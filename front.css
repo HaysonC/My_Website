@@ -1,0 +1,68 @@
+/* Import the Computer Modern font from Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Computer+Modern+Serif&display=swap');
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: 'Computer Modern Serif', serif;
+  /* Diagonal moving gradient background (45deg) */
+  background: linear-gradient(45deg, #000, #222, #000);
+  background-size: 400% 400%;
+  animation: gradientWave 15s ease infinite;
+  color: #fff;
+}
+
+@keyframes gradientWave {
+  0% {
+    background-position: 0% 0%;
+  }
+  50% {
+    background-position: 100% 100%;
+  }
+  100% {
+    background-position: 0% 0%;
+  }
+}
+
+/* Full-screen hero section */
+.hero {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.hero-content {
+  text-align: center;
+  padding: 20px;
+  /* Removed background-color and border-radius for a transparent look */
+}
+
+.hero h1 {
+  font-size: 4rem;
+  margin-bottom: 20px;
+  letter-spacing: 1px;
+}
+
+.hero p {
+  font-size: 1.5rem;
+  margin-bottom: 40px;
+  line-height: 1.4;
+}
+
+.enter-btn {
+  display: inline-block;
+  text-decoration: none;
+  color: #fff;
+  background-color: #007bff;
+  padding: 12px 24px;
+  font-size: 1.2rem;
+  border-radius: 4px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.enter-btn:hover {
+  background-color: #0056b3;
+  transform: translateY(-2px);
+}

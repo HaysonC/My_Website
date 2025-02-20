@@ -1,67 +1,132 @@
 /* Import the Computer Modern font from Google Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Computer+Modern+Serif&display=swap');
 
-/* Apply global styles */
 body {
-    font-family: 'Computer Modern Serif', serif;
-    background-color: #f4f4f4;
-    margin: 40px;
-    padding: 0;
-    text-align: left;
-    color: #666;
+  font-family: 'Computer Modern Serif', serif;
+  /* Diagonal moving gradient background for a wave-like effect */
+  background: linear-gradient(45deg, #000, #222, #000);
+  background-size: 400% 400%;
+  animation: gradientWave 15s ease infinite;
+  margin: 0;
+  padding: 0;
+  color: #ddd;
+  line-height: 1.6;
 }
 
-/* Style the header */
+@keyframes gradientWave {
+  0% { background-position: 0% 0%; }
+  50% { background-position: 100% 100%; }
+  100% { background-position: 0% 0%; }
+}
+
+/* Container to center the content */
+.container {
+  max-width: 900px;
+  margin: 80px auto 40px auto;
+  padding: 20px;
+  background-color: rgba(0, 0, 0, 0.8);
+  border-radius: 8px;
+}
+
+/* Header Styling */
+header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
 h1 {
-    font-size: 2.5rem;
-    margin: 20px 0;
-    color: #000000;
+  font-size: 3rem;
+  margin: 20px 0;
+  color: #fff;
 }
 
 h2 {
-    color: #000000;
+  font-size: 2rem;
+  margin-bottom: 10px;
+  color: #fff;
 }
 
-/* Style the paragraph */
 p {
-    font-size: 1rem;
-    color: #666;
+  font-size: 1.1rem;
+  color: #ccc;
 }
 
-/* Style the navbar */
+/* Navbar Styling */
 .navbar {
-    position: fixed;
-    top: 10px;
-    right: 20px;
-    background-color: #333;
-    border-radius: 5px;
-    padding: 10px;
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
-    display: flex;
-    flex-direction: column; /* Arrange links vertically */
-    gap: 10px;
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background-color: rgba(51,51,51,0.9);
+  border-radius: 8px;
+  padding: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
-/* Style each link in the navbar */
 .navbar a {
-    color: white;
-    text-decoration: none;
-    font-size: 1rem;
-    padding: 5px 15px;
-    border-radius: 5px;
-    text-align: center;
-    transition: background-color 0.3s ease, transform 0.3s ease;
+  display: block;
+  color: #fff;
+  text-decoration: none;
+  font-size: 1rem;
+  padding: 8px 15px;
+  border-radius: 5px;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  text-align: center;
 }
 
-/* Add hover effect */
 .navbar a:hover {
-    background-color: #555;
-    transform: scale(1.05);
+  background-color: #555;
+  transform: translateY(-2px);
 }
 
-/* Highlight the active link */
-.navbar #active {
-    background-color: #007bff;
-    font-weight: bold;
-    color: white;
+.navbar a.active {
+  background-color: #007bff;
+  font-weight: bold;
+}
+
+/* Section Styling */
+section {
+  margin-bottom: 60px;
+  padding: 20px;
+  background: rgba(30, 30, 30, 0.8);
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* List Styles */
+ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+ul li {
+  margin-bottom: 20px;
+}
+
+/* Link Styling */
+a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* Footer Styling */
+footer {
+  text-align: center;
+  padding: 20px 0;
+  margin-top: 40px;
+  background-color: rgba(51,51,51,0.9);
+  color: #fff;
+}
+
+footer a {
+  color: #fff;
+  text-decoration: underline;
 }
