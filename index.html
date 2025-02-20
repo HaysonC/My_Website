@@ -2,18 +2,61 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Hayson Cheung</title>
   <link rel="stylesheet" href="front.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-  <div class="tech-background"></div> <!-- Background grid here -->
+  <div class="shooting-lines"></div> <!-- Shooting Lines Background -->
   <div class="hero">
     <div class="hero-content">
-      <h1>Hayson Cheung</h1>
-      <p>Engineering Science Student<br>Machine Learning | Robotics | Control Systems</p>
+      <h1>
+        <span>H</span><span>a</span><span>y</span><span>s</span><span>o</span><span>n</span>
+        <span>C</span><span>h</span><span>e</span><span>u</span><span>n</span><span>g</span>
+      </h1>
+      <p></p>
+      <div class="typing-email">
+      hayson [dot] cheung [at] mail [dot] utoronto [dot] ca
+      </div>
+      <div class="about-content">
+        <h2>About Me</h2>
+        <p>I'm Hayson Cheung, a first-year Engineering Science student at the University of Toronto, with a deep interest in machine learning, robotics, and control systems. I'm passionate about solving real-world problems using cutting-edge technologies and exploring how artificial intelligence can simulate sentient behaviors. Currently, my focus is on sentiment analysis, understanding emotions, and creating intelligent systems that react and adapt like humans. I am also interested in evolutionary programs, specifically NEAT.</p>
+        <p>I love combining my technical knowledge with creative problem-solving and constantly strive to improve and learn new things.</p>
+      </div>
+
       <a href="main.html" class="enter-btn">Enter</a>
+
+      <div class="social-links">
+        <a href="https://github.com/HaysonC" target="_blank" class="social-icon">
+          <i class="fab fa-github"></i>
+        </a>
+        <a href="https://linkedin.com/in/hayson-cheung-3688a5241/" target="_blank" class="social-icon">
+          <i class="fab fa-linkedin"></i>
+        </a>
+        <a href="https://www.instagram.com/hayson.cheunggggg/" target="_blank" class="social-icon">
+          <i class="fab fa-instagram"></i>
+        </a>
+      </div>
     </div>
   </div>
+  <script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const emailElement = document.querySelector(".typing-email");
+    const emailText = emailElement.textContent;
+    emailElement.textContent = "";
+
+    let index = 0;
+    function type() {
+      if (index < emailText.length) {
+        emailElement.textContent += emailText.charAt(index);
+        index++;
+        setTimeout(type, 0); // Adjust typing speed here
+      }
+    }
+
+    type();
+  });
+</script>
+
 </body>
 </html>
