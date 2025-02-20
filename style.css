@@ -1,8 +1,8 @@
-/* Import the Computer Modern font from Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Computer+Modern+Serif&display=swap');
+/* Import the JetBrains Mono font from Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono&display=swap');
 
 body {
-  font-family: 'Computer Modern Serif', serif;
+  font-family: 'JetBrains Mono', monospace;
   /* Diagonal moving gradient background for a wave-like effect */
   background: linear-gradient(45deg, #000, #222, #000);
   background-size: 400% 400%;
@@ -83,7 +83,7 @@ p {
 }
 
 .navbar a.active {
-  background-color: #007bff;
+  background-color: #00FFFF; /* Cyan blue active link */
   font-weight: bold;
 }
 
@@ -109,7 +109,7 @@ ul li {
 
 /* Link Styling */
 a {
-  color: #007bff;
+  color: #00FFFF; /* Cyan blue links */
   text-decoration: none;
 }
 

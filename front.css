@@ -1,28 +1,14 @@
-/* Import the Computer Modern font from Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Computer+Modern+Serif&display=swap');
+/* Import the JetBrains Mono font from Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono&display=swap');
 
 html, body {
   margin: 0;
   padding: 0;
   height: 100%;
-  font-family: 'Computer Modern Serif', serif;
-  /* Diagonal moving gradient background (45deg) */
-  background: linear-gradient(45deg, #000, #222, #000);
-  background-size: 400% 400%;
-  animation: gradientWave 15s ease infinite;
+  font-family: 'JetBrains Mono', monospace;
   color: #fff;
-}
-
-@keyframes gradientWave {
-  0% {
-    background-position: 0% 0%;
-  }
-  50% {
-    background-position: 100% 100%;
-  }
-  100% {
-    background-position: 0% 0%;
-  }
+  overflow: hidden;
+  background: #000;
 }
 
 /* Full-screen hero section */
@@ -31,12 +17,14 @@ html, body {
   align-items: center;
   justify-content: center;
   height: 100vh;
+  position: relative;
 }
 
 .hero-content {
   text-align: center;
   padding: 20px;
-  /* Removed background-color and border-radius for a transparent look */
+  position: relative;
+  z-index: 10; /* Ensures the content is on top */
 }
 
 .hero h1 {
@@ -54,8 +42,9 @@ html, body {
 .enter-btn {
   display: inline-block;
   text-decoration: none;
-  color: #fff;
-  background-color: #007bff;
+  color: #00FFFF; /* Cyan blue color */
+  background-color: transparent;
+  border: 2px solid #00FFFF; /* Cyan blue border */
   padding: 12px 24px;
   font-size: 1.2rem;
   border-radius: 4px;
@@ -63,6 +52,57 @@ html, body {
 }
 
 .enter-btn:hover {
-  background-color: #0056b3;
+  background-color: #00FFFF; /* Cyan blue fill */
+  color: #000; /* Text turns black on hover */
   transform: translateY(-2px);
+}
+
+/* Cool Techy Background */
+.tech-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1; /* Sends the background behind the content */
+  background: rgba(0, 0, 0, 0.8);
+  animation: techBackground 3s linear infinite, gridMove 5s linear infinite;
+}
+
+/* Wavy gradient background (already included in the tech background animation) */
+@keyframes gradientWave {
+  0% {
+    background-position: 0% 0%;
+  }
+  50% {
+    background-position: 100% 100%;
+  }
+  100% {
+    background-position: 0% 0%;
+  }
+}
+
+/* Animation for the wavy gradient background */
+@keyframes gridMove {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 100% 100%;
+  }
+}
+
+@keyframes techBackground {
+  0% {
+    background: radial-gradient(circle, rgba(0, 255, 255, 0.5), rgba(0, 0, 0, 0.8)), rgba(0, 0, 0, 0.9);
+    background-size: 10% 10%;
+  }
+  50% {
+    background: radial-gradient(circle, rgba(0, 255, 0, 0.5), rgba(0, 0, 0, 0.8)), rgba(0, 0, 0, 0.9);
+    background-size: 20% 20%;
+  }
+  100% {
+    background: radial-gradient(circle, rgba(0, 255, 255, 0.5), rgba(0, 0, 0, 0.8)), rgba(0, 0, 0, 0.9);
+    background-size: 10% 10%;
+  }
 }
