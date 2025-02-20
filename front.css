@@ -29,6 +29,7 @@ html, body {
   position: relative;
   flex-direction: column;
   text-align: center;
+  width: 100%;
 }
 
 /* === Cyberpunk Name Styling === */
