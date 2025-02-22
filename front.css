@@ -114,6 +114,8 @@ h1 span:nth-child(10) { animation-delay: 4.5s; }
   font-size: 1.2rem;
   border-radius: 4px;
   transition: background-color 0.3s ease, transform 0.2s ease, color 0.3s ease;
+  margin-left: 10px; /* Adjust the value as needed */
+  margin-right: 10px; /* Adjust the value as needed */
 }
 
 .enter-btn:hover {
