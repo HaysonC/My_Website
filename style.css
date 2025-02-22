@@ -342,5 +342,18 @@ footer {
 .image-container {
   display: flex;
   justify-content: center;
-  margin-top: 20px;
+  margin: 20px 0;
+}
+
+.image-container img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 10px;
+  border: 2px solid rgba(0, 234, 255, 0.3);
+  box-shadow: 0 4px 12px rgba(0, 234, 255, 0.5);
+  transition: transform 0.3s ease;
+}
+
+.image-container img:hover {
+  transform: scale(1.02);
 }
