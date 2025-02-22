@@ -22,3 +22,30 @@
     font-style: italic;
     color: #ccc;
 }
+.section-wheel {
+  position: fixed;
+  right: 20px; /* Always on the right */
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.6);
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  width: 180px;
+  font-size: 14px;
+  transition: top 0.3s ease, transform 0.3s ease;
+}
+
+.section-wheel a {
+  display: block;
+  padding: 5px;
+  color: #ddd;
+  text-decoration: none;
+  transition: 0.3s;
+}
+
+.section-wheel a.active {
+  font-weight: bold;
+  color: cyan;
+}

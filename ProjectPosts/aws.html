@@ -1,0 +1,67 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Evolving Agents with NEAT</title>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="blog-style.css">
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <!-- MathJax for LaTeX rendering -->
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+</head>
+<body>
+<a href="index.html" class="back-home-btn">Back to Posts</a>
+  <div class="blog-container">
+      <section class="acknowledgment">
+    <h2>Acknowledgment</h2>
+    <p>Huge thanks to the contributors who did the heavy lifting on this project:<p>
+        <p> <a href="https://jetchiang.co/">Jet Chiang</a> figured out the network visuals; and </p>
+        <p> <a href="https://www.linkedin.com/in/epic-eric/?originalSubdomain=ca">Eric Xie</a> who worked on the database; and </p>
+        <p> <a href="https://www.linkedin.com/in/paul-dong-986531258/?originalSubdomain=ca">Paul Dong</a> who worked on the frontend; and</p>
+    </section>
+    <header>
+      <h1>MapMatch - A sematic-based matching algorithm w/ AWS</h1>
+        <a href="https://devpost.com/software/roomiematch-xoe75b" target="_blank" class="social-icon">
+          <i class="fab fa-solid fa-link"></i>
+        </a>
+      <p class="intro">
+        Read about how we cramped up a semi-working AWS-based roommate matching algorithm in 6 hours.
+      </p>
+    </header>
+      <h2>The AWS Hackathon</h2>
+
+        <p>
+            Oh my God, how are we supposed to make something work in 6 hours. DONT get me started on the fact that we had to use AWS. I mean, I love AWS, but it's a pain to set up.
+        </p>
+      <h2>The Algorithm</h2>
+        <p>
+            We used a simple algorithm that takes in a description of a person and then matches them with another person based on the similarity of their descriptions. We used AWS to host the algorithm and the database. We use AWS titan to obtain the semantic embeddings of the descriptions and then we compare the embeddings to find the most similar descriptions. We save the user data on AWS DynamoDB and then host the server on, you guessed it, AWS.
+        </p>
+      <h2>Embeddings -> Similarity</h2>
+        <p>
+            The embeddings are generated using the AWS titan service. They are directions in a high-dimensional space that represent the meaning of the descriptions. We then compare the embeddings to find the most similar descriptions. We use the cosine similarity to compare the embeddings:
+        </p>
+      <div style="text-align: center; margin: 20px 0;">
+        $$\text{similarity} = \frac{A \cdot B}{||A|| \cdot ||B||}$$
+      </div>
+        <p>
+            where \(A\) and \(B\) are the embeddings of the descriptions. We then match the descriptions with the highest similarity.
+        </p>
+      <h2>Graphical Projection</h2>
+        <p>
+            My friend, Jet, figured out how to project the embeddings onto a 2D plane. We used this to visualize the embeddings and see how the descriptions are clustered. <a href="https://jetchiang.co/post/aws-hacks/">Check out his blog post</a> for more details.
+        </p>
+      <h2>Conclusion</h2>
+        <p>
+            We managed to get a semi-working algorithm in 6 hours. Apart from all that im grateful for blah and blah, I hope to work on this project more in the future. I think my teammates are pretty cracked and cool!
+        </p>
+      <p> Also, we won, so I guess that's cool. (definitely not flexing)</p>
+  </div>
+
+</body>
+</html>
