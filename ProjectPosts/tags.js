@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("tag-title").innerText = selectedTag;
 
     // Fetch all articles from the 'ProjectPosts' directory
-    fetch("ProjectPosts/articles.json") // Ensure the JSON file is in the correct path
+    fetch("articles.json") // Ensure the JSON file is in the correct path
         .then(response => response.json())
         .then(articles => {
             // Filter articles that contain the selected tag
