@@ -29,9 +29,9 @@ document.addEventListener("DOMContentLoaded", function () {
                     <h2>${article.title}</h2>
                     <p>${article.description}</p>
                     <div class="tags">
-                        ${article.tags.map(tag => `<a href="article-tag?tag=${encodeURIComponent(tag)}"><span class="tag">${tag}</span></a>`).join("")}
+                        ${article.tags.map(tag => `<a href="/ProjectPosts/article-tag?tag=${encodeURIComponent(tag)}"><span class="tag">${tag}</span></a>`).join("")}
                     </div>
-                    <a href="../${article.link}" class="read-more">Read More <i class="fas fa-arrow-right"></i></a>
+                    <a href="/ProjectPosts/${article.link}" class="read-more">Read More <i class="fas fa-arrow-right"></i></a>
                 </article>
             `).join("");
         })
