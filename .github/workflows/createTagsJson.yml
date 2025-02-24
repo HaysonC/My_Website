@@ -6,6 +6,10 @@ on:
       - main
   workflow_dispatch:  # Allows manual trigger
 
+permissions:
+  contents: write
+
+
 jobs:
   generate-json:
     runs-on: ubuntu-latest
