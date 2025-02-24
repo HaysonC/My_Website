@@ -29,7 +29,7 @@ document.querySelectorAll(".blog-post").forEach((article) => {
 const jsonData = JSON.stringify(articles, null, 2);
 
 // Ensure the 'ProjectPosts' directory exists
-const outputDir = "ProjectPosts";
+const outputDir = "ProjectPosts/article-tag";
 if (!fs.existsSync(outputDir)) {
     fs.mkdirSync(outputDir, { recursive: true });
 }
@@ -37,4 +37,4 @@ if (!fs.existsSync(outputDir)) {
 // Write the JSON file
 fs.writeFileSync(`${outputDir}/articles.json`, jsonData, "utf-8");
 
-console.log("✅ Articles JSON generated successfully in ProjectPosts/articles.json");
+console.log(`✅ Articles JSON generated successfully in ${outputDir}/articles.json`);

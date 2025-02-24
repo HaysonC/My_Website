@@ -35,6 +35,6 @@ jobs:
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions@users.noreply.github.com"
-          git add ProjectPosts/articles.json
+          git add ProjectPosts/article-tag/articles.json
           git commit -m "Auto-generate articles.json from blog posts" || echo "No changes to commit"
           git push
