@@ -1,0 +1,34 @@
+name: Create Tags Json
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:  # Allows manual trigger
+
+jobs:
+  generate-json:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+
+      - name: Install dependencies
+        run: npm install jsdom
+
+      - name: Run script to generate JSON
+        run: node ProjectPosts/createTagsJson.js
+
+      - name: Commit and push changes
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions@users.noreply.github.com"
+          git add ProjectPosts/articles.json
+          git commit -m "Auto-generate articles.json from blog posts" || echo "No changes to commit"
+          git push

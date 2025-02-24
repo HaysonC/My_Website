@@ -101,11 +101,12 @@
         One of the important pillar of NEAT is Speciation. Speciation is the process of dividing the population into species based on the similarity of the genomes.
             This is important because it allows the population to maintain diversity and prevents the population from converging to a local optimum. It also protects new innovations from being wiped out as the genome evolves.
             We determine the similarity of two genomes by calculating the compatibility distance between them. The compatibility distance is a measure of how similar two genomes are based on their structure, which is given by the formula:
+        </p>
             <div style="text-align: center; margin: 20px 0;">
                 $$\delta = c_1 \cdot E + c_2 \cdot D + c_3 \cdot W$$
             </div>
             where \(E\) is the number of excess genes, \(D\) is the number of disjoint genes, and \(W\) is the average weight difference of matching genes. The coefficients \(c_1\), \(c_2\), and \(c_3\) are constants that determine the importance of each term.
-        </p>
+
         <p>
         Crossover is the process of combining the genetic material of two parents to produce offspring. In NEAT, crossover is performed by aligning the genes of the parents based on their innovation numbers. Matching genes are inherited randomly from either parent, while disjoint or excess genes are inherited from the more fit parent.
         </p>

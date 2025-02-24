@@ -1,0 +1,71 @@
+.skills-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  padding: 10px;
+}
+
+.skill {
+  background-color: #1e1e1e;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.skill i {
+  color: #00d4ff;
+  font-size: 22px;
+  margin-bottom: 5px;
+}
+
+.skill-bar {
+  width: 100%;
+  background-color: #333;
+  border-radius: 5px;
+  height: 12px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 0 10px rgba(0, 212, 255, 0.6);
+}
+
+.skill-fill {
+  height: 100%;
+  border-radius: 5px;
+  animation: glow 2s infinite alternate;
+}
+
+.ml { width: 90%; background: linear-gradient(90deg, #ff8a00, #e52e71); }
+.dl { width: 85%; background: linear-gradient(90deg, #ff3c00, #ffcc00); }
+.nn { width: 80%; background: linear-gradient(90deg, #ff00ff, #00ffff); }
+.python { width: 95%; background: linear-gradient(90deg, #306998, #ffd43b); }
+.java { width: 75%; background: linear-gradient(90deg, #f89820, #5382a1); }
+.c { width: 70%; background: linear-gradient(90deg, #00599c, #00a2e8); }
+.opencv { width: 80%; background: linear-gradient(90deg, #5c2d91, #ff2d20); }
+
+@keyframes glow {
+  from {
+    box-shadow: 0 0 5px rgba(0, 212, 255, 0.4);
+  }
+  to {
+    box-shadow: 0 0 15px rgba(0, 212, 255, 0.8);
+  }
+}
+
+.skill-button {
+  margin-top: 10px;
+  padding: 8px 12px;
+  text-align: center;
+  color: white;
+  background: linear-gradient(90deg, #007bff, #00d4ff);
+  text-decoration: none;
+  border-radius: 5px;
+  font-size: 14px;
+  transition: 0.3s;
+}
+
+.skill-button:hover {
+  background: linear-gradient(90deg, #0056b3, #00a2e8);
+}

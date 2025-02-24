@@ -65,3 +65,18 @@
   transition: transform 0.3s ease;
 }
 
+.related-articles {
+    margin-top: 15px;
+    padding: 10px;
+    border-left: 4px solid #00d4ff;
+    background: #1e1e1e;
+    border-radius: 5px;
+}
+
+.related-articles h3 {
+    font-size: 18px;
+    margin-bottom: 8px;
+    color: #00d4ff;
+}
+
+

@@ -21,8 +21,8 @@
     <h2>Acknowledgment</h2>
     <p>Huge thanks to the contributors who did the heavy lifting on this project:<p>
         <p> <a href="https://jetchiang.co/">Jet Chiang</a> figured out the network visuals; and </p>
-        <p> <a href="https://www.linkedin.com/in/epic-eric/?originalSubdomain=ca">Eric Xie</a> who worked on the database; and </p>
-        <p> <a href="https://www.linkedin.com/in/paul-dong-986531258/?originalSubdomain=ca">Paul Dong</a> who worked on the frontend; and</p>
+        <p> <a href="https://epiceric.tech/">Eric Xie</a> who worked on the database; and </p>
+        <p> <a href="https://www.linkedin.com/in/paul-dong-986531258/?originalSubdomain=ca">Paul Dong</a> who worked on the frontend </p>
     </section>
     <header>
       <h1>MapMatch - A sematic-based matching algorithm w/ AWS</h1>
@@ -40,7 +40,7 @@
         </p>
       <h2>The Algorithm</h2>
         <p>
-            We used a simple algorithm that takes in a description of a person and then matches them with another person based on the similarity of their descriptions. We used AWS to host the algorithm and the database. We use AWS titan to obtain the semantic embeddings of the descriptions and then we compare the embeddings to find the most similar descriptions. We save the user data on AWS DynamoDB and then host the server on, you guessed it, AWS.
+            We used a simple algorithm that takes in a description of a person and then matches them with another person based on the similarity of their descriptions. We used AWS to host the algorithm and the database. We use AWS lambda to obtain the semantic embeddings of the descriptions and then we compare the embeddings to find the most similar descriptions. We save the user data on AWS DynamoDB and then host the server on, you guessed it, AWS.
         </p>
       <h2>Embeddings -> Similarity</h2>
         <p>
