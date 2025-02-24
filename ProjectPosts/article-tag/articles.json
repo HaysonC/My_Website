@@ -1,0 +1,33 @@
+[
+  {
+    "title": "LSTM enc-dec with TensorFlow",
+    "description": "\n        I have been leading a paper reading group with UTMIST on the topic deep learning. We have been reading papers on the latest advancements in deep learning and discussing the implications of the papers. Check out my blog post a demo of a paper we read.\n    ",
+    "tags": [
+      "Machine Learning",
+      "TensorFlow",
+      "Python"
+    ],
+    "link": "LSTM.html"
+  },
+  {
+    "title": "Roommate Matching with AWS",
+    "description": "\n        I have been working on a project that uses AWS to match roommates based on their written descriptions. Check out my project on AWS Hacks that won the hackathon.\n      ",
+    "tags": [
+      "Machine Learning",
+      "AWS",
+      "JavaScript"
+    ],
+    "link": "aws.html"
+  },
+  {
+    "title": "Evolving Agents with NEAT",
+    "description": "\n          Hi guys! I have been pretty obsessed with the concept of neuro evolution. Check out my projects on Neuro Evolution of Augmenting Topologies\n      ",
+    "tags": [
+      "Machine Learning",
+      "Neuro Networks",
+      "Python",
+      "NEAT"
+    ],
+    "link": "neat.html"
+  }
+]
