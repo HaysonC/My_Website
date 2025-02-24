@@ -2,8 +2,8 @@ const fs = require("fs");
 const jsdom = require("jsdom");
 const { JSDOM } = jsdom;
 
-// Read the HTML file (replace 'index.html' with the actual file you need)
-const htmlFilePath = "index.html"; // Change this if necessary
+// Read the HTML file
+const htmlFilePath = "ProjectPosts/index.html";
 const htmlContent = fs.readFileSync(htmlFilePath, "utf-8");
 
 // Parse the HTML with jsdom
