@@ -7,7 +7,7 @@
       "TensorFlow",
       "Python"
     ],
-    "link": "LSTM.html"
+    "link": "LSTM"
   },
   {
     "title": "Roommate Matching with AWS",
@@ -17,7 +17,7 @@
       "AWS",
       "JavaScript"
     ],
-    "link": "aws.html"
+    "link": "aws"
   },
   {
     "title": "Evolving Agents with NEAT",
@@ -28,6 +28,6 @@
       "Python",
       "NEAT"
     ],
-    "link": "neat.html"
+    "link": "neat"
   }
 ]

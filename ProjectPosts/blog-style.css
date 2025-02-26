@@ -64,6 +64,13 @@
   box-shadow: 0 4px 12px rgba(0, 234, 255, 0.5);
   transition: transform 0.3s ease;
 }
+.image-description {
+  margin-top: 10px;
+  font-style: italic;
+  color: #ccc;
+  text-align: center;
+  white-space: pre-line;
+}
 
 .related-articles {
     margin-top: 15px;
