@@ -29,5 +29,16 @@
       "NEAT"
     ],
     "link": "neat"
+  },
+  {
+    "title": "Pendulum Motion Analysis",
+    "description": "\n            I have been working on a project that uses computer vision to track a pendulum for my PHY180 project. Check out my project on pendulum motion analysis.\n      ",
+    "tags": [
+      "Machine Learning",
+      "Computer Vision",
+      "OpenCv",
+      "Python"
+    ],
+    "link": "pendulum"
   }
 ]
