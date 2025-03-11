@@ -116,10 +116,26 @@
         <h2>Smash Bros. Evolution</h2>
         <p><i>Project done in Collaboration with Eric Xie, Paul Dong, and Jet Chiang</i></p>
         <p><i>Project done on UTMIST AI^2 Platform, <a href="https://www.utmist.ca/ai2">check it out</a></i></p>
+        <p>
+            The second time we use neat, is an integration of neat and LSTM on a smash bros game. We used the UTMIST AI^2 platform to create a smash bros game where the agents are evolved using neat. The agents are trained using the neat-python library. The agents are trained to play the game by maximizing the expected likelihood of a favorable policy through genetic algorithms.
 
-        </article>
-  </div>
+        </p>
 
+        <h3> Why did I use rNEAT?</h3>
+        <p>
+            I used rNEAT because it is a powerful tool for evolving neural networks. It allows for the evolution of complex structures through speciation, crossover, and mutation. rNEAT is particularly well-suited for evolving agents in dynamic and competitive environments, such as games. By combining rNEAT with LSTM, we can create agents that adapt to changing conditions and learn complex strategies over time.
+        </p>
+        <p>
+            For more information on LSTM, check out my post on <a href="../LSTM">LSTM</a>.
+        </p>
+        <h3>Improvements</h3>
+        <p>
+            We observe that the agent started to evolve "sensible" moves like trying to attack after a short time. However, neat is extremely dependent on the set up of the training (the reward function, the environment, etc.). The agents seemed to be stuck in a certain local optimum where they just spam the same move over and over again. This is a common problem in neat, where the agents are stuck in a local optimum. This is a problem that is still being researched and is a problem that is still being worked on.
+        </p>
+        <p>
+            I spoke with one of the people that worked in <a href="https://www.youtube.com/@aiwarehouse">AI Warehouse</a>: <a href="https://tanayjyot.vercel.app">Tanayjyot</a>. The suggestion is to also evolved with the hyperparameters of the neat algorithm, by trying different training with different hyperparameters. This is a good suggestion and is something that I will try in the future.
+        </p>
+    </article>
 
 <section class="suggested-reading">
     <h2>Suggested Reading</h2>
@@ -141,7 +157,6 @@
         </li>
     </ul>
 </section>
-
 </body>
 <script src="../blog-script.js"></script>
 
