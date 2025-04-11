@@ -94,13 +94,20 @@ h6 {
   justify-content: center;
   cursor: pointer;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  transition: all var(--transition-speed) ease;
+  transition: all 0.3s ease;
   opacity: 0;
   color: var(--primary-color);
 }
 
 .sidebar.collapsed ~ #sidebar-toggle {
   opacity: 1;
+  transform: translateX(0);
+}
+
+#sidebar-toggle:hover {
+  background-color: var(--accent-color);
+  color: white;
+  box-shadow: 0 4px 12px rgba(139, 109, 92, 0.2);
 }
 
 /* Sidebar navigation */
@@ -121,7 +128,7 @@ h6 {
   padding: 0.75rem 1.5rem;
   color: var(--primary-color);
   text-decoration: none;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
   border-left: 3px solid transparent;
   font-family: "Playfair Display", Georgia, serif;
 }
@@ -139,11 +146,13 @@ h6 {
   margin-left: 1.5rem;
   max-height: 0;
   overflow: hidden;
-  transition: max-height 0.3s ease;
+  transition: max-height 0.5s ease, opacity 0.3s ease;
+  opacity: 0;
 }
 
 .sidebar-nav li.active .sub-nav {
   max-height: 500px;
+  opacity: 1;
 }
 
 .sub-link {
@@ -163,6 +172,7 @@ h6 {
   display: flex !important;
   justify-content: space-between;
   align-items: center;
+  transition: all 0.3s ease;
 }
 
 .main-link::after {
@@ -187,8 +197,9 @@ h6 {
   flex: 1;
   margin-left: var(--sidebar-width);
   padding: 3rem 4rem;
-  transition: margin-left var(--transition-speed) ease;
+  transition: margin-left 0.3s ease;
   max-width: 1200px;
+  line-height: 1.8;
 }
 
 .content.expanded {
@@ -220,6 +231,7 @@ h6 {
 /* Blog sections */
 .blog-section {
   margin-bottom: 4rem;
+  scroll-margin-top: 2rem;
 }
 
 .blog-section h2 {
@@ -229,16 +241,6 @@ h6 {
   position: relative;
   padding-bottom: 0.5rem;
   scroll-margin-top: 2rem;
-}
-
-.blog-section h2::after {
-  content: "";
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 60px;
-  height: 2px;
-  background-color: var(--accent-color);
 }
 
 /* Improve heading spacing */
@@ -437,7 +439,7 @@ h6 {
 .dropdown-content {
   max-height: 0;
   overflow: hidden;
-  transition: max-height 0.5s ease;
+  transition: max-height 0.6s ease-in-out, padding 0.3s ease;
   padding: 0 1.5rem;
 }
 
@@ -447,23 +449,25 @@ h6 {
   border-top: 1px solid var(--border-color);
 }
 
-.dropdown-content p {
-  margin-bottom: 1rem;
-}
-
 /* Annotation styles */
 .annotation-box {
-  margin: 1.5rem 0;
+  margin: 1.8rem 0;
   padding: 1.5rem;
   background-color: var(--annotation-bg);
   border: 1px solid var(--annotation-border);
   border-left: 4px solid var(--accent-color);
   border-radius: 0 4px 4px 0;
   position: relative;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.annotation-box:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
 .annotation-box::before {
-  content: "CTMF Annotations";
+  content: "CTMF Reflection";
   position: absolute;
   top: -12px;
   left: 15px;
@@ -509,6 +513,17 @@ h6 {
 @media (max-width: 768px) {
   .content {
     padding: 2rem;
+    margin-left: 0;
+  }
+
+  .sidebar {
+    z-index: 100;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  }
+
+  #sidebar-toggle {
+    opacity: 1;
+    transform: translateX(0);
   }
 
   .blog-header h1 {

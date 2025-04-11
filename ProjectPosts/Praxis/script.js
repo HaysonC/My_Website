@@ -134,37 +134,11 @@ document.addEventListener("DOMContentLoaded", () => {
     })
   })
 
-  // Mobile sidebar toggle
-  if (window.innerWidth <= 576) {
-    const mobileToggle = document.createElement("button")
-    mobileToggle.id = "mobile-toggle"
-    mobileToggle.innerHTML = "<span></span>"
-    mobileToggle.style.cssText = `
-            position: fixed;
-            top: 1rem;
-            left: 1rem;
-            z-index: 20;
-            background: rgba(255, 255, 255, 0.9);
-            border: 1px solid rgba(0, 0, 0, 0.1);
-            border-radius: 4px;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-        `
-
-    document.body.appendChild(mobileToggle)
-
-    mobileToggle.addEventListener("click", () => {
-      sidebar.classList.toggle("active")
-    })
-  }
-
   // Function to highlight active section based on scroll position
   function highlightActiveSection() {
     const scrollPosition = window.scrollY
+    const windowHeight = window.innerHeight
+    const scrollBottom = scrollPosition + windowHeight * 0.5 // Use middle of viewport
 
     // Get all sections and h3 headings
     const sections = document.querySelectorAll(".blog-section")
@@ -172,51 +146,77 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Check if we're in a main section
     let activeMainSection = null
+    let activeMainSectionElement = null
+
+    // First pass: find the active main section
     sections.forEach((section) => {
       const sectionTop = section.offsetTop - 100
-      const sectionHeight = section.offsetHeight
+      const sectionBottom = sectionTop + section.offsetHeight
       const sectionId = section.getAttribute("id")
 
-      if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
-        // Remove active class from all main links
-        mainNavLinks.forEach((link) => link.classList.remove("active"))
-
-        // Add active class to corresponding main link
-        const activeLink = document.querySelector(`.sidebar-nav .main-link[href="#${sectionId}"]`)
-        if (activeLink) {
-          activeLink.classList.add("active")
-          activeMainSection = sectionId
-
-          // Open the sub-nav for this section
-          const parentLi = activeLink.parentElement
-          document.querySelectorAll(".sidebar-nav > li").forEach((li) => {
-            li.classList.remove("active")
-          })
-          parentLi.classList.add("active")
-        }
+      if (scrollPosition >= sectionTop && scrollPosition < sectionBottom) {
+        activeMainSection = sectionId
+        activeMainSectionElement = section
       }
     })
 
-    // If we're in a main section, check for h3 headings
+    // If no section is active based on scroll position, find the closest one
+    if (!activeMainSection && sections.length > 0) {
+      let closestSection = sections[0]
+      let closestDistance = Math.abs(scrollPosition - closestSection.offsetTop)
+
+      sections.forEach((section) => {
+        const distance = Math.abs(scrollPosition - section.offsetTop)
+        if (distance < closestDistance) {
+          closestDistance = distance
+          closestSection = section
+        }
+      })
+
+      activeMainSection = closestSection.getAttribute("id")
+      activeMainSectionElement = closestSection
+    }
+
+    // Update main navigation
     if (activeMainSection) {
-      // Reset all sub-links
-      subNavLinks.forEach((link) => link.classList.remove("active"))
+      // Remove active class from all main links and their parent li
+      mainNavLinks.forEach((link) => {
+        link.classList.remove("active")
+        link.parentElement.classList.remove("active")
+      })
+
+      // Add active class to corresponding main link
+      const activeLink = document.querySelector(`.sidebar-nav .main-link[href="#${activeMainSection}"]`)
+      if (activeLink) {
+        activeLink.classList.add("active")
+        activeLink.parentElement.classList.add("active")
+      }
+    }
+
+    // Reset all sub-links
+    subNavLinks.forEach((link) => link.classList.remove("active"))
+
+    // If we're in a main section, check for h3 headings
+    if (activeMainSectionElement) {
+      // Find all h3 headings in the active section
+      const sectionH3s = activeMainSectionElement.querySelectorAll("h3[id]")
 
       // Find the active h3 heading
       let activeSubHeading = null
-      h3Headings.forEach((heading) => {
+      let lastVisibleHeading = null
+
+      sectionH3s.forEach((heading) => {
         const headingTop = heading.offsetTop - 120
         const headingId = heading.getAttribute("id")
 
-        // Check if this heading is in the active main section
-        const headingSection = heading.closest(".blog-section")
-        if (headingSection && headingSection.id === activeMainSection) {
-          // Check if we've scrolled past this heading
-          if (scrollPosition >= headingTop) {
-            activeSubHeading = headingId
-          }
+        // Check if we've scrolled past this heading
+        if (scrollPosition >= headingTop) {
+          lastVisibleHeading = headingId
         }
       })
+
+      // Use the last visible heading as the active one
+      activeSubHeading = lastVisibleHeading
 
       // Highlight the active sub-link
       if (activeSubHeading) {
@@ -243,4 +243,17 @@ document.addEventListener("DOMContentLoaded", () => {
       content.classList.add("expanded")
     }
   })
+
+  // Smooth scroll to section when page loads with hash
+  if (window.location.hash) {
+    const targetSection = document.querySelector(window.location.hash)
+    if (targetSection) {
+      setTimeout(() => {
+        window.scrollTo({
+          top: targetSection.offsetTop - 20,
+          behavior: "smooth",
+        })
+      }, 100)
+    }
+  }
 })
