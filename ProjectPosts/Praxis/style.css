@@ -12,6 +12,8 @@
   --separator-color: rgba(139, 109, 92, 0.3);
   --citation-hover: #f0ebe5;
   --reference-bg: #f5f2ed;
+  --annotation-bg: rgba(139, 109, 92, 0.08);
+  --annotation-border: rgba(139, 109, 92, 0.3);
 }
 
 /* Base styles */
@@ -369,6 +371,26 @@ h6 {
   max-width: 85%;
 }
 
+.image-container {
+  margin: 2rem 0;
+  text-align: center;
+}
+
+.image-container img {
+  max-width: 85%;
+  height: auto;
+  border-radius: 4px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+}
+
+.dropdown .image {
+  display: block;
+  margin: 1rem auto;
+  max-width: 100%;
+  border-radius: 4px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+}
+
 /* Dropdown styles */
 .dropdown {
   margin: 1.5rem 0 2.5rem;
@@ -420,13 +442,67 @@ h6 {
 }
 
 .dropdown.active .dropdown-content {
-  max-height: 2000px; /* Large enough to contain content */
+  max-height: 3000px; /* Large enough to contain content */
   padding: 1.5rem;
   border-top: 1px solid var(--border-color);
 }
 
 .dropdown-content p {
   margin-bottom: 1rem;
+}
+
+/* Annotation styles */
+.annotation-box {
+  margin: 1.5rem 0;
+  padding: 1.5rem;
+  background-color: var(--annotation-bg);
+  border: 1px solid var(--annotation-border);
+  border-left: 4px solid var(--accent-color);
+  border-radius: 0 4px 4px 0;
+  position: relative;
+}
+
+.annotation-box::before {
+  content: "CTMF Annotations";
+  position: absolute;
+  top: -12px;
+  left: 15px;
+  background-color: var(--background-color);
+  padding: 0 10px;
+  font-family: "Playfair Display", serif;
+  font-size: 0.9rem;
+  color: var(--accent-color);
+  font-weight: 600;
+}
+
+.annotation-box h4 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  color: var(--primary-color);
+  font-family: "Playfair Display", serif;
+  font-size: 1.2rem;
+}
+
+.annotation-box p {
+  margin-bottom: 0.75rem;
+  font-size: 1rem;
+}
+
+.annotation-box p:last-child {
+  margin-bottom: 0;
+}
+
+.annotation-box ul {
+  margin: 0.5rem 0 1rem 1.5rem;
+}
+
+.annotation-box li {
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+}
+
+.annotation-box strong {
+  color: var(--accent-color);
 }
 
 /* Responsive styles */
@@ -449,6 +525,10 @@ h6 {
 
   .dropdown.active .dropdown-content {
     padding: 1rem;
+  }
+
+  .annotation-box {
+    padding: 1.25rem;
   }
 }
 
@@ -478,6 +558,15 @@ h6 {
   .image-caption {
     padding: 0.75rem 1rem;
     font-size: 0.85rem;
+  }
+
+  .annotation-box {
+    padding: 1rem;
+    margin: 1.25rem 0;
+  }
+
+  .annotation-box h4 {
+    font-size: 1.1rem;
   }
 }
 
