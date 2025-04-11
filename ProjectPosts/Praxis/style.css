@@ -467,7 +467,7 @@ h6 {
 }
 
 .annotation-box::before {
-  content: "CTMF Reflection";
+  content: "CTMF Annotations";
   position: absolute;
   top: -12px;
   left: 15px;
