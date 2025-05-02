@@ -2,9 +2,100 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>$Title$</title>
+  <title>LegoFIKS: Gamified Therapy with LEGO</title>
+  <link rel="stylesheet" href="../../style.css">
+  <link rel="stylesheet" href="../blog-style.css">
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-$END$
+  <a href="../index.html" class="back-home-btn">Back to Posts</a>
+
+  <div class="blog-container">
+     <section class="acknowledgment">
+        <p>
+            This project was created during the <strong>GenAI Genesis 2025 Hackathon</strong>, the largest Canadian AI hackathon, where we won the <strong>Best AI for Creativity & Generative Arts</strong> award. I would like to thank the collaborators of this project:
+        </p>
+
+         <p> <a href="https://archieshou.com/" target="_blank">Archie Shou</a>: Helped with Three.js and 3D model integration using Shap-E.</p>
+         <p> <a href="https://www.linkedin.com/in/jessica-yunke-yi?" target="_blank">Jessica Yunke Yi</a>: Came up with the idea and pitched it brilliantly.</p>
+         <p> <a href="https://www.linkedin.com/in/allen-lian" target="_blank">Allen Lian</a>: Assisted with front-end development and app integration testing.</p>
+     </section>
+
+
+    <header>
+      <h1>LegoFIKS: Gamified Therapy with LEGO</h1>
+      <p class="intro">
+        A revolutionary approach to social competence therapy for children with Autism Spectrum Disorder, combining creativity, technology, and LEGO.
+      </p>
+    </header>
+    <article class="blog-post-content">
+      <h2>Inspiration</h2>
+      <p>
+        Are autism and neuro-divergence mental deficiencies? Clinical therapy often treats it like so, but we believe otherwise. The challenges with clinical Applied Behavioural Analysis (ABA) for autism in the status quo include:
+      </p>
+      <ul>
+        <li>Lack of meaningful social engagement with peers.</li>
+        <li>Authority, taskmaster-based model for compliance.</li>
+        <li>Specialists are uncommon and inaccessible.</li>
+        <li>Behavioral improvements are focused on conformity, not individuality.</li>
+      </ul>
+      <p>
+        LEGO-based behavioral therapy is a clinically-studied and gamified approach to social competence therapy. It assigns social roles and encourages interactive gameplay during sessions, increasing intrinsic motivation, fostering authentic interaction with peers, and reducing stress/anxiety surrounding therapy. Teaching communication and self-regulation doesn’t have to affect the intrinsic, unique qualities of our kids.
+      </p>
+      <p>
+        We wanted to find a way to improve and scale this idea, maximizing the creativity and independence of our next generation.
+      </p>
+
+      <h2>What it does</h2>
+      <p>
+        The generator intakes images (e.g., children’s drawings) and outputs a 3D, layer-by-layer LEGO build with instructions suitable for behavioural exercises. Each instruction set contains separate requirements for a guide, supplier, and builder role in the LEGO construction.
+      </p>
+
+      <h2>How we built it</h2>
+      <p>
+        <strong>Front-end:</strong> React.js, Tailwind CSS, NeatJS, Three.js<br>
+        <strong>Back-end:</strong> Python (Flask API, Gemini API, Shap-E, Modal)
+      </p>
+
+      <h2>Challenges we ran into</h2>
+      <ul>
+        <li>Determining a sort algorithm to allocate LEGO blocks for our build (e.g., greedy algo, different bounding mechanisms).</li>
+        <li>Colorizing our LEGO designs after voxelization.</li>
+        <li>Connecting our pipeline: frontend interfaces, backend APIs, and AI model workflows.</li>
+      </ul>
+
+      <h2>Accomplishments that we're proud of</h2>
+      <ul>
+        <li>Developing a brick-placement algorithm leveraging border detection and structural integrity principles.</li>
+        <li>Integrating Gemini into our workflow, enabling dynamic AI-generated content.</li>
+        <li>Trouble-shooting errors in the “pipeline,” being resilient de-buggers.</li>
+        <li>End-to-end system integration, managing API redirects and making generated outputs (files, text from Gemini, etc.) accessible within the application.</li>
+        <li>Winning the <strong>Best AI for Creativity & Generative Arts</strong> award at the <strong>GenAI Genesis 2025 Hackathon</strong>, the largest Canadian AI hackathon.</li>
+      </ul>
+
+      <h2>What we learned</h2>
+      <ul>
+        <li>Conversion algorithms: color transfer to voxelization and mesh to voxel algorithms.</li>
+        <li>Generative 3D model architectures (Shap-E): including latent diffusion models and implicit neural representations.</li>
+        <li>How to work with new 3D file formats, including .obj, .ldr, and .stl.</li>
+      </ul>
+
+      <h2>What's next for LegoFIKS</h2>
+      <ul>
+        <li>Expanding build pieces (incl. LEGO Library, custom pieces), fine-tuning structures.</li>
+        <li>Generating instructions for single/multi-builder modes with behavioural principles.</li>
+        <li>Integrating further clinician insights: creating simultaneous platforms for school/home users and licensed healthcare professionals to work in conjunction.</li>
+      </ul>
+
+
+      <section class="video-container">
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/OrTWdd-mMso?start=83" 
+          title="LegoFIKS Demo" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+        </iframe>
+        <p class="video-description">Demo of LegoFIKS in action.</p>
+      </section>
+    </article>
+  </div>
 </body>
 </html>
