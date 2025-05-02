@@ -1,7 +1,19 @@
 [
   {
-    "title": "LSTM enc-dec with TensorFlow",
-    "description": "\n        I have been leading a paper reading group with UTMIST on the topic deep learning. We have been reading papers on the latest advancements in deep learning and discussing the implications of the papers. Check out my blog post a demo of a paper we read.\n    ",
+    "title": "LegoFIKS",
+    "description": "\n        In the GenAI Genesis 2025 Hackathon, I worked on a project called LegoFIKS. The project is a web application that generates a 3D LEGO model and role-playing instructions from an image using Shape-E, Gemini, and more.\n        This is designed for children with Autism Spectrum Disorder to help them interact and have fun with others—because who doesn't love LEGO? Proudly, we have won the Best AI for Creativity & Generative Arts award at the hackathon.\n      ",
+    "tags": [
+      "Machine Learning",
+      "GenAI",
+      "Python",
+      "Web Development",
+      "3D Modeling"
+    ],
+    "link": "legoFiks"
+  },
+  {
+    "title": "LSTM Encoder-Decoder with TensorFlow",
+    "description": "\n        I have been leading a paper reading group with UTMIST on deep learning. We’ve been reading papers on the latest advancements and discussing their implications. Check out my blog post for a demo of one of the papers we explored.\n      ",
     "tags": [
       "Machine Learning",
       "TensorFlow",
@@ -11,7 +23,7 @@
   },
   {
     "title": "Roommate Matching with AWS",
-    "description": "\n        I have been working on a project that uses AWS to match roommates based on their written descriptions. Check out my project on AWS Hacks that won the hackathon.\n      ",
+    "description": "\n        I worked on a project that uses AWS to match roommates based on their written descriptions. This project won the AWS Hacks hackathon. Check it out!\n      ",
     "tags": [
       "Machine Learning",
       "AWS",
@@ -21,10 +33,10 @@
   },
   {
     "title": "Evolving Agents with NEAT",
-    "description": "\n          Hi guys! I have been pretty obsessed with the concept of neuro evolution. Check out my projects on Neuro Evolution of Augmenting Topologies\n      ",
+    "description": "\n        I’ve been exploring neuroevolution and its applications. Check out my projects on NeuroEvolution of Augmenting Topologies (NEAT) and how it’s used to evolve intelligent agents.\n      ",
     "tags": [
       "Machine Learning",
-      "Neuro Networks",
+      "Neural Networks",
       "Python",
       "NEAT"
     ],
@@ -32,7 +44,7 @@
   },
   {
     "title": "Pendulum Motion Analysis",
-    "description": "\n            I have been working on a project that uses computer vision to track a pendulum for my PHY180 project. Check out my project on pendulum motion analysis.\n      ",
+    "description": "\n        I worked on a project using computer vision to track a pendulum for my PHY180 project. Check out my analysis of pendulum motion.\n      ",
     "tags": [
       "Machine Learning",
       "Computer Vision",
