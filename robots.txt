@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://haysonc.github.io/My_Website/sitemap.xml
