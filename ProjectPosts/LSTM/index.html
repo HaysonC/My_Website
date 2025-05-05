@@ -1,140 +1,148 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>LSTM Encoder-Decoder Translator with TensorFlow</title>
-    <link rel="stylesheet" href="../../style.css">
-    <link rel="stylesheet" href="../blog-style.css">
-    <!-- Font Awesome for icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <!-- MathJax for LaTeX rendering -->
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-    <script id="MathJax-script" async
-      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
-    </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LSTM Encoder-Decoder Translator with TensorFlow</title>
+  <link rel="stylesheet" href="../../style.css">
+  <link rel="stylesheet" href="../blog-style.css">
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <!-- MathJax for LaTeX rendering -->
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
 </head>
 <body>
   <a href="../index.html" class="back-home-btn">Back to Posts</a>
   <div class="blog-container">
-      <header>
-          <h1>LSTM Encoder-Decoder Translator with TensorFlow</h1>
-          <p class="intro">Sequence to Sequence Learning with LSTM adapted from Ilya Sutskever, Oriol Vinyals, and Quoc V. Le.</p>
-          <div class="social-icon">
-              <a href="https://github.com/HaysonC/Encoder-DecoderLSTMTranslator" target="_blank" class="icon"><i class="fab fa-github"></i></a>
-              <a href="https://colab.research.google.com/drive/1qdCU3CGQ1AeH1kQwXrgmcJOrJtX8a8Pn?usp=sharing" target="_blank" class="icon"><i class="fas fa-link"></i></a>
-          </div>
-      </header>
+    <header>
+      <h1>LSTM Encoder-Decoder Translator with TensorFlow</h1>
+      <p class="intro">Sequence to Sequence Learning with LSTM adapted from Ilya Sutskever, Oriol Vinyals, and Quoc V. Le.</p>
+      <div class="social-icon">
+        <a href="https://github.com/HaysonC/Encoder-DecoderLSTMTranslator" target="_blank" class="icon"><i class="fab fa-github"></i></a>
+        <a href="https://colab.research.google.com/drive/1qdCU3CGQ1AeH1kQwXrgmcJOrJtX8a8Pn?usp=sharing" target="_blank" class="icon"><i class="fas fa-link"></i></a>
+      </div>
+    </header>
 
-      <section class="content">
-          <h2>Project Overview</h2>
-          <p>
-              <strong>Sequence to Sequence Learning with Keras (Beta)</strong> – Authored by Hayson Cheung (<a href="mailto:hayson.cheung@mail.utoronto.ca">hayson.cheung@mail.utoronto.ca</a>).<br>
-              Adapted from the seminal work of Ilya Sutskever, Oriol Vinyals, and Quoc V. Le in their paper
-              <a href="https://papers.nips.cc/paper/5346-sequence-to-sequence-learning-with-neural-networks.pdf" target="_blank">Sequence to Sequence Learning with Neural Networks (NIPS 2014)</a>.
-          </p>
-          <h2>Overview LSTM enc-dec</h2>
-            <p>
-                Long Short-Term Memory (LSTM) networks are a type of recurrent neural network (RNN) designed to handle sequential data. Unlike traditional RNNs, LSTMs mitigate the vanishing gradient problem by using gating mechanisms that control the flow of information.
-            </p>
-          <h3>Encoders and Decoders in LSTM</h3>
-                <p>
-                    Below is a figure of the LSTM Encoder-Decoder model. The encoder processes the input sequence and generates a context vector, which is then fed into the decoder to generate the output sequence base on the encoder's context vector and its hidden states and previous output.
-                            </p>
-          <div class="image-container">
-                        <img src="lstmencdec.png" alt="LSTM Encoder-Decoder Model">
-          </div>
+    <section class="blog-post-content">
+      <h2>Project Overview</h2>
+      <p>
+        <strong>Sequence to Sequence Learning with Keras (Beta)</strong> – Authored by Hayson Cheung (<a href="mailto:hayson.cheung@mail.utoronto.ca">hayson.cheung@mail.utoronto.ca</a>).<br>
+        Adapted from the seminal work of Ilya Sutskever, Oriol Vinyals, and Quoc V. Le in their paper
+        <a href="https://papers.nips.cc/paper/5346-sequence-to-sequence-learning-with-neural-networks.pdf" target="_blank">Sequence to Sequence Learning with Neural Networks (NIPS 2014)</a>.
+      </p>
 
-            <h3>Encoding Process</h3>
-            <p>
-                In an LSTM Encoder-Decoder framework, the <strong>encoder</strong> processes the input sequence \( X = (x_1, x_2, ..., x_T) \) and compresses it into a fixed-size latent vector \( h_T \), also known as the **context vector**. This latent space representation captures the semantics of the entire sequence.
-            </p>
-            <p>
-                The LSTM cell is governed by the following equations:
-            </p>
-            \[
-            f_t = \sigma(W_f x_t + U_f h_{t-1} + b_f)
-            \]
-            \[
-            i_t = \sigma(W_i x_t + U_i h_{t-1} + b_i)
-            \]
-            \[
-            \tilde{C}_t = \tanh(W_c x_t + U_c h_{t-1} + b_c)
-            \]
-            \[
-            C_t = f_t \odot C_{t-1} + i_t \odot \tilde{C}_t
-            \]
-            \[
-            o_t = \sigma(W_o x_t + U_o h_{t-1} + b_o)
-            \]
-            \[
-            h_t = o_t \odot \tanh(C_t)
-            \]
-            <p>
-                Here, \( f_t, i_t, o_t \) represent the forget, input, and output gates, while \( C_t \) is the cell state that stores long-term dependencies. The hidden state \( h_T \) at the final timestep encodes the full input sequence.
-            </p>
+      <h2>Overview LSTM enc-dec</h2>
+      <p>
+        Long Short-Term Memory (LSTM) networks are a type of recurrent neural network (RNN) designed to handle sequential data. Unlike traditional RNNs, LSTMs mitigate the vanishing gradient problem by using gating mechanisms that control the flow of information.
+      </p>
 
-            <h3>Latent Space Representation</h3>
-            <p>
-                The hidden state \( h_T \) and cell state \( C_T \) together form a **latent representation** of the input sequence. This latent space is crucial because it acts as a bottleneck that forces the model to learn a compact, meaningful representation of the input before generating output.
-            </p>
+      <h3>Encoders and Decoders in LSTM</h3>
+      <p>
+        Below is a figure of the LSTM Encoder-Decoder model. The encoder processes the input sequence and generates a context vector, which is then fed into the decoder to generate the output sequence base on the encoder's context vector and its hidden states and previous output.
+      </p>
 
-            <h3>Decoding Process</h3>
-            <p>
-                The **decoder** receives the latent representation and generates an output sequence \( Y = (y_1, y_2, ..., y_T') \). At each timestep, it takes the previous output token and hidden state as input:
-            </p>
-            \[
-            s_t = \text{LSTM}(y_{t-1}, s_{t-1})
-            \]
-            \[
-            p(y_t | y_1, ..., y_{t-1}, X) = \text{softmax}(W_s s_t + b_s)
-            \]
-            <p>
-                This probability distribution is used to select the next token in the output sequence.
-            </p>
+      <div class="image-container">
+        <img src="lstmencdec.png" alt="LSTM Encoder-Decoder Model">
+      </div>
+      <p class="image-description">LSTM Encoder-Decoder architecture for sequence-to-sequence learning.</p>
 
-            <h3>Limitations & Future Improvements</h3>
-            <p>
-                While this approach is effective, using a single context vector \( h_T \) to encode the entire sequence can be a bottleneck. To improve performance, modern architectures introduce **attention mechanisms**, which allow the decoder to focus on different parts of the input sequence dynamically.
-            </p>
+      <h3>Encoding Process</h3>
+      <p>
+        In an LSTM Encoder-Decoder framework, the <strong>encoder</strong> processes the input sequence $$ X = (x_1, x_2, ..., x_T) $$ and compresses it into a fixed-size latent vector $$ h_T $$, also known as the **context vector**. This latent space representation captures the semantics of the entire sequence.
+      </p>
+      <p>
+        The LSTM cell is governed by the following equations:
+      </p>
+      \[
+      f_t = \sigma(W_f x_t + U_f h_{t-1} + b_f)
+      \]
+      \[
+      i_t = \sigma(W_i x_t + U_i h_{t-1} + b_i)
+      \]
+      \[
+      \tilde{C}_t = \tanh(W_c x_t + U_c h_{t-1} + b_c)
+      \]
+      \[
+      C_t = f_t \odot C_{t-1} + i_t \odot \tilde{C}_t
+      \]
+      \[
+      o_t = \sigma(W_o x_t + U_o h_{t-1} + b_o)
+      \]
+      \[
+      h_t = o_t \odot \tanh(C_t)
+      \]
+      <p>
+        Here, $$ f_t, i_t, o_t $$ represent the forget, input, and output gates, while $$ C_t $$ is the cell state that stores long-term dependencies. The hidden state $$ h_T $$ at the final timestep encodes the full input sequence.
+      </p>
 
-          <h2>Further Improvements: Attention Mechanisms</h2>
-          <p>
-              One key limitation of the basic sequence-to-sequence model is that it relies on a fixed-dimensional context vector to summarize the entire input sequence. This can be problematic for long input sequences, as the context vector may not capture all relevant information.
-          </p>
-          <p>
-              To address this, attention mechanisms were introduced in later works, allowing the decoder to focus on different parts of the input sequence at each time step. The <a href="https://arxiv.org/abs/1409.0473" target="_blank">Bahdanau Attention (Neural Machine Translation by Jointly Learning to Align and Translate)</a> model proposed a soft alignment method where the decoder dynamically attends to different encoder hidden states.
-          </p>
-          <p>
-              This idea was further extended in <a href="https://arxiv.org/abs/1508.04025" target="_blank">Luong Attention (Effective Approaches to Attention-based Neural Machine Translation)</a>, which introduced different types of attention mechanisms. Attention has since become a foundational concept in deep learning for NLP, leading to the development of Transformer models.
-          </p>
-      </section>
+      <h3>Latent Space Representation</h3>
+      <p>
+        The hidden state $$ h_T $$ and cell state $$ C_T $$ together form a **latent representation** of the input sequence. This latent space is crucial because it acts as a bottleneck that forces the model to learn a compact, meaningful representation of the input before generating output.
+      </p>
 
-      <section class="suggested-reading">
-          <h2>Suggested Reading</h2>
-          <ul>
-              <li>
-                  <strong><a href="https://papers.nips.cc/paper/5346-sequence-to-sequence-learning-with-neural-networks.pdf" target="_blank">Sequence to Sequence Learning with Neural Networks</a></strong><br>
-                  Authors: Ilya Sutskever, Oriol Vinyals, and Quoc V. Le<br>
-                  This foundational paper introduces the sequence-to-sequence model that underpins many modern translation systems.
-              </li>
-              <li>
-                  <strong><a href="https://arxiv.org/abs/1409.3215" target="_blank">Learning Phrase Representations using RNN Encoder-Decoder for Statistical Machine Translation</a></strong><br>
-                  Authors: Kyunghyun Cho, Bart van Merrienboer, Caglar Gulcehre, Dzmitry Bahdanau, Fethi Bougares, Holger Schwenk, and Yoshua Bengio<br>
-                  This paper introduces the attention mechanism, a key innovation in sequence-to-sequence models.
-              </li>
-              <li>
-                  <strong><a href="https://arxiv.org/abs/1409.0473" target="_blank">Neural Machine Translation by Jointly Learning to Align and Translate</a></strong><br>
-                  Authors: Dzmitry Bahdanau, Kyunghyun Cho, and Yoshua Bengio<br>
-                  This paper presents the Bahdanau (Additive) Attention mechanism, which improves translation quality by dynamically attending to different input words.
-              </li>
-              <li>
-                  <strong><a href="https://arxiv.org/abs/1508.04025" target="_blank">Effective Approaches to Attention-based Neural Machine Translation</a></strong><br>
-                  Authors: Minh-Thang Luong, Hieu Pham, and Christopher D. Manning<br>
-                  This paper introduces different types of attention mechanisms, including global and local attention, refining the alignment process.
-              </li>
-          </ul>
-      </section>
+      <h3>Decoding Process</h3>
+      <p>
+        The **decoder** receives the latent representation and generates an output sequence $$ Y = (y_1, y_2, ..., y_T') $$. At each timestep, it takes the previous output token and hidden state as input:
+      </p>
+      \[
+      s_t = \text{LSTM}(y_{t-1}, s_{t-1})
+      \]
+      \[
+      p(y_t | y_1, ..., y_{t-1}, X) = \text{softmax}(W_s s_t + b_s)
+      \]
+      <p>
+        This probability distribution is used to select the next token in the output sequence.
+      </p>
+
+      <h3>Limitations & Future Improvements</h3>
+      <p>
+        While this approach is effective, using a single context vector $$ h_T $$ to encode the entire sequence can be a bottleneck. To improve performance, modern architectures introduce **attention mechanisms**, which allow the decoder to focus on different parts of the input sequence dynamically.
+      </p>
+    </section>
+
+    <section class="blog-post-content">
+      <h2>Further Improvements: Attention Mechanisms</h2>
+      <p>
+        One key limitation of the basic sequence-to-sequence model is that it relies on a fixed-dimensional context vector to summarize the entire input sequence. This can be problematic for long input sequences, as the context vector may not capture all relevant information.
+      </p>
+      <p>
+        To address this, attention mechanisms were introduced in later works, allowing the decoder to focus on different parts of the input sequence at each time step. The <a href="https://arxiv.org/abs/1409.0473" target="_blank">Bahdanau Attention (Neural Machine Translation by Jointly Learning to Align and Translate)</a> model proposed a soft alignment method where the decoder dynamically attends to different encoder hidden states.
+      </p>
+      <p>
+        This idea was further extended in <a href="https://arxiv.org/abs/1508.04025" target="_blank">Luong Attention (Effective Approaches to Attention-based Neural Machine Translation)</a>, which introduced different types of attention mechanisms. Attention has since become a foundational concept in deep learning for NLP, leading to the development of Transformer models.
+      </p>
+    </section>
+
+    <section class="suggested-reading">
+      <h2>Suggested Reading</h2>
+      <ul>
+        <li>
+          <strong><a href="https://papers.nips.cc/paper/5346-sequence-to-sequence-learning-with-neural-networks.pdf" target="_blank">Sequence to Sequence Learning with Neural Networks</a></strong><br>
+          Authors: Ilya Sutskever, Oriol Vinyals, and Quoc V. Le<br>
+          This foundational paper introduces the sequence-to-sequence model that underpins many modern translation systems.
+        </li>
+        <li>
+          <strong><a href="https://arxiv.org/abs/1409.3215" target="_blank">Learning Phrase Representations using RNN Encoder-Decoder for Statistical Machine Translation</a></strong><br>
+          Authors: Kyunghyun Cho, Bart van Merrienboer, Caglar Gulcehre, Dzmitry Bahdanau, Fethi Bougares, Holger Schwenk, and Yoshua Bengio<br>
+          This paper introduces the attention mechanism, a key innovation in sequence-to-sequence models.
+        </li>
+        <li>
+          <strong><a href="https://arxiv.org/abs/1409.0473" target="_blank">Neural Machine Translation by Jointly Learning to Align and Translate</a></strong><br>
+          Authors: Dzmitry Bahdanau, Kyunghyun Cho, and Yoshua Bengio<br>
+          This paper presents the Bahdanau (Additive) Attention mechanism, which improves translation quality by dynamically attending to different input words.
+        </li>
+        <li>
+          <strong><a href="https://arxiv.org/abs/1508.04025" target="_blank">Effective Approaches to Attention-based Neural Machine Translation</a></strong><br>
+          Authors: Minh-Thang Luong, Hieu Pham, and Christopher D. Manning<br>
+          This paper introduces different types of attention mechanisms, including global and local attention, refining the alignment process.
+        </li>
+      </ul>
+    </section>
   </div>
+
+  <script src="../blog-script.js"></script>
 </body>
 </html>
-

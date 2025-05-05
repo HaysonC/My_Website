@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pendulum Motion Analysis</title>
   <link rel="stylesheet" href="../../style.css">
   <link rel="stylesheet" href="../blog-style.css">
@@ -14,7 +15,7 @@
   </script>
 </head>
 <body>
-<a href="../index.html" class="back-home-btn">Back to Posts</a>
+  <a href="../index.html" class="back-home-btn">Back to Posts</a>
   <div class="blog-container">
     <section class="acknowledgment">
       <h2>Acknowledgment</h2>
@@ -22,79 +23,89 @@
       <p><a href="https://epiceric.tech/">Eric Xie</a> for finding optimizations in the tracking algorithm; and</p>
       <p>Andy Wen for debugging issues with frame processing.</p>
     </section>
+
     <header>
       <h1>Pendulum Motion Analysis</h1>
       <p class="intro">
         Tracking a pendulum using computer vision and mathematical modeling with OpenCV.
       </p>
-        <div class="social-icon">
-            <a href="https://github.com/HaysonC/phy180-pendulum" target="_blank" class="icon"><i class="fab fa-github"></i></a>
-        </div>
+      <div class="social-icon">
+        <a href="https://github.com/HaysonC/phy180-pendulum" target="_blank" class="icon"><i class="fab fa-github"></i></a>
+      </div>
     </header>
-    <h2>Color Detection of the Bob using Cosine Similarity</h2>
-    <p>
-      The pendulum bob is detected using <strong>cosine similarity</strong> in RGB space. Instead of thresholding in HSV,
-      we compare each pixel color to a reference bob color \(C_r = (R_r, G_r, B_r)\) using the cosine similarity formula:
-    </p>
-    <div style="text-align: center; margin: 20px 0;">
-      $$S = \frac{C_r \cdot C_p}{\|C_r\| \|C_p\|}$$
-    </div>
-    <p>
-      where \( C_p = (R_p, G_p, B_p) \) is the color of a pixel. Pixels with similarity above a threshold \( S_{\text{min}} \)
-      are considered part of the bob. The centroid \( (x_c, y_c) \) is then calculated as:
-    </p>
-    <div style="text-align: center; margin: 20px 0;">
-      $$ x_c = \frac{\sum x_i}{N}, \quad y_c = \frac{\sum y_i}{N} $$
-    </div>
-    <h2>Finding the Pivot Using Least Squares Circle Fitting</h2>
-    <p>
-      The pendulum moves along a circular arc, meaning the pivot (origin) \((x_0, y_0)\) is the center of a fitted circle. 
-      We solve for \( (x_0, y_0) \) using the objective function:
-    </p>
-    <div style="text-align: center; margin: 20px 0;">
-      $$ E^* = \arg\min_{x_0, y_0} \sum_{i} \left( (x_i - x_0)^2 + (y_i - y_0)^2 - R^2 \right)^2 $$
-    </div>
-    <p>
-      where the error \(E^*\) is minimized using non-linear least squares optimization. 
-      The detected pivot is validated by ensuring radius consistency across frames:
-    </p>
-    <div style="text-align: center; margin: 20px 0;">
-      $$ R_i = \sqrt{(x_i - x_0)^2 + (y_i - y_0)^2} \approx R_{\text{avg}} $$
-    </div>
-    <h2>Demonstration</h2>
-    <section class="video-container">
-    <video controls width="640">
-      <source src="pen.mp4" type="video/mp4">
-      Your browser does not support the video tag.
-    </video>
-      <p class="video-caption">Demonstration of the pendulum tracking algorithm.</p>
+
+    <section class="blog-post-content">
+      <h2>Color Detection of the Bob using Cosine Similarity</h2>
+      <p>
+        The pendulum bob is detected using <strong>cosine similarity</strong> in RGB space. Instead of thresholding in HSV,
+        we compare each pixel color to a reference bob color $$C_r = (R_r, G_r, B_r)$$ using the cosine similarity formula:
+      </p>
+      <div style="text-align: center; margin: 20px 0;">
+        $$S = \frac{C_r \cdot C_p}{\|C_r\| \|C_p\|}$$
+      </div>
+      <p>
+        where $$ C_p = (R_p, G_p, B_p) $$ is the color of a pixel. Pixels with similarity above a threshold $$ S_{\text{min}} $$
+        are considered part of the bob. The centroid $$ (x_c, y_c) $$ is then calculated as:
+      </p>
+      <div style="text-align: center; margin: 20px 0;">
+        $$ x_c = \frac{\sum x_i}{N}, \quad y_c = \frac{\sum y_i}{N} $$
+      </div>
+
+      <h2>Finding the Pivot Using Least Squares Circle Fitting</h2>
+      <p>
+        The pendulum moves along a circular arc, meaning the pivot (origin) $$(x_0, y_0)$$ is the center of a fitted circle.
+        We solve for $$ (x_0, y_0) $$ using the objective function:
+      </p>
+      <div style="text-align: center; margin: 20px 0;">
+        $$ E^* = \arg\min_{x_0, y_0} \sum_{i} \left( (x_i - x_0)^2 + (y_i - y_0)^2 - R^2 \right)^2 $$
+      </div>
+      <p>
+        where the error $$E^*$$ is minimized using non-linear least squares optimization.
+        The detected pivot is validated by ensuring radius consistency across frames:
+      </p>
+      <div style="text-align: center; margin: 20px 0;">
+        $$ R_i = \sqrt{(x_i - x_0)^2 + (y_i - y_0)^2} \approx R_{\text{avg}} $$
+      </div>
+
+      <h2>Demonstration</h2>
+      <div class="video-container">
+        <video controls width="640">
+          <source src="pen.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+        <p class="video-caption">Demonstration of the pendulum tracking algorithm.</p>
+      </div>
+
+      <h2>Data Processing & Mathematical Fitting</h2>
+      <p>
+        The CSV data is processed to compute period times and track the pendulum's oscillation. The analysis scripts also fit exponential functions to describe damping effects.
+      </p>
+      <p>
+        A quadratic function is used to fit the period data, confirming theoretical predictions.
+      </p>
+      <p>
+        Detailed analysis scripts such as <code>dataAnalysis.py</code>, <code>expoFit.py</code>, and <code>periodTime.py</code> are available in the <a href="https://github.com/HaysonC/PHY180-Pendulum" target="_blank">GitHub repository</a>.
+      </p>
+
+      <h2>Selected Graphs</h2>
+      <p>Below are some of the graphs generated from the data analysis:</p>
+      <div class="image-container">
+        <img src="expoNew.png" alt="Exponential Fitting of Pendulum's Decay with Quartic Period Fitting">
+      </div>
+      <p class="image-description">Exponential fitting of the pendulum's decay with quartic period fitting.</p>
+
+      <div class="image-container">
+        <img src="periodTime.png" alt="Period Time Analysis of Pendulum at different angles">
+      </div>
+      <p class="image-description">Period time analysis of the pendulum at different angles.</p>
+
+      <div class="image-container">
+        <img src="peaksDetection.png" alt="Peak Detection of Pendulum's Motion">
+      </div>
+      <p class="image-description">Peak detection of the pendulum's motion.</p>
     </section>
-    <h2>Data Processing & Mathematical Fitting</h2>
-    <p>
-      The CSV data is processed to compute period times and track the pendulum’s oscillation. The analysis scripts also fit exponential functions to describe damping effects.
-    </p>
-    <p>
-      A quadratic function is used to fit the period data, confirming theoretical predictions.
-    </p>
-    <p>
-      Detailed analysis scripts such as <code>dataAnalysis.py</code>, <code>expoFit.py</code>, and <code>periodTime.py</code> are available in the <a href="https://github.com/HaysonC/PHY180-Pendulum" target="_blank">GitHub repository</a>.
-    </p>
-    <h3>Selected Graphs</h3>
-    <p>Below are some of the graphs generated from the data analysis:</p>
-    <div class="image-container">
-      <img src="expoNew.png" alt="Exponential Fitting of Pendulum's Decay with Quartic Period Fitting">
-
-    </div>
-     <p class="image-description">Exponential fitting of the pendulum's decay with quartic period fitting.</p>
-    <div class="image-container">
-      <img src="periodTime.png" alt="Period Time Analysis of Pendulum at different angles">
-    </div>
-    <p class="image-description">Period time analysis of the pendulum at different angles.</p>
-    <div class="image-container">
-      <img src="peaksDetection.png" alt="Peak Detection of Pendulum's Motion">
-    </div>
-    <p class="image-description">Peak detection of the pendulum's motion.</p>
-
   </div>
+
+  <script src="../blog-script.js"></script>
 </body>
 </html>

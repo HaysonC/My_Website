@@ -1,23 +1,57 @@
 /* Import JetBrains Mono font */
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&display=swap");
 
-html, body {
+:root {
+  --primary-color: #00eaff;
+  --secondary-color: #ff00a0;
+  --bg-color: #0a0a0a;
+  --text-color: #ffffff;
+  --terminal-bg: rgba(16, 16, 16, 0.9);
+  --terminal-text: #00ff00;
+  --terminal-prompt: #00eaff;
+  --terminal-command: #ffffff;
+  --terminal-output: #cccccc;
+  --glow-color: rgba(0, 234, 255, 0.7);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
   margin: 0;
   padding: 0;
   height: 100%;
-  font-family: 'JetBrains Mono', monospace;
-  background: linear-gradient(45deg, rgb(41, 56, 56), #000);
-  background-size: 400% 400%;
-  animation: gradientWave 15s ease infinite;
-  color: #fff;
-  overflow: hidden;
+  font-family: "JetBrains Mono", monospace;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  overflow-x: hidden;
+  line-height: 1.6;
 }
 
-/* Subtle animated dark gradient */
-@keyframes gradientWave {
-  0% { background-position: 0 0; }
-  50% { background-position: 20% 70%; }
-  100% { background-position: 0 0; }
+/* Particles background */
+#particles-js {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+/* Terminal background lines */
+.terminal-lines {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
+  background-size: 100% 4px;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.15;
 }
 
 /* === Full-screen hero section === */
@@ -25,151 +59,483 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 100vh;
+  min-height: 100vh;
   position: relative;
-  flex-direction: column;
-  text-align: center;
-  width: 100%;
+  z-index: 2;
+  padding: 2rem;
 }
 
-/* === Cyberpunk Name Styling === */
-h1 {
+.hero-content {
+  max-width: 900px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+/* Logo */
+.logo-container {
+  margin-bottom: 2rem;
+  position: relative;
+}
+
+.logo {
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--bg-color);
+  box-shadow: 0 0 20px var(--glow-color);
+  position: relative;
+  overflow: hidden;
+  animation: logoGlow 3s infinite alternate;
+}
+
+.logo::before {
+  content: "";
+  position: absolute;
+  width: 150%;
+  height: 150%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transform: translateX(-100%);
+  animation: logoScan 3s infinite;
+}
+
+@keyframes logoGlow {
+  0% {
+    box-shadow: 0 0 10px var(--glow-color);
+  }
+  100% {
+    box-shadow: 0 0 30px var(--glow-color), 0 0 50px rgba(0, 234, 255, 0.4);
+  }
+}
+
+@keyframes logoScan {
+  0% {
+    transform: translateX(-100%);
+  }
+  50%,
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* Glitch Name Styling */
+h1.glitch {
   font-size: 4rem;
-  margin-bottom: 20px;
-  color: #00eaff;
+  margin-bottom: 1rem;
+  color: var(--primary-color);
   text-shadow: 0 0 8px rgba(0, 234, 255, 0.8), 0 0 20px rgba(0, 234, 255, 0.5);
   position: relative;
   display: inline-block;
+  animation: textGlow 4s infinite alternate;
 }
 
-/* Flickering effect for random letters */
-h1 span {
+h1.glitch::before,
+h1.glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.8;
+}
+
+h1.glitch::before {
+  color: var(--secondary-color);
+  z-index: -1;
+  animation: glitch-effect 3s infinite;
+}
+
+h1.glitch::after {
+  color: var(--primary-color);
+  z-index: -2;
+  animation: glitch-effect 2s infinite reverse;
+}
+
+@keyframes glitch-effect {
+  0% {
+    transform: none;
+    opacity: 0.8;
+  }
+  7% {
+    transform: translate(2px, 3px);
+    opacity: 0.6;
+  }
+  10% {
+    transform: none;
+    opacity: 0.8;
+  }
+  27% {
+    transform: none;
+    opacity: 0.8;
+  }
+  30% {
+    transform: translate(-5px, 2px);
+    opacity: 0.6;
+  }
+  35% {
+    transform: none;
+    opacity: 0.8;
+  }
+  52% {
+    transform: none;
+    opacity: 0.8;
+  }
+  55% {
+    transform: translate(5px, -2px);
+    opacity: 0.6;
+  }
+  50% {
+    transform: none;
+    opacity: 0.8;
+  }
+  72% {
+    transform: none;
+    opacity: 0.8;
+  }
+  75% {
+    transform: translate(-2px, -6px);
+    opacity: 0.6;
+  }
+  80% {
+    transform: none;
+    opacity: 0.8;
+  }
+  100% {
+    transform: none;
+    opacity: 0.8;
+  }
+}
+
+@keyframes textGlow {
+  0%,
+  18%,
+  22%,
+  25%,
+  53%,
+  57%,
+  100% {
+    text-shadow: 0 0 8px rgba(0, 234, 255, 0.8), 0 0 20px rgba(0, 234, 255, 0.5);
+  }
+  20%,
+  24%,
+  55% {
+    text-shadow: none;
+  }
+}
+
+/* Typewriter effect */
+.typewriter {
+  margin-bottom: 2rem;
+  height: 2rem;
+}
+
+.txt-rotate {
+  font-size: 1.5rem;
+  color: var(--secondary-color);
   display: inline-block;
-  animation: flicker 6s infinite alternate;
+  position: relative;
 }
 
-/* Sparse & randomized flickering effect */
-@keyframes flicker {
-  0%, 100% { opacity: 1; }
-  10% { opacity: 0.7; text-shadow: 0 0 6px rgba(0, 234, 255, 0.6); }
-  22% { opacity: 0; } /* Quick flicker */
-  28% { opacity: 1; }
-  47% { opacity: 0.9; }
-  55% { opacity: 0.5; }
-  62% { opacity: 1; }
-  85% { opacity: 0.2; }
+.txt-rotate::after {
+  content: "|";
+  position: absolute;
+  right: -8px;
+  animation: blink 0.7s infinite;
 }
 
-/* Different letters flicker at different times */
-h1 span:nth-child(2) { animation-delay: 0.8s; }
-h1 span:nth-child(4) { animation-delay: 1.4s; }
-h1 span:nth-child(6) { animation-delay: 2.2s; }
-h1 span:nth-child(8) { animation-delay: 3s; }
-h1 span:nth-child(10) { animation-delay: 4.5s; }
+@keyframes blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
 
-/* === About Section === */
-.about-content {
-  max-width: 800px;
-  padding: 20px;
+/* Terminal styling */
+.terminal {
+  width: 100%;
+  margin-bottom: 2rem;
+  background-color: var(--terminal-bg);
   border-radius: 8px;
-  margin-bottom: 30px;
-}
-
-.about-content p {
-  font-size: 1rem;
-  color: #ccc;
-  line-height: 1.6;
-  text-align: justify;
-}
-
-.typing-email {
-  font-size: 1rem;
-  color: #ccc;
-  line-height: 1.6;
-  text-align: center;
-  display: inline-block;
-  border-right: 2px solid #00eaff;
-  white-space: nowrap;
   overflow: hidden;
-  animation:  blink-caret 0.75s infinite, typing 1.5s steps(40, end);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+  text-align: left;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInUp 1s forwards 0.5s;
 }
 
-@keyframes typing {
-  from { width: 0; }
-  to { width: 70%; }
+.terminal-header {
+  background-color: #2d2d2d;
+  padding: 10px;
+  display: flex;
+  align-items: center;
 }
 
-@keyframes blink-caret {
-  from, to { border-color: transparent; box-shadow: none; }
-  50% { border-color: #00eaff; box-shadow: 0 0 0 rgba(0, 234, 255, 0.5); }
+.terminal-buttons {
+  display: flex;
+  gap: 6px;
+  margin-right: 15px;
 }
 
-/* === Cyberpunk Button === */
-.enter-btn {
+.terminal-button {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.terminal-button.red {
+  background-color: #ff5f56;
+}
+.terminal-button.yellow {
+  background-color: #ffbd2e;
+}
+.terminal-button.green {
+  background-color: #27c93f;
+}
+
+.terminal-title {
+  color: #ddd;
+  font-size: 0.9rem;
+}
+
+.terminal-body {
+  padding: 15px;
+  font-size: 0.95rem;
+}
+
+.line {
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+}
+
+.prompt {
+  color: var(--terminal-prompt);
+  margin-right: 10px;
+}
+
+.command {
+  color: var(--terminal-command);
+}
+
+.output {
+  color: var(--terminal-output);
+  margin-bottom: 15px;
+  line-height: 1.5;
+}
+
+.contact-email {
+  color: var(--primary-color);
+}
+
+.file {
   display: inline-block;
-  text-decoration: none;
-  color: #00eaff;
-  border: 2px solid #00eaff;
-  padding: 12px 24px;
-  font-size: 1.2rem;
+  margin-right: 15px;
+  color: #4d9cf6;
+}
+
+.blink {
+  animation: blink 1s infinite;
+}
+
+/* Cyber buttons */
+.nav-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 2rem;
+}
+
+.cyber-button {
+  --button-width: 200px;
+  --button-height: 50px;
+  --button-border-color: var(--primary-color);
+
+  display: inline-block;
+  position: relative;
+  width: var(--button-width);
+  height: var(--button-height);
+  background-color: transparent;
+  color: var(--primary-color);
+  border: 2px solid var(--button-border-color);
   border-radius: 4px;
-  transition: background-color 0.3s ease, transform 0.2s ease, color 0.3s ease;
-  margin-left: 10px; /* Adjust the value as needed */
-  margin-right: 10px; /* Adjust the value as needed */
+  text-decoration: none;
+  font-size: 1rem;
+  font-weight: 500;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.enter-btn:hover {
-  background-color: #00eaff;
-  color: #000;
-  transform: translateY(-2px);
+.cyber-button::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(0, 234, 255, 0.2), transparent);
+  transition: all 0.6s ease;
 }
 
-/* === Social Links === */
+.cyber-button:hover {
+  background-color: rgba(0, 234, 255, 0.1);
+  box-shadow: 0 0 15px rgba(0, 234, 255, 0.5);
+  transform: translateY(-3px);
+}
+
+.cyber-button:hover::before {
+  left: 100%;
+}
+
+.cyber-button-text {
+  position: relative;
+  z-index: 1;
+}
+
+.cyber-button-glitch {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--primary-color);
+  transform: translateX(-100%);
+  opacity: 0;
+}
+
+.cyber-button:hover .cyber-button-glitch {
+  animation: glitch-animation 0.4s ease-in-out;
+}
+
+@keyframes glitch-animation {
+  0% {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  10% {
+    transform: translateX(-50%);
+    opacity: 0.3;
+  }
+  20% {
+    transform: translateX(0%);
+    opacity: 0.1;
+  }
+  30% {
+    transform: translateX(50%);
+    opacity: 0.3;
+  }
+  40% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+/* Social Links */
 .social-links {
   display: flex;
   justify-content: center;
-  gap: 20px;
+  gap: 25px;
   margin-top: 15px;
 }
 
-.social-links a {
-  display: inline-block;
-  text-decoration: none;
-  transition: transform 0.2s ease;
-}
-
-.social-links a:hover {
-  transform: scale(1.1);
-}
-
-/* Icons */
 .social-icon {
   font-size: 2rem;
-  color: #00eaff;
-  transition: color 0.3s ease;
+  color: var(--primary-color);
+  transition: all 0.3s ease;
+  position: relative;
+  display: inline-block;
+}
+
+.social-icon::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  bottom: -5px;
+  left: 0;
+  background-color: var(--primary-color);
+  transform: scaleX(0);
+  transform-origin: bottom right;
+  transition: transform 0.3s ease;
 }
 
 .social-icon:hover {
-  color: #00bcd4;
+  color: var(--secondary-color);
+  transform: translateY(-3px);
+  text-shadow: 0 0 10px rgba(255, 0, 160, 0.7);
 }
 
-/* Subtle flicker effect for headers */
-h1 span, h2 span {
-  display: inline-block;
-  animation: textFlicker 5s infinite alternate;
+.social-icon:hover::after {
+  transform: scaleX(1);
+  transform-origin: bottom left;
+  background-color: var(--secondary-color);
 }
 
-@keyframes textFlicker {
-  0%, 100% { opacity: 1; }
-  10% { opacity: 0.9; text-shadow: 0 0 4px rgba(0, 188, 212, 0.5); }
-  27% { opacity: 0.5; }
-  31% { opacity: 1; }
-  55% { opacity: 0.7; }
-  73% { opacity: 0.8; }
-  89% { opacity: 1; }
+/* Animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-h1 span:nth-child(2) { animation-delay: 0.9s; } h2 span:nth-child(3) { animation-delay: 0.5s; }
-h1 span:nth-child(4) { animation-delay: 1.0s; } h2 span:nth-child(5) { animation-delay: 1.3s; }
-h1 span:nth-child(6) { animation-delay: 2.2s; } h2 span:nth-child(7) { animation-delay: 2.7s; }
+/* Responsive styles */
+@media (max-width: 768px) {
+  h1.glitch {
+    font-size: 3rem;
+  }
 
+  .nav-buttons {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .cyber-button {
+    width: 100%;
+    max-width: 250px;
+  }
+
+  .terminal-body {
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 480px) {
+  h1.glitch {
+    font-size: 2.5rem;
+  }
+
+  .txt-rotate {
+    font-size: 1.2rem;
+  }
+
+  .logo {
+    width: 60px;
+    height: 60px;
+    font-size: 1.5rem;
+  }
+}

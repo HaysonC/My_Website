@@ -1,0 +1,62 @@
+:root {
+  --primary-color: #00eaff;
+  --secondary-color: #ff00a0;
+  --bg-color: #0a0a0a;
+  --text-color: #ffffff;
+}
+
+#splash-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--bg-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.splash-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.splash-letter {
+  font-size: 8rem;
+  font-weight: 700;
+  color: var(--primary-color);
+  text-shadow: 0 0 20px var(--primary-color);
+  position: absolute;
+  transition: transform 1.2s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+}
+
+.letter-h {
+  transform: translateX(0);
+}
+
+.letter-c {
+  transform: translateX(0);
+}
+
+.reveal-animation .letter-h {
+  transform: translateX(-100vw);
+}
+
+.reveal-animation .letter-c {
+  transform: translateX(100vw);
+}
+
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}

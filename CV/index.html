@@ -2,185 +2,306 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Hayson Cheung - Engineering Science Student</title>
   <link rel="stylesheet" href="../style.css">
   <link rel="stylesheet" href="cv.css">
-  <!-- Font Awesome for icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-  <div class="update-bar">
-    <p>Note: This section is up to date as of May 2025.</p>
-  </div>
-  <div class="hero">
-    <div class="navbar">
-      <a href="#interests" class="active">Interests</a>
-      <a href="#projects">Projects</a>
-      <a href="#related-experiences">Related Experiences</a>
-      <a href="#skills">Skills</a>
-      <a href="#scholarship">Scholarships</a>
-      <a href="#resume">Resume</a>
-    </div>
+  <div id="particles-js"></div>
+  <div class="terminal-lines"></div>
 
-    <div class="container">
-      <header>
-        <h1><a href="../index.html" class="name-link">Hayson Cheung</a></h1>
-        <p>I am a first-year Engineering Science student at the University of Toronto with a passion for machine learning, computer science, robotics, and control systems. I use technology to solve real-world challenges and explore innovative solutions.</p>
-      </header>
+  <a href="../index.html" class="back-home-btn">
+    <i class="fas fa-home"></i> Home
+  </a>
 
-      <section id="interests">
-        <h2>My Interests</h2>
-        <p>My technical interests span machine learning, AI, robotics, and control systems. I love leveraging software and emerging technologies to enhance system performance and solve practical problems.</p>
-      </section>
+  <div class="cv-container">
+    <!-- Header Section -->
+    <header class="cv-header">
+      <div class="profile">
+        <div class="profile-avatar">
+          <div class="avatar-placeholder">HC</div>
+        </div>
+        <div class="profile-details">
+          <h1>Hayson Cheung</h1>
+          <h2>Engineering Science Student</h2>
+          <p class="university">University of Toronto</p>
 
-      <section id="projects">
-        <h2>Projects</h2>
-        <ul>
-          <li>
-            <h3><a href="https://github.com/Epic-Eric/New-Hacks/">Krackle</a></h3>
-            <p>Developed a real-time emotion detection system using CNNs and Eigenface algorithms to track user reactions during video interactions, enhancing user engagement.</p>
-          </li>
-          <li>
-            <h3><a href="https://github.com/HaysonC/NEAT-PongBot/">NEAT Pong Bot</a></h3>
-            <p>Created a high-performance Pong bot using NeuroEvolution of Augmenting Topologies (NEAT), exploring deep learning techniques like CNNs and Q-learning for improved decision-making.</p>
-          </li>
-          <li>
-            <h3><a href="https://github.com/Epic-Eric/AWSHacks">MapMatch</a></h3>
-            <p>Designed an AWS-based algorithm to analyze roommate descriptions and compute compatibility through semantic embeddings, efficiently matching roommates with similar habits.</p>
-          </li>
-          <li>
-            <h3><a href="https://github.com/HaysonC/PHY180-Pendulum">PHY-Pendulum</a></h3>
-            <p>Developed an object detection system using OpenCV to analyze pendulum motion with center origin detection and dynamic graph generation for detailed analysis.</p>
-          </li>
-          <li>
-            <h3><a href="https://devpost.com/software/roomiematch-xoe75b">AWS Hacks</a></h3>
-            <ul>
-              <li>Built a backend algorithm that analyzes roommate descriptions by extracting keywords, transforming them into semantic vectors, and assessing compatibility using AWS services.</li>
-              <li>Enhanced matching efficiency and accuracy for streamlined pairing; featured for potential deployment at UofT.</li>
-            </ul>
-          </li>
-          <li>
-            <h3><a href="https://github.com/HaysonC/Smash-RL-Agent">Smash Bros. RL Agent</a></h3>
-            <p>Developed a reinforcement learning agent for a Smash Bros.-style platformer game using rPPO, NEAT, and Stable-Baselines3. Integrated recurrent networks with RecurrentPPO to improve decision-making and evolve optimal network topologies.</p>
-          </li>
-          <li>
-            <h3><a href="https://github.com/HaysonC/NodeBased-ML-ModelBuilder">Node-Based Machine Learning Model Builder</a></h3>
-            <p>Developed a Django app that generates machine learning scripts based on user-defined pipelines. Includes builders for PyTorch and statistical models to streamline custom model development.</p>
-          </li>
-          <li>
-            <h3><a href="../blog/legoFIKS.html">LegoFIKS: Gamified Therapy with LEGO</a></h3>
-            <p>A revolutionary approach to social competence therapy for children with Autism Spectrum Disorder, combining creativity, technology, and LEGO. Winner of Best AI for Creativity & Generative Arts at GenAI Genesis 2025.</p>
-          </li>
-        </ul>
-      </section>
-
-      <section id="related-experiences">
-        <h2>Related Experiences</h2>
-        <ul>
-          <li>
-            <h3>University of Toronto Aerospace Team - Control Systems</h3>
-            <p>Developed MATLAB and Python-based control systems for the FINCH satellite mission, contributing to precise altitude planning and orientation control in space systems.</p>
-          </li>
-          <li>
-            <h3>Yannes Solution Ltd.</h3>
-            <p>Developed a Python-based system for organizing and processing on-site images, optimizing project documentation, and administered the installation of over 500 CCTV cameras across the Hong Kong Metro’s East Rail Line, enhancing safety and security.</p>
-          </li>
-          <li>
-            <h3>VEX Robotics</h3>
-            <p>Led a team of 20 members to design and build competitive robots for VEX Robotics tournaments, focusing on performance improvements through iterative testing and design optimization.</p>
-          </li>
-          <li>
-            <h3>University of Toronto Machine Intelligence Student Team (UTMIST)</h3>
-            <p>Led academic paper-reading sessions on LSTMs, Encoder-Decoder models, and Transformers, and developed an LSTM Encoder-Decoder model for Neural Machine Translation using TensorFlow, improving team knowledge and technical skills.</p>
-          </li>
-          <li>
-            <h3>Coding Club - Ridley College</h3>
-            <p>Instructed dynamic programming, linear programming, and hashing algorithms, mentoring 40 novice students and helping 7 qualify for the Canadian Computing Competition. Also organized STEM events for 150 junior students, sparking early interest in technology.</p>
-          </li>
-        </ul>
-      </section>
-
-      <section id="skills">
-        <h2>Skills</h2>
-        <div class="skills-container">
-          <div class="skill">
-            <i class="fas fa-robot"></i> Machine Learning
-            <a href="your_ml_project_link" class="skill-button">View Project</a>
-          </div>
-
-          <div class="skill">
-            <i class="fas fa-brain"></i> Deep Learning
-            <a href="your_dl_project_link" class="skill-button">View Project</a>
-          </div>
-
-          <div class="skill">
-            <i class="fas fa-project-diagram"></i> Deep Learning
-            <a href="your_nn_project_link" class="skill-button">View Project</a>
-          </div>
-
-          <div class="skill">
-            <i class="fab fa-python"></i> Python
-            <a href="your_python_project_link" class="skill-button">View Project</a>
-          </div>
-
-          <div class="skill">
-            <i class="fab fa-java"></i> Java
-            <a href="your_java_project_link" class="skill-button">View Project</a>
-          </div>
-
-          <div class="skill">
-            <i class="fas fa-code"></i> C
-            <a href="your_c_project_link" class="skill-button">View Project</a>
-          </div>
-
-          <div class="skill">
-            <i class="fas fa-camera"></i> OpenCV
-            <a href="your_opencv_project_link" class="skill-button">View Project</a>
+          <div class="contact-links">
+            <a href="mailto:hayson.cheung@mail.utoronto.ca" class="contact-item">
+              <i class="fas fa-envelope"></i>
+              <span>hayson.cheung@mail.utoronto.ca</span>
+            </a>
+            <a href="https://github.com/HaysonC" target="_blank" class="contact-item">
+              <i class="fab fa-github"></i>
+              <span>github.com/HaysonC</span>
+            </a>
+            <a href="https://linkedin.com/in/hayson-cheung-3688a5241/" target="_blank" class="contact-item">
+              <i class="fab fa-linkedin"></i>
+              <span>linkedin.com/in/hayson-cheung</span>
+            </a>
           </div>
         </div>
-      </section>
+      </div>
 
-      <section id="scholarship">
-        <h2>Scholarships & Research Funding</h2>
-        <p><strong>ESROP-Global Scholarship:</strong> Awarded a CAD 4,500 scholarship for a research position in Thailand at KMUTT, focusing on machine intelligence, neural networks, and robotics.</p>
-        <p><strong>MITACS Globalink Research Award (GRA):</strong> Received CAD 6,000 in research funding for AI research, time series data modeling, and quantitative finance research with AI.</p>
-      </section>
+      <div class="cv-intro">
+        <p>First-year Engineering Science student with a passion for machine learning, robotics, and control systems. Focused on leveraging cutting-edge technologies to solve real-world problems and create innovative solutions.</p>
+      </div>
+    </header>
 
-      <section id="resume">
-        <h2>Resume</h2>
-        <p>For more details on my experience, education, and skills, please <a href="HaysonCheung_Resume_utmist.pdf">view my full resume</a>.</p>
-      </section>
-    </div>
+    <!-- Main Content -->
+    <main class="cv-content">
+      <div class="cv-sidebar">
+        <div class="sidebar-section">
+          <h3><i class="fas fa-lightbulb"></i> Areas of Interest</h3>
+          <ul class="tag-list">
+            <li>Machine Learning</li>
+            <li>Robotics</li>
+            <li>Control Systems</li>
+            <li>Computer Vision</li>
+            <li>Neural Networks</li>
+            <li>Deep Learning</li>
+          </ul>
+        </div>
 
-    <footer>
-      <p>Contact me: <a href="mailto:hayson.cheung@mail.utoronto.ca">hayson [dot] cheung [at] mail [dot] utoronto [dot] ca</a> | <a href="https://linkedin.com/in/hayson-cheung-3688a5241/">LinkedIn</a> | <a href="https://github.com/HaysonC">GitHub</a></p>
-    </footer>
+        <div class="sidebar-section">
+          <h3><i class="fas fa-code"></i> Technical Skills</h3>
+          <ul class="skills-list">
+            <li>
+              <span class="skill-name">Python</span>
+              <span class="skill-level">Advanced</span>
+            </li>
+            <li>
+              <span class="skill-name">Machine Learning</span>
+              <span class="skill-level">Advanced</span>
+            </li>
+            <li>
+              <span class="skill-name">Deep Learning</span>
+              <span class="skill-level">Intermediate</span>
+            </li>
+            <li>
+              <span class="skill-name">Neural Networks</span>
+              <span class="skill-level">Intermediate</span>
+            </li>
+            <li>
+              <span class="skill-name">Java</span>
+              <span class="skill-level">Intermediate</span>
+            </li>
+            <li>
+              <span class="skill-name">C</span>
+              <span class="skill-level">Intermediate</span>
+            </li>
+            <li>
+              <span class="skill-name">OpenCV</span>
+              <span class="skill-level">Advanced</span>
+            </li>
+          </ul>
+        </div>
 
-    <!-- JavaScript for dynamic navbar highlighting using IntersectionObserver -->
-    <script>
-      const sections = document.querySelectorAll("section");
-      const navLinks = document.querySelectorAll(".navbar a");
+        <div class="sidebar-section">
+          <h3><i class="fas fa-award"></i> Scholarships</h3>
+          <div class="scholarship-item">
+            <h4>ESROP-Global Scholarship</h4>
+            <p>CAD 4,500 for research at KMUTT, Thailand</p>
+          </div>
+          <div class="scholarship-item">
+            <h4>MITACS Globalink Research Award</h4>
+            <p>CAD 6,000 for AI and quantitative finance research</p>
+          </div>
+        </div>
 
-      const observerOptions = {
-        root: null,
-        rootMargin: '0px',
-        threshold: 0.6
-      };
+        <div class="sidebar-section">
+          <h3><i class="fas fa-file-alt"></i> Resume</h3>
+          <a href="HaysonCheung_Resume.pdf" class="download-resume">
+            <i class="fas fa-download"></i> Download Full Resume
+          </a>
+        </div>
+      </div>
 
-      const observerCallback = (entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            const sectionId = entry.target.getAttribute("id");
-            navLinks.forEach(link => {
-              link.classList.toggle("active", link.getAttribute("href") === '#' + sectionId);
-            });
+      <div class="cv-main">
+        <section class="cv-section" id="experience">
+          <h3><i class="fas fa-briefcase"></i> Experience</h3>
+
+          <div class="timeline">
+            <div class="timeline-item">
+              <div class="timeline-marker"></div>
+              <div class="timeline-content">
+                <div class="timeline-header">
+                  <h4>University of Toronto Aerospace Team - Control Systems</h4>
+                  <span class="timeline-date">2024 - Present</span>
+                </div>
+                <p>Developed MATLAB and Python-based control systems for the FINCH satellite mission, contributing to precise altitude planning and orientation control in space systems.</p>
+              </div>
+            </div>
+
+            <div class="timeline-item">
+              <div class="timeline-marker"></div>
+              <div class="timeline-content">
+                <div class="timeline-header">
+                  <h4>University of Toronto Machine Intelligence Student Team (UTMIST)</h4>
+                  <span class="timeline-date">2023 - Present</span>
+                </div>
+                <p>Led academic paper-reading sessions on LSTMs, Encoder-Decoder models, and Transformers. Developed an LSTM Encoder-Decoder model for Neural Machine Translation using TensorFlow.</p>
+              </div>
+            </div>
+
+            <div class="timeline-item">
+              <div class="timeline-marker"></div>
+              <div class="timeline-content">
+                <div class="timeline-header">
+                  <h4>Yannes Solution Ltd.</h4>
+                  <span class="timeline-date">Summer 2023</span>
+                </div>
+                <p>Developed a Python-based system for organizing and processing on-site images, optimizing project documentation. Administered the installation of over 500 CCTV cameras across the Hong Kong Metro's East Rail Line.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="cv-section" id="projects">
+          <h3><i class="fas fa-project-diagram"></i> Projects</h3>
+
+          <div class="projects-grid">
+            <div class="project-card">
+              <div class="project-header">
+                <h4>LegoFIKS</h4>
+                <div class="project-links">
+                  <a href="../ProjectPosts/legoFiks" class="project-link"><i class="fas fa-link"></i></a>
+                </div>
+              </div>
+              <div class="project-tags">
+                <span>GenAI</span>
+                <span>3D Modeling</span>
+                <span>Therapy</span>
+              </div>
+              <p>A revolutionary approach to social competence therapy for children with Autism Spectrum Disorder, combining creativity, technology, and LEGO. Winner of Best AI for Creativity & Generative Arts at GenAI Genesis 2025.</p>
+            </div>
+
+            <div class="project-card">
+              <div class="project-header">
+                <h4>NEAT Pong Bot</h4>
+                <div class="project-links">
+                  <a href="https://github.com/HaysonC/NEAT-PongBot/" class="project-link"><i class="fab fa-github"></i></a>
+                  <a href="../ProjectPosts/neat" class="project-link"><i class="fas fa-link"></i></a>
+                </div>
+              </div>
+              <div class="project-tags">
+                <span>NEAT</span>
+                <span>Neural Networks</span>
+                <span>Game AI</span>
+              </div>
+              <p>Created a high-performance Pong bot using NeuroEvolution of Augmenting Topologies (NEAT), exploring deep learning techniques like CNNs and Q-learning for improved decision-making.</p>
+            </div>
+
+            <div class="project-card">
+              <div class="project-header">
+                <h4>MapMatch</h4>
+                <div class="project-links">
+                  <a href="https://github.com/Epic-Eric/AWSHacks" class="project-link"><i class="fab fa-github"></i></a>
+                  <a href="../ProjectPosts/aws" class="project-link"><i class="fas fa-link"></i></a>
+                </div>
+              </div>
+              <div class="project-tags">
+                <span>AWS</span>
+                <span>NLP</span>
+                <span>Semantic Embeddings</span>
+              </div>
+              <p>Designed an AWS-based algorithm to analyze roommate descriptions and compute compatibility through semantic embeddings, efficiently matching roommates with similar habits.</p>
+            </div>
+
+            <div class="project-card">
+              <div class="project-header">
+                <h4>PHY-Pendulum</h4>
+                <div class="project-links">
+                  <a href="https://github.com/HaysonC/PHY180-Pendulum" class="project-link"><i class="fab fa-github"></i></a>
+                  <a href="../ProjectPosts/pendulum" class="project-link"><i class="fas fa-link"></i></a>
+                </div>
+              </div>
+              <div class="project-tags">
+                <span>OpenCV</span>
+                <span>Data Analysis</span>
+                <span>Physics</span>
+              </div>
+              <p>Developed an object detection system using OpenCV to analyze pendulum motion with center origin detection and dynamic graph generation for detailed analysis.</p>
+            </div>
+
+            <div class="project-card">
+              <div class="project-header">
+                <h4>LSTM Encoder-Decoder</h4>
+                <div class="project-links">
+                  <a href="https://github.com/HaysonC/Encoder-DecoderLSTMTranslator" class="project-link"><i class="fab fa-github"></i></a>
+                  <a href="../ProjectPosts/LSTM" class="project-link"><i class="fas fa-link"></i></a>
+                </div>
+              </div>
+              <div class="project-tags">
+                <span>Machine Learning</span>
+                <span>TensorFlow</span>
+                <span>Python</span>
+              </div>
+              <p>Implemented a sequence-to-sequence learning model with LSTM for neural machine translation, adapted from the seminal work of Sutskever, Vinyals, and Le.</p>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      // Initialize particles.js
+      if (typeof particlesJS !== "undefined") {
+        particlesJS("particles-js", {
+          particles: {
+            number: { value: 50, density: { enable: true, value_area: 800 } },
+            color: { value: "#00eaff" },
+            shape: { type: "circle" },
+            opacity: { value: 0.5, random: true },
+            size: { value: 3, random: true },
+            line_linked: { enable: true, distance: 150, color: "#00eaff", opacity: 0.4, width: 1 },
+            move: { enable: true, speed: 1, direction: "none", random: true, straight: false, out_mode: "out" }
+          },
+          interactivity: {
+            detect_on: "canvas",
+            events: {
+              onhover: { enable: true, mode: "grab" },
+              onclick: { enable: true, mode: "push" }
+            }
           }
         });
-      };
+      }
 
-      const observer = new IntersectionObserver(observerCallback, observerOptions);
-      sections.forEach(section => observer.observe(section));
-    </script>
-  </div>
+      // Animate timeline items
+      const timelineItems = document.querySelectorAll('.timeline-item');
+      const timelineObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('animate');
+          }
+        });
+      }, { threshold: 0.1 });
+
+      timelineItems.forEach(item => {
+        timelineObserver.observe(item);
+      });
+
+      // Animate project cards
+      const projectCards = document.querySelectorAll('.project-card');
+      const projectObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry, index) => {
+          if (entry.isIntersecting) {
+            setTimeout(() => {
+              entry.target.classList.add('animate');
+            }, index * 100);
+          }
+        });
+      }, { threshold: 0.1 });
+
+      projectCards.forEach(card => {
+        projectObserver.observe(card);
+      });
+    });
+  </script>
 </body>
 </html>

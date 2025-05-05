@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>University Notes - GitHub Viewer</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    :root {
+      --primary-color: #00eaff;
+      --secondary-color: #ff00a0;
+      --bg-color: #0a0a0a;
+      --text-color: #ffffff;
+      --border-color: rgba(0, 234, 255, 0.3);
+      --card-bg: rgba(20, 20, 20, 0.8);
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    #particles-js {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      z-index: -1;
+    }
+
+    .github-container {
+      max-width: 1200px;
+      margin: 80px auto 40px auto;
+      padding: 20px;
+      width: 100%;
+      box-sizing: border-box;
+      position: relative;
+      z-index: 2;
+    }
+
+    .github-header {
+      background: rgba(30, 30, 30, 0.85);
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 10px rgba(0, 188, 212, 0.3);
+      border: 1px solid var(--border-color);
+    }
+
+    .github-header h1 {
+      margin-top: 0;
+      color: var(--primary-color);
+    }
+
+    .github-header p {
+      color: var(--text-color);
+      margin-bottom: 0;
+    }
+
+    .github-content {
+      display: grid;
+      grid-template-columns: 300px 1fr;
+      gap: 20px;
+    }
+
+    .file-explorer {
+      background: rgba(30, 30, 30, 0.85);
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 2px 10px rgba(0, 188, 212, 0.3);
+      border: 1px solid var(--border-color);
+      max-height: 600px;
+      overflow-y: auto;
+    }
+
+    .file-explorer h2 {
+      margin-top: 0;
+      color: var(--primary-color);
+      font-size: 1.2rem;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .file-tree {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .file-tree li {
+      margin-bottom: 5px;
+    }
+
+    .file-tree a {
+      display: block;
+      padding: 8px 10px;
+      color: var(--text-color);
+      text-decoration: none;
+      border-radius: 4px;
+      transition: background-color 0.3s ease;
+    }
+
+    .file-tree a:hover {
+      background-color: rgba(0, 188, 212, 0.2);
+      color: var(--primary-color);
+    }
+
+    .file-tree a.active {
+      background-color: rgba(0, 188, 212, 0.3);
+      color: var(--primary-color);
+    }
+
+    .file-tree .folder {
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .file-tree .folder::before {
+      content: "📁 ";
+    }
+
+    .file-tree .folder.open::before {
+      content: "📂 ";
+    }
+
+    .file-tree .file::before {
+      content: "📄 ";
+    }
+
+    .file-tree .nested {
+      padding-left: 20px;
+      display: none;
+    }
+
+    .file-tree .nested.active {
+      display: block;
+    }
+
+    .file-content {
+      background: rgba(30, 30, 30, 0.85);
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 2px 10px rgba(0, 188, 212, 0.3);
+      border: 1px solid var(--border-color);
+      min-height: 600px;
+    }
+
+    .file-content pre {
+      margin: 0;
+      padding: 0;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      font-family: "JetBrains Mono", monospace;
+      color: var(--text-color);
+      line-height: 1.5;
+    }
+
+    .file-content .markdown img {
+      max-width: 100%;
+      height: auto;
+    }
+
+    .file-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 10px;
+      margin-bottom: 15px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .file-header h2 {
+      margin: 0;
+      color: var(--primary-color);
+      font-size: 1.2rem;
+    }
+
+    .file-actions a {
+      color: var(--primary-color);
+      text-decoration: none;
+      margin-left: 15px;
+      font-size: 1.1rem;
+      transition: color 0.3s ease;
+    }
+
+    .file-actions a:hover {
+      color: var(--secondary-color);
+    }
+
+    .loading {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+      color: var(--primary-color);
+    }
+
+    .loading i {
+      animation: spin 1s linear infinite;
+      font-size: 2rem;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    @media (max-width: 768px) {
+      .github-content {
+        grid-template-columns: 1fr;
+      }
+
+      .file-explorer {
+        max-height: 300px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="particles-js"></div>
+  <div class="terminal-lines"></div>
+
+  <a href="index.html" class="back-home-btn">
+    <i class="fas fa-home"></i> Home
+  </a>
+
+  <div class="github-container">
+    <div class="github-header">
+      <h1>University Notes</h1>
+      <p>Browse through my university notes and resources from the GitHub repository.</p>
+    </div>
+
+    <div class="github-content">
+      <div class="file-explorer">
+        <h2>Files</h2>
+        <ul class="file-tree" id="file-tree">
+          <li class="loading">
+            <i class="fas fa-spinner"></i>
+          </li>
+        </ul>
+      </div>
+
+      <div class="file-content">
+        <div class="file-header">
+          <h2 id="current-file">README.md</h2>
+          <div class="file-actions">
+            <a href="https://github.com/HaysonC/skulenotes" target="_blank" title="View on GitHub">
+              <i class="fab fa-github"></i>
+            </a>
+            <a href="#" id="raw-link" target="_blank" title="View Raw">
+              <i class="fas fa-code"></i>
+            </a>
+          </div>
+        </div>
+        <div id="content-display">
+          <div class="loading">
+            <i class="fas fa-spinner"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      // Initialize particles.js
+      if (typeof particlesJS !== "undefined") {
+        particlesJS("particles-js", {
+          particles: {
+            number: { value: 50, density: { enable: true, value_area: 800 } },
+            color: { value: "#00eaff" },
+            shape: { type: "circle" },
+            opacity: { value: 0.5, random: true },
+            size: { value: 3, random: true },
+            line_linked: { enable: true, distance: 150, color: "#00eaff", opacity: 0.4, width: 1 },
+            move: { enable: true, speed: 1, direction: "none", random: true, straight: false, out_mode: "out" }
+          },
+          interactivity: {
+            detect_on: "canvas",
+            events: {
+              onhover: { enable: true, mode: "grab" },
+              onclick: { enable: true, mode: "push" }
+            }
+          }
+        });
+      }
+
+      const repoOwner = 'HaysonC';
+      const repoName = 'skulenotes';
+      const fileTree = document.getElementById('file-tree');
+      const contentDisplay = document.getElementById('content-display');
+      const currentFileElement = document.getElementById('current-file');
+      const rawLink = document.getElementById('raw-link');
+
+      // Fetch repository contents
+      fetch(`https://api.github.com/repos/${repoOwner}/${repoName}/contents`)
+        .then(response => response.json())
+        .then(data => {
+          fileTree.innerHTML = '';
+          buildFileTree(data, fileTree);
+
+          // Load README.md by default
+          const readmeFile = data.find(item => item.name.toLowerCase() === 'readme.md');
+          if (readmeFile) {
+            loadFile(readmeFile.path, readmeFile.name, readmeFile.download_url);
+          }
+        })
+        .catch(error => {
+          fileTree.innerHTML = `<li>Error loading files: ${error.message}</li>`;
+        });
+
+      function buildFileTree(items, parentElement, path = '') {
+        items.sort((a, b) => {
+          // Folders first, then files
+          if (a.type === 'dir' && b.type !== 'dir') return -1;
+          if (a.type !== 'dir' && b.type === 'dir') return 1;
+          // Alphabetical order
+          return a.name.localeCompare(b.name);
+        });
+
+        items.forEach(item => {
+          const li = document.createElement('li');
+          const itemPath = path ? `${path}/${item.name}` : item.name;
+
+          if (item.type === 'dir') {
+            // Folder
+            li.innerHTML = `<span class="folder">${item.name}</span>`;
+            const nestedUl = document.createElement('ul');
+            nestedUl.className = 'nested';
+            li.appendChild(nestedUl);
+
+            // Toggle folder open/close
+            const folderSpan = li.querySelector('.folder');
+            folderSpan.addEventListener('click', function() {
+              this.classList.toggle('open');
+              nestedUl.classList.toggle('active');
+
+              // Lazy load folder contents if not already loaded
+              if (nestedUl.children.length === 0) {
+                nestedUl.innerHTML = '<li class="loading"><i class="fas fa-spinner"></i></li>';
+                fetch(item.url)
+                  .then(response => response.json())
+                  .then(data => {
+                    nestedUl.innerHTML = '';
+                    buildFileTree(data, nestedUl, itemPath);
+                  })
+                  .catch(error => {
+                    nestedUl.innerHTML = `<li>Error loading folder: ${error.message}</li>`;
+                  });
+              }
+            });
+          } else {
+            // File
+            li.innerHTML = `<a href="#" class="file" data-path="${itemPath}" data-url="${item.download_url}">${item.name}</a>`;
+
+            // Load file content on click
+            const fileLink = li.querySelector('a');
+            fileLink.addEventListener('click', function(e) {
+              e.preventDefault();
+              document.querySelectorAll('.file-tree a').forEach(a => a.classList.remove('active'));
+              this.classList.add('active');
+              loadFile(this.getAttribute('data-path'), this.textContent, this.getAttribute('data-url'));
+            });
+          }
+
+          parentElement.appendChild(li);
+        });
+      }
+
+      function loadFile(path, name, url) {
+        currentFileElement.textContent = name;
+        rawLink.href = url;
+
+        contentDisplay.innerHTML = '<div class="loading"><i class="fas fa-spinner"></i></div>';
+
+        fetch(url)
+          .then(response => response.text())
+          .then(content => {
+            // Check if it's a markdown file
+            if (name.toLowerCase().endsWith('.md')) {
+              contentDisplay.innerHTML = `<div class="markdown">${marked.parse(content)}</div>`;
+            } else if (name.toLowerCase().endsWith('.jpg') || name.toLowerCase().endsWith('.png') || name.toLowerCase().endsWith('.gif')) {
+              // Image file
+              contentDisplay.innerHTML = `<img src="${url}" alt="${name}" style="max-width: 100%;">`;
+            } else if (name.toLowerCase().endsWith('.pdf')) {
+              // PDF file
+              contentDisplay.innerHTML = `<iframe src="${url}" width="100%" height="600px"></iframe>`;
+            } else {
+              // Text file
+              contentDisplay.innerHTML = `<pre>${escapeHtml(content)}</pre>`;
+            }
+          })
+          .catch(error => {
+            contentDisplay.innerHTML = `<div class="error">Error loading file: ${error.message}</div>`;
+          });
+      }
+
+      function escapeHtml(unsafe) {
+        return unsafe
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#039;");
+      }
+    });
+  </script>
+</body>
+</html>

@@ -2,61 +2,106 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Hayson Cheung</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hayson Cheung | Engineering Science</title>
   <link rel="stylesheet" href="front.css">
+  <link rel="stylesheet" href="splash.css">
+  <link rel="stylesheet" href="theme-styles.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-  <div class="hero">
-    <div class="hero-content">
-      <h1>
-        <span>H</span><span>a</span><span>y</span><span>s</span><span>o</span><span>n</span>
-        <span>C</span><span>h</span><span>e</span><span>u</span><span>n</span><span>g</span>
-      </h1>
-      <p></p>
-      <div class="typing-email">
-      hayson [dot] cheung [at] mail [dot] utoronto [dot] ca
-      </div>
-      <div class="about-content">
-        <h2>About Me</h2>
-        <p>I'm Hayson Cheung, a first-year Engineering Science student at the University of Toronto, with a deep interest in machine learning, robotics, and control systems. I'm passionate about solving real-world problems using cutting-edge technologies and exploring how artificial intelligence can simulate sentient behaviors. Currently, my focus is on sentiment analysis, understanding emotions, and creating intelligent systems that react and adapt like humans. I am also interested in evolutionary programs, specifically NEAT.</p>
-        <p>I love combining my technical knowledge with creative problem-solving and constantly strive to improve and learn new things.</p>
-      </div>
+  <!-- Splash Screen -->
+  <div id="splash-screen">
+    <div class="splash-content">
+      <div class="splash-letter letter-h">H</div>
+      <div class="splash-letter letter-c">C</div>
+    </div>
+  </div>
 
-      <a href="CV" class="enter-btn">Curriculum Vitae</a>
-      <a href="ProjectPosts" class="enter-btn">Project Posts</a>
-      <a href="https://github.com/HaysonC/skulenotes" class="enter-btn">University Notes</a>
-      <div class="social-links">
-        <a href="https://github.com/HaysonC" target="_blank" class="social-icon">
-          <i class="fab fa-github"></i>
-        </a>
-        <a href="https://linkedin.com/in/hayson-cheung-3688a5241/" target="_blank" class="social-icon">
-          <i class="fab fa-linkedin"></i>
-        </a>
-        <a href="https://www.instagram.com/hayson.cheunggggg/" target="_blank" class="social-icon">
-          <i class="fab fa-instagram"></i>
-        </a>
+  <!-- Main Content -->
+  <div id="main-content" style="display: none;">
+    <div id="particles-js"></div>
+    <div class="terminal-lines"></div>
+
+    <div class="hero">
+      <div class="hero-content">
+        <div class="logo-container">
+          <div class="logo">HC</div>
+        </div>
+        <h1 class="glitch" data-text="Hayson Cheung">Hayson Cheung</h1>
+
+        <div class="typewriter">
+          <span class="txt-rotate" data-period="2000" data-rotate='[ "Engineering Science Student", "Machine Learning Enthusiast", "Robotics Developer", "Problem Solver" ]'></span>
+        </div>
+
+        <div class="terminal">
+          <div class="terminal-header">
+            <div class="terminal-buttons">
+              <span class="terminal-button red"></span>
+              <span class="terminal-button yellow"></span>
+              <span class="terminal-button green"></span>
+            </div>
+            <div class="terminal-title">hayson@uoft:~</div>
+          </div>
+          <div class="terminal-body">
+            <div class="line">
+              <span class="prompt">$</span> <span class="command">cat about.txt</span>
+            </div>
+            <div class="output">
+              I'm a first-year Engineering Science student at the University of Toronto, with a deep interest in machine learning, robotics, and control systems. I'm passionate about solving real-world problems using cutting-edge technologies and exploring how artificial intelligence can simulate sentient behaviors.
+            </div>
+            <div class="line">
+              <span class="prompt">$</span> <span class="command">echo $CONTACT</span>
+            </div>
+            <div class="output contact-email">hayson [dot] cheung [at] mail [dot] utoronto [dot] ca</div>
+            <div class="line">
+              <span class="prompt">$</span> <span class="command">ls projects/</span>
+            </div>
+            <div class="output">
+              <span class="file">LegoFIKS</span>
+              <span class="file">NEAT-PongBot</span>
+              <span class="file">LSTM-Translator</span>
+              <span class="file">MapMatch</span>
+              <span class="file">PHY-Pendulum</span>
+            </div>
+            <div class="line">
+              <span class="prompt">$</span> <span class="command blink">_</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="nav-buttons">
+          <a href="CV" class="cyber-button">
+            <span class="cyber-button-text">Curriculum Vitae</span>
+            <span class="cyber-button-glitch"></span>
+          </a>
+          <a href="ProjectPosts" class="cyber-button">
+            <span class="cyber-button-text">Project Posts</span>
+            <span class="cyber-button-glitch"></span>
+          </a>
+          <a href="github-viewer.html" class="cyber-button">
+            <span class="cyber-button-text">University Notes</span>
+            <span class="cyber-button-glitch"></span>
+          </a>
+        </div>
+
+        <div class="social-links">
+          <a href="https://github.com/HaysonC" target="_blank" class="social-icon">
+            <i class="fab fa-github"></i>
+          </a>
+          <a href="https://linkedin.com/in/hayson-cheung-3688a5241/" target="_blank" class="social-icon">
+            <i class="fab fa-linkedin"></i>
+          </a>
+          <a href="https://www.instagram.com/hayson.cheunggggg/" target="_blank" class="social-icon">
+            <i class="fab fa-instagram"></i>
+          </a>
+        </div>
       </div>
     </div>
   </div>
-  <script>
-  document.addEventListener("DOMContentLoaded", function() {
-    const emailElement = document.querySelector(".typing-email");
-    const emailText = emailElement.textContent;
-    emailElement.textContent = "";
 
-    let index = 0;
-    function type() {
-      if (index < emailText.length) {
-        emailElement.textContent += emailText.charAt(index);
-        index++;
-        setTimeout(type, 0); // Adjust typing speed here
-      }
-    }
-
-    type();
-  });
-</script>
-
+  <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+  <script src="front.js"></script>
+  <script src="theme-switcher.js"></script>
 </body>
 </html>
