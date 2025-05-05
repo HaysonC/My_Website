@@ -4,16 +4,172 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Hayson Cheung | Engineering Science</title>
-  <!-- Use relative paths with ./ prefix for GitHub Pages -->
-  <link rel="stylesheet" href="./front.css">
-  <link rel="stylesheet" href="./splash.css">
-  <!-- If you added the theme styles file -->
-  <link rel="stylesheet" href="./theme-styles.css">
-  <!-- Add GitHub Pages specific fixes -->
-  <link rel="stylesheet" href="./github-pages-fix.css">
+
+  <!-- Critical inline CSS to ensure basic styling works even if external CSS fails -->
+  <style>
+    :root {
+      --primary-color: #00eaff;
+      --secondary-color: #ff00a0;
+      --bg-color: #0a0a0a;
+      --text-color: #ffffff;
+      --terminal-bg: rgba(16, 16, 16, 0.9);
+      --terminal-prompt: #00eaff;
+      --terminal-command: #ffffff;
+      --terminal-output: #cccccc;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: monospace;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      min-height: 100vh;
+    }
+
+    #particles-js {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      z-index: 0;
+    }
+
+    .hero {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      position: relative;
+      z-index: 2;
+      padding: 2rem;
+    }
+
+    .hero-content {
+      max-width: 900px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    h1.glitch {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+      color: var(--primary-color);
+      text-shadow: 0 0 8px rgba(0, 234, 255, 0.8);
+    }
+
+    .terminal {
+      width: 100%;
+      margin-bottom: 2rem;
+      background-color: var(--terminal-bg);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+      text-align: left;
+    }
+
+    .terminal-header {
+      background-color: #2d2d2d;
+      padding: 10px;
+      display: flex;
+      align-items: center;
+    }
+
+    .terminal-buttons {
+      display: flex;
+      gap: 6px;
+      margin-right: 15px;
+    }
+
+    .terminal-button {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+
+    .terminal-button.red { background-color: #ff5f56; }
+    .terminal-button.yellow { background-color: #ffbd2e; }
+    .terminal-button.green { background-color: #27c93f; }
+
+    .terminal-title {
+      color: #ddd;
+      font-size: 0.9rem;
+    }
+
+    .terminal-body {
+      padding: 15px;
+      font-size: 0.95rem;
+    }
+
+    .line {
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+    }
+
+    .prompt {
+      color: var(--terminal-prompt);
+      margin-right: 10px;
+    }
+
+    .command {
+      color: var(--terminal-command);
+    }
+
+    .output {
+      color: var(--terminal-output);
+      margin-bottom: 15px;
+      line-height: 1.5;
+    }
+
+    .nav-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 15px;
+      margin-bottom: 2rem;
+    }
+
+    .cyber-button {
+      display: inline-block;
+      position: relative;
+      width: 200px;
+      height: 50px;
+      background-color: transparent;
+      color: var(--primary-color);
+      border: 2px solid var(--primary-color);
+      border-radius: 4px;
+      text-decoration: none;
+      font-size: 1rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .social-links {
+      display: flex;
+      justify-content: center;
+      gap: 25px;
+      margin-top: 15px;
+    }
+
+    .social-icon {
+      font-size: 2rem;
+      color: var(--primary-color);
+    }
+  </style>
+
+  <!-- External CSS files -->
+  <link rel="stylesheet" href="front.css">
+  <link rel="stylesheet" href="splash.css">
+  <link rel="stylesheet" href="theme-styles.css">
+  <link rel="stylesheet" href="github-pages-fix.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <!-- Add base URL for GitHub Pages -->
-  <base href="./">
 </head>
 <body>
   <!-- Splash Screen -->
@@ -77,15 +233,15 @@
         </div>
 
         <div class="nav-buttons">
-          <a href="./CV" class="cyber-button">
+          <a href="CV" class="cyber-button">
             <span class="cyber-button-text">Curriculum Vitae</span>
             <span class="cyber-button-glitch"></span>
           </a>
-          <a href="./ProjectPosts" class="cyber-button">
+          <a href="ProjectPosts" class="cyber-button">
             <span class="cyber-button-text">Project Posts</span>
             <span class="cyber-button-glitch"></span>
           </a>
-          <a href="./github-viewer.html" class="cyber-button">
+          <a href="github-viewer.html" class="cyber-button">
             <span class="cyber-button-text">University Notes</span>
             <span class="cyber-button-glitch"></span>
           </a>
@@ -122,12 +278,9 @@
     }, 3000);
   </script>
 
-  <!-- Use relative paths with ./ prefix for GitHub Pages -->
   <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
-  <script src="./front.js"></script>
-  <!-- If you added the theme switcher -->
-  <script src="./theme-switcher.js"></script>
-  <!-- If you added the scroll progress -->
-  <script src="./scroll-progress.js"></script>
+  <script src="front.js"></script>
+  <script src="theme-switcher.js"></script>
+  <script src="scroll-progress.js"></script>
 </body>
 </html>
