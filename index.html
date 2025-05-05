@@ -4,10 +4,16 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Hayson Cheung | Engineering Science</title>
-  <link rel="stylesheet" href="front.css">
-  <link rel="stylesheet" href="splash.css">
-  <link rel="stylesheet" href="theme-styles.css">
+  <!-- Use relative paths with ./ prefix for GitHub Pages -->
+  <link rel="stylesheet" href="./front.css">
+  <link rel="stylesheet" href="./splash.css">
+  <!-- If you added the theme styles file -->
+  <link rel="stylesheet" href="./theme-styles.css">
+  <!-- Add GitHub Pages specific fixes -->
+  <link rel="stylesheet" href="./github-pages-fix.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <!-- Add base URL for GitHub Pages -->
+  <base href="./">
 </head>
 <body>
   <!-- Splash Screen -->
@@ -71,15 +77,15 @@
         </div>
 
         <div class="nav-buttons">
-          <a href="CV" class="cyber-button">
+          <a href="./CV" class="cyber-button">
             <span class="cyber-button-text">Curriculum Vitae</span>
             <span class="cyber-button-glitch"></span>
           </a>
-          <a href="ProjectPosts" class="cyber-button">
+          <a href="./ProjectPosts" class="cyber-button">
             <span class="cyber-button-text">Project Posts</span>
             <span class="cyber-button-glitch"></span>
           </a>
-          <a href="github-viewer.html" class="cyber-button">
+          <a href="./github-viewer.html" class="cyber-button">
             <span class="cyber-button-text">University Notes</span>
             <span class="cyber-button-glitch"></span>
           </a>
@@ -100,8 +106,28 @@
     </div>
   </div>
 
+  <!-- Fallback script to ensure content displays -->
+  <script>
+    // Force display content after 3 seconds if something goes wrong
+    setTimeout(function() {
+      var mainContent = document.getElementById('main-content');
+      var splashScreen = document.getElementById('splash-screen');
+
+      if (mainContent && mainContent.style.display === 'none') {
+        if (splashScreen) splashScreen.style.display = 'none';
+        mainContent.style.display = 'block';
+        mainContent.style.opacity = '1';
+        console.log('Fallback: Forced content display');
+      }
+    }, 3000);
+  </script>
+
+  <!-- Use relative paths with ./ prefix for GitHub Pages -->
   <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
-  <script src="front.js"></script>
-  <script src="theme-switcher.js"></script>
+  <script src="./front.js"></script>
+  <!-- If you added the theme switcher -->
+  <script src="./theme-switcher.js"></script>
+  <!-- If you added the scroll progress -->
+  <script src="./scroll-progress.js"></script>
 </body>
 </html>

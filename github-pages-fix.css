@@ -1,0 +1,71 @@
+/* Fix for GitHub Pages deployment */
+html,
+body {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+#main-content {
+  min-height: 100vh;
+  width: 100%;
+  position: relative;
+}
+
+/* Force visibility of elements */
+.hero,
+.hero-content,
+.terminal,
+.nav-buttons,
+.social-links {
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* Fix for particles.js */
+#particles-js {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+/* Fix for terminal lines */
+.terminal-lines {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+/* Ensure proper stacking */
+.hero {
+  position: relative;
+  z-index: 2;
+}
+
+/* Fix for splash screen */
+#splash-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9999;
+  background-color: var(--bg-color, #0a0a0a);
+}
+
+/* Fix for theme toggle */
+#theme-toggle {
+  z-index: 9999;
+}
+
+/* Fix for scroll progress */
+#scroll-progress {
+  z-index: 9999;
+}
