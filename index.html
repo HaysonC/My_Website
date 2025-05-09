@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Hayson Cheung | Engineering Science</title>
+  <link rel="icon" href="badge.png" type="image/png">
 
   <meta name="description" content="Hayson Cheung - Engineering Science student at University of Toronto specializing in machine learning, robotics, and control systems.">
   <meta name="keywords" content="Hayson Cheung, Engineering Science, University of Toronto, Machine Learning, Robotics, Control Systems, NEAT, LSTM, Computer Vision">
@@ -175,6 +176,22 @@
       font-size: 2rem;
       color: var(--primary-color);
     }
+
+    .webring-pointer {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 20px;
+    }
+
+    .pointer-text {
+      color: var(--text-color);
+      margin-bottom: 5px;
+    }
+
+    .curved-arrow {
+      /* You might need to adjust the styling of the arrow as needed */
+    }
   </style>
 
   <!-- External CSS files -->
@@ -206,7 +223,7 @@
         <h1 class="glitch" data-text="Hayson Cheung">Hayson Cheung</h1>
 
         <div class="typewriter">
-          <span class="txt-rotate" data-period="2000" data-rotate='[ "Engineering Science Student", "Machine Learning Enthusiast", "Robotics Developer", "Problem Solver" ]'></span>
+          <span class="txt-rotate" data-period="2000" data-rotate='[ "Engineering Science Student", "Machine Learning", "Robotics", "Computer Vision", "Engineering" ]'></span>
         </div>
 
         <div class="terminal">
@@ -316,5 +333,24 @@
     "knowsAbout": ["Machine Learning", "Robotics", "Control Systems", "Computer Vision", "Neural Networks", "Deep Learning"]
   }
   </script>
+  <!-- Webring Widget -->
+  <div class="webring-widget">
+    <a href="https://webring.ayanali.net/#https://hayson.me/My_Website?nav=prev" class="webring-arrow">
+      <i class="fas fa-chevron-left"></i>
+    </a>
+    <a href="https://webring.ayanali.net/#https://hayson.me/My_Website" target="_blank" class="webring-logo">
+      <img src="https://webring.ayanali.net/img/icon-dark.svg" alt="The Unnamed Webring"/>
+    </a>
+    <a href="https://webring.ayanali.net/#https://hayson.me/My_Website?nav=next" class="webring-arrow">
+      <i class="fas fa-chevron-right"></i>
+    </a>
+  </div>
+  <div class="webring-pointer">
+    <div class="pointer-text">Check out other's websites too!!</div>
+    <svg class="direct-arrow" width="80" height="60" viewBox="0 0 80 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M10,10 L60,50" stroke="var(--primary-color)" stroke-width="3" fill="none" />
+      <path d="M48,45 L60,50 L55,38" stroke="var(--primary-color)" stroke-width="3" fill="none" />
+    </svg>
+  </div>
 </body>
 </html>

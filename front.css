@@ -539,3 +539,157 @@ h1.glitch::after {
     font-size: 1.5rem;
   }
 }
+
+/* Webring Widget */
+.webring-widget {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  background-color: rgba(10, 10, 10, 0.8);
+  padding: 12px 20px;
+  border-radius: 8px;
+  border: 1px solid var(--primary-color);
+  box-shadow: 0 0 15px rgba(0, 234, 255, 0.3);
+  backdrop-filter: blur(5px);
+  z-index: 1000;
+  transition: all 0.3s ease;
+}
+
+.webring-widget:hover {
+  box-shadow: 0 0 20px rgba(0, 234, 255, 0.7);
+  transform: translateY(-3px);
+}
+
+.webring-arrow {
+  color: var(--primary-color);
+  text-decoration: none;
+  font-size: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.webring-arrow:hover {
+  color: var(--secondary-color);
+  text-shadow: 0 0 10px rgba(255, 0, 160, 0.7);
+}
+
+.webring-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.webring-logo img {
+  width: 32px;
+  height: 32px;
+  filter: drop-shadow(0 0 5px rgba(0, 234, 255, 0.5));
+  transition: all 0.3s ease;
+}
+
+.webring-logo:hover img {
+  transform: rotate(180deg);
+  filter: drop-shadow(0 0 8px rgba(0, 234, 255, 0.8));
+}
+
+/* Responsive adjustments for webring */
+@media (max-width: 768px) {
+  .webring-widget {
+    bottom: 15px;
+    right: 15px;
+    padding: 10px 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .webring-widget {
+    bottom: 10px;
+    right: 10px;
+    padding: 8px 12px;
+    gap: 10px;
+  }
+
+  .webring-arrow {
+    font-size: 1.2rem;
+  }
+
+  .webring-logo img {
+    width: 28px;
+    height: 28px;
+  }
+}
+
+/* Direct Arrow Pointer */
+.webring-pointer {
+  position: fixed;
+  bottom: 100px;
+  right: 100px;
+  z-index: 999;
+  animation: float 3s ease-in-out infinite;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.pointer-text {
+  font-family: "JetBrains Mono", monospace;
+  color: var(--primary-color);
+  font-size: 1rem;
+  font-weight: bold;
+  text-shadow: 0 0 5px var(--glow-color);
+  margin-bottom: 5px;
+  animation: textGlow 2s infinite alternate;
+  text-align: center;
+}
+
+.direct-arrow {
+  filter: drop-shadow(0 0 5px var(--glow-color));
+  animation: arrowPulse 2s infinite alternate;
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes arrowPulse {
+  0% {
+    filter: drop-shadow(0 0 3px var(--glow-color));
+  }
+  100% {
+    filter: drop-shadow(0 0 8px var(--glow-color));
+  }
+}
+
+/* Responsive adjustments for the pointer */
+@media (max-width: 768px) {
+  .webring-pointer {
+    bottom: 90px;
+    right: 80px;
+    transform: scale(0.9);
+  }
+
+  .pointer-text {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .webring-pointer {
+    bottom: 80px;
+    right: 60px;
+    transform: scale(0.8);
+  }
+
+  .pointer-text {
+    font-size: 0.8rem;
+  }
+}
