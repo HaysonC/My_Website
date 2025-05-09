@@ -5,17 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Articles on <span id="tag-title"></span></title>
     <link rel="stylesheet" href="../../style.css">
+    <link rel="stylesheet" href="../../mobile.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="tags.js"></script>
 </head>
 <body>
-    <a href="../index.html" class="back-home-btn">Back to Posts</a>
-      <div class="blog-container">
-    <!-- This will now display the header with the selected tag -->
-    <header>
-        <h1>Articles on <span id="tag-title"></span></h1>
-    </header>
-    <!-- This is where the filtered articles will be injected -->
-    <main id="filtered-articles"></main>
-      </div>
+    <a href="../index.html" class="back-home-btn">
+      <i class="fas fa-home"></i> Back to Posts
+    </a>
+    <div class="blog-container">
+      <!-- This will now display the header with the selected tag -->
+      <header>
+          <h1>Articles on <span id="tag-title"></span></h1>
+      </header>
+      <!-- This is where the filtered articles will be injected -->
+      <main id="filtered-articles"></main>
+    </div>
+
+    <script src="../../mobile.js"></script>
 </body>
 </html>

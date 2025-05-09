@@ -3,9 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Hayson Cheung - Engineering Science Student</title>
+  <title>Hayson Cheung - CV</title>
   <link rel="stylesheet" href="../style.css">
   <link rel="stylesheet" href="cv.css">
+  <link rel="stylesheet" href="../mobile.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
@@ -248,9 +249,10 @@
   </div>
 
   <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+  <script src="../mobile.js"></script>
   <script>
+    // Initialize particles.js
     document.addEventListener("DOMContentLoaded", function() {
-      // Initialize particles.js
       if (typeof particlesJS !== "undefined") {
         particlesJS("particles-js", {
           particles: {
@@ -272,35 +274,30 @@
         });
       }
 
-      // Animate timeline items
+      // Animate timeline items on scroll
       const timelineItems = document.querySelectorAll('.timeline-item');
-      const timelineObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('animate');
-          }
-        });
-      }, { threshold: 0.1 });
-
-      timelineItems.forEach(item => {
-        timelineObserver.observe(item);
-      });
-
-      // Animate project cards
       const projectCards = document.querySelectorAll('.project-card');
-      const projectObserver = new IntersectionObserver((entries) => {
-        entries.forEach((entry, index) => {
-          if (entry.isIntersecting) {
-            setTimeout(() => {
-              entry.target.classList.add('animate');
-            }, index * 100);
+
+      const animateOnScroll = () => {
+        const triggerBottom = window.innerHeight * 0.8;
+
+        timelineItems.forEach(item => {
+          const itemTop = item.getBoundingClientRect().top;
+          if (itemTop < triggerBottom) {
+            item.classList.add('animate');
           }
         });
-      }, { threshold: 0.1 });
 
-      projectCards.forEach(card => {
-        projectObserver.observe(card);
-      });
+        projectCards.forEach(card => {
+          const cardTop = card.getBoundingClientRect().top;
+          if (cardTop < triggerBottom) {
+            card.classList.add('animate');
+          }
+        });
+      };
+
+      window.addEventListener('scroll', animateOnScroll);
+      animateOnScroll(); // Initial check
     });
   </script>
 </body>

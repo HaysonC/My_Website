@@ -1,0 +1,341 @@
+/* Mobile-specific styles */
+:root {
+  --primary-color: #00eaff;
+  --secondary-color: #ff00a0;
+  --bg-color: #0a0a0a;
+  --text-color: #ffffff;
+  --muted-foreground: #cccccc;
+  --border-color: rgba(0, 234, 255, 0.3);
+  --glow-color: rgba(0, 234, 255, 0.7);
+  --accent-color: #00bcd4;
+  --card-bg: rgba(20, 20, 20, 0.8);
+  --section-bg: rgba(26, 26, 26, 0.9);
+}
+
+/* Base mobile styles */
+@media (max-width: 768px) {
+  /* General adjustments */
+  body {
+    font-size: 16px;
+  }
+
+  h1 {
+    font-size: 2.2rem !important;
+  }
+
+  h2 {
+    font-size: 1.8rem !important;
+  }
+
+  h3 {
+    font-size: 1.5rem !important;
+  }
+
+  p,
+  li {
+    font-size: 1rem !important;
+  }
+
+  /* Container adjustments */
+  .container,
+  .blog-container,
+  .github-container,
+  .cv-container {
+    margin-top: 60px !important;
+    padding: 15px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Back button positioning */
+  .back-home-btn {
+    top: 10px !important;
+    left: 10px !important;
+    padding: 8px 12px !important;
+    font-size: 0.9rem !important;
+    z-index: 1010 !important;
+  }
+
+  /* Webring widget adjustments */
+  .webring-widget {
+    bottom: 10px !important;
+    right: 10px !important;
+    padding: 8px 12px !important;
+    gap: 10px !important;
+    z-index: 1010 !important;
+  }
+
+  .webring-pointer {
+    bottom: 70px !important;
+    right: 40px !important;
+    transform: scale(0.8) !important;
+  }
+
+  /* Blog post adjustments */
+  .blog-post {
+    padding: 15px !important;
+  }
+
+  .blog-post img {
+    max-height: 200px !important;
+  }
+
+  /* Tags display */
+  .tags {
+    flex-wrap: wrap !important;
+  }
+
+  .tag {
+    font-size: 12px !important;
+    padding: 4px 8px !important;
+  }
+
+  /* Video container */
+  .video-container video,
+  .video-container iframe {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+
+  /* Image container */
+  .image-container img {
+    max-width: 100% !important;
+  }
+
+  /* Terminal styling */
+  .terminal-body {
+    padding: 10px !important;
+    font-size: 0.85rem !important;
+  }
+
+  /* GitHub viewer adjustments */
+  .github-content {
+    grid-template-columns: 1fr !important;
+  }
+
+  .file-explorer {
+    max-height: 250px !important;
+    margin-bottom: 15px !important;
+  }
+
+  /* CV adjustments */
+  .profile {
+    flex-direction: column !important;
+    text-align: center !important;
+  }
+
+  .contact-links {
+    justify-content: center !important;
+  }
+
+  .cv-content {
+    grid-template-columns: 1fr !important;
+  }
+
+  .cv-sidebar {
+    order: 2 !important;
+  }
+
+  .cv-main {
+    order: 1 !important;
+  }
+
+  /* Praxis portfolio adjustments */
+  .sidebar {
+    width: 100% !important;
+    height: auto !important;
+    position: relative !important;
+    transform: none !important;
+    margin-bottom: 20px !important;
+  }
+
+  .content {
+    margin-left: 0 !important;
+    padding: 15px !important;
+  }
+
+  /* Adjust the mobile navigation toggle position to avoid overlap with theme switcher */
+  .mobile-nav-toggle {
+    position: fixed;
+    top: 10px;
+    right: 70px; /* Increased from 10px to avoid overlap with theme switcher */
+    z-index: 1020;
+    background: rgba(0, 0, 0, 0.7);
+    color: var(--primary-color);
+    border: 2px solid var(--primary-color);
+    border-radius: 4px;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    backdrop-filter: blur(5px);
+  }
+
+  /* Ensure theme toggle is properly positioned and doesn't overlap */
+  #theme-toggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.7);
+    color: var(--primary-color);
+    border: 2px solid var(--primary-color);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    z-index: 1002;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(5px);
+  }
+
+  .mobile-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.95);
+    z-index: 1015;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transform: translateY(-100%);
+    transition: transform 0.3s ease;
+  }
+
+  .mobile-nav.active {
+    transform: translateY(0);
+  }
+
+  .mobile-nav a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-size: 1.2rem;
+    margin: 10px 0;
+    padding: 10px 20px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    width: 80%;
+    text-align: center;
+    transition: all 0.3s ease;
+  }
+
+  .mobile-nav a:hover {
+    background: var(--primary-color);
+    color: var(--bg-color);
+  }
+
+  .mobile-nav-close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    color: var(--primary-color);
+    font-size: 1.5rem;
+    cursor: pointer;
+  }
+}
+
+/* Small mobile devices */
+@media (max-width: 480px) {
+  body {
+    font-size: 15px;
+  }
+
+  h1 {
+    font-size: 1.8rem !important;
+  }
+
+  h2 {
+    font-size: 1.5rem !important;
+  }
+
+  h3 {
+    font-size: 1.3rem !important;
+  }
+
+  .container,
+  .blog-container,
+  .github-container,
+  .cv-container {
+    padding: 10px !important;
+    margin-top: 50px !important;
+  }
+
+  .blog-post {
+    padding: 12px !important;
+  }
+
+  .terminal-body {
+    font-size: 0.8rem !important;
+  }
+
+  .cyber-button {
+    width: 100% !important;
+    max-width: 250px !important;
+    height: 45px !important;
+    font-size: 0.9rem !important;
+  }
+
+  .social-links {
+    gap: 15px !important;
+  }
+
+  .social-icon {
+    font-size: 1.5rem !important;
+  }
+
+  .webring-widget {
+    padding: 6px 10px !important;
+  }
+
+  .webring-logo img {
+    width: 24px !important;
+    height: 24px !important;
+  }
+
+  .webring-pointer {
+    display: none !important;
+  }
+
+  /* Hero section adjustments */
+  .hero-content {
+    padding: 1rem !important;
+  }
+
+  .logo {
+    width: 60px !important;
+    height: 60px !important;
+    font-size: 1.5rem !important;
+  }
+
+  h1.glitch {
+    font-size: 2rem !important;
+  }
+
+  .txt-rotate {
+    font-size: 1rem !important;
+  }
+
+  /* Adjust for smaller screens */
+  .mobile-nav-toggle {
+    top: 10px;
+    right: 65px;
+    width: 35px;
+    height: 35px;
+  }
+
+  #theme-toggle {
+    top: 10px;
+    right: 15px;
+    width: 35px;
+    height: 35px;
+  }
+}

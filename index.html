@@ -192,6 +192,41 @@
     .curved-arrow {
       /* You might need to adjust the styling of the arrow as needed */
     }
+
+    /* Basic mobile styles */
+    @media (max-width: 768px) {
+      h1.glitch {
+        font-size: 2.5rem;
+      }
+
+      .cyber-button {
+        width: 100%;
+        max-width: 250px;
+      }
+
+      .terminal-body {
+        font-size: 0.85rem;
+      }
+
+      .social-icon {
+        font-size: 1.8rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      h1.glitch {
+        font-size: 2rem;
+      }
+
+      .hero {
+        padding: 1rem;
+      }
+
+      .terminal-body {
+        padding: 10px;
+        font-size: 0.8rem;
+      }
+    }
   </style>
 
   <!-- External CSS files -->
@@ -199,6 +234,7 @@
   <link rel="stylesheet" href="splash.css">
   <link rel="stylesheet" href="theme-styles.css">
   <link rel="stylesheet" href="github-pages-fix.css">
+  <link rel="stylesheet" href="mobile.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
@@ -223,7 +259,7 @@
         <h1 class="glitch" data-text="Hayson Cheung">Hayson Cheung</h1>
 
         <div class="typewriter">
-          <span class="txt-rotate" data-period="2000" data-rotate='[ "Engineering Science Student", "Machine Learning", "Robotics", "Computer Vision", "Engineering" ]'></span>
+          <span class="txt-rotate" data-period="2000" data-rotate='[ "Engineering Science Student", "Machine Learning", "Robotics", "Computer Vision", "Neuroevolution" ]'></span>
         </div>
 
         <div class="terminal">
@@ -312,6 +348,7 @@
   <script src="front.js"></script>
   <script src="theme-switcher.js"></script>
   <script src="scroll-progress.js"></script>
+  <script src="mobile.js"></script>
 
   <!-- Structured Data for Person -->
   <script type="application/ld+json">

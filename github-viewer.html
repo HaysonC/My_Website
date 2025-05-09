@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>University Notes - GitHub Viewer</title>
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="mobile.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
     :root {
@@ -208,13 +209,16 @@
       100% { transform: rotate(360deg); }
     }
 
+    /* Touch-friendly styles for mobile */
     @media (max-width: 768px) {
-      .github-content {
-        grid-template-columns: 1fr;
+      .file-tree a, .file-tree .folder {
+        padding: 12px 15px;
+        margin-bottom: 8px;
       }
 
-      .file-explorer {
-        max-height: 300px;
+      .file-actions a {
+        padding: 10px;
+        margin-left: 10px;
       }
     }
   </style>
@@ -266,13 +270,17 @@
 
   <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="mobile.js"></script>
   <script>
     document.addEventListener("DOMContentLoaded", function() {
       // Initialize particles.js
       if (typeof particlesJS !== "undefined") {
+        // Reduce particle count on mobile
+        const particleCount = window.innerWidth <= 768 ? 30 : 50;
+
         particlesJS("particles-js", {
           particles: {
-            number: { value: 50, density: { enable: true, value_area: 800 } },
+            number: { value: particleCount, density: { enable: true, value_area: 800 } },
             color: { value: "#00eaff" },
             shape: { type: "circle" },
             opacity: { value: 0.5, random: true },
@@ -407,6 +415,97 @@
           .replace(/>/g, "&gt;")
           .replace(/"/g, "&quot;")
           .replace(/'/g, "&#039;");
+      }
+
+      // Mobile-specific enhancements
+      if (window.innerWidth <= 768) {
+        // Add swipe to toggle file explorer
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        document.addEventListener('touchstart', e => {
+          touchStartX = e.changedTouches[0].screenX;
+        }, false);
+
+        document.addEventListener('touchend', e => {
+          touchEndX = e.changedTouches[0].screenX;
+          handleSwipe();
+        }, false);
+
+        const handleSwipe = () => {
+          const fileExplorer = document.querySelector('.file-explorer');
+          const fileContent = document.querySelector('.file-content');
+          const swipeThreshold = 100;
+
+          if (touchEndX - touchStartX > swipeThreshold) {
+            // Swipe right - show file explorer
+            if (window.innerWidth <= 768) {
+              fileExplorer.style.display = 'block';
+              fileContent.style.display = 'none';
+            }
+          } else if (touchStartX - touchEndX > swipeThreshold) {
+            // Swipe left - show file content
+            if (window.innerWidth <= 768) {
+              fileExplorer.style.display = 'none';
+              fileContent.style.display = 'block';
+            }
+          }
+        };
+
+        // Add toggle button for file explorer
+        const toggleBtn = document.createElement('button');
+        toggleBtn.className = 'file-explorer-toggle';
+        toggleBtn.innerHTML = '<i class="fas fa-folder"></i>';
+        toggleBtn.style.position = 'fixed';
+        toggleBtn.style.bottom = '20px';
+        toggleBtn.style.right = '20px';
+        toggleBtn.style.zIndex = '1000';
+        toggleBtn.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
+        toggleBtn.style.color = 'var(--primary-color)';
+        toggleBtn.style.border = '2px solid var(--primary-color)';
+        toggleBtn.style.borderRadius = '50%';
+        toggleBtn.style.width = '50px';
+        toggleBtn.style.height = '50px';
+        toggleBtn.style.display = 'flex';
+        toggleBtn.style.alignItems = 'center';
+        toggleBtn.style.justifyContent = 'center';
+        toggleBtn.style.fontSize = '1.5rem';
+        toggleBtn.style.backdropFilter = 'blur(5px)';
+
+        document.body.appendChild(toggleBtn);
+
+        const fileExplorer = document.querySelector('.file-explorer');
+        const fileContent = document.querySelector('.file-content');
+
+        // Initially show content on mobile
+        fileExplorer.style.display = 'none';
+        fileContent.style.display = 'block';
+
+        toggleBtn.addEventListener('click', () => {
+          if (fileExplorer.style.display === 'none') {
+            fileExplorer.style.display = 'block';
+            fileContent.style.display = 'none';
+            toggleBtn.innerHTML = '<i class="fas fa-file-alt"></i>';
+          } else {
+            fileExplorer.style.display = 'none';
+            fileContent.style.display = 'block';
+            toggleBtn.innerHTML = '<i class="fas fa-folder"></i>';
+          }
+        });
+
+        // Make file links more touch-friendly
+        document.addEventListener('click', (e) => {
+          if (e.target.classList.contains('file') || e.target.classList.contains('folder')) {
+            // After clicking a file, show content on mobile
+            if (window.innerWidth <= 768) {
+              setTimeout(() => {
+                fileExplorer.style.display = 'none';
+                fileContent.style.display = 'block';
+                toggleBtn.innerHTML = '<i class="fas fa-folder"></i>';
+              }, 300);
+            }
+          }
+        });
       }
     });
   </script>
