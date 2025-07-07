@@ -126,6 +126,40 @@
           <h3><i class="fas fa-briefcase"></i> Experience</h3>
 
           <div class="timeline">
+            <!-- Latest first -->
+            <div class="timeline-item">
+              <div class="timeline-marker"></div>
+              <div class="timeline-content">
+                <div class="timeline-header">
+                  <h4>KMUTT Research Intern at IC2</h4>
+                  <span class="timeline-date">May 2025 – Present</span>
+                </div>
+                <p>Research intern at <a href="https://ic2.sit.kmutt.ac.th/" target="_blank">IC2, KMUTT</a> under the supervision of <a href="https://www.sit.kmutt.ac.th/showprofile/?empid=155" target="_blank">Assoc. Prof. Dr. Jonathan Hoyin Chan</a>. Developed a music diffusion model using PyTorch for high-quality audio generation and implemented baseline and Temporal Fusion Transformer models for end-to-end automated trading, achieving above-market returns with low risk.</p>
+              </div>
+            </div>
+
+            <div class="timeline-item">
+              <div class="timeline-marker"></div>
+              <div class="timeline-content">
+                <div class="timeline-header">
+                    <h4><a href="https://echoeye.ca" target="_blank">EchoEye (echoeye.ca)</a> – Chief Technology Officer (CTO)</h4>
+                  <span class="timeline-date">Nov 2024 – Present</span>
+                </div>
+                <p>Co-founded and led a hardware-focused startup developing smart vision systems, winning the Rotman “LYBI” Competition against 100+ teams. Designed embedded systems for camera-based solutions, working with camera chipsets, SoCs, and low-latency networking protocols. Led full-stack web development using AWS, React, and Django. Managed and mentored a team of 4+ interns, coordinating across marketing and legal for patent filings and product marketing.</p>
+              </div>
+            </div>
+
+            <div class="timeline-item">
+              <div class="timeline-marker"></div>
+              <div class="timeline-content">
+                <div class="timeline-header">
+                  <h4>University of Toronto Machine Intelligence Student Team (UTMIST)</h4>
+                  <span class="timeline-date">2023 - Present</span>
+                </div>
+                <p>Led academic paper-reading sessions on LSTMs, Encoder-Decoder models, and Transformers. Developed an LSTM Encoder-Decoder model for Neural Machine Translation using TensorFlow. Contributed to Strata, a collaborative research and engineering initiative within UTMIST.</p>
+              </div>
+            </div>
+
             <div class="timeline-item">
               <div class="timeline-marker"></div>
               <div class="timeline-content">
@@ -141,19 +175,8 @@
               <div class="timeline-marker"></div>
               <div class="timeline-content">
                 <div class="timeline-header">
-                  <h4>University of Toronto Machine Intelligence Student Team (UTMIST)</h4>
-                  <span class="timeline-date">2023 - Present</span>
-                </div>
-                <p>Led academic paper-reading sessions on LSTMs, Encoder-Decoder models, and Transformers. Developed an LSTM Encoder-Decoder model for Neural Machine Translation using TensorFlow.</p>
-              </div>
-            </div>
-
-            <div class="timeline-item">
-              <div class="timeline-marker"></div>
-              <div class="timeline-content">
-                <div class="timeline-header">
                   <h4>Yannes Solution Ltd.</h4>
-                  <span class="timeline-date">Summer 2023</span>
+                  <span class="timeline-date">Summer 2024</span>
                 </div>
                 <p>Developed a Python-based system for organizing and processing on-site images, optimizing project documentation. Administered the installation of over 500 CCTV cameras across the Hong Kong Metro's East Rail Line.</p>
               </div>
@@ -161,10 +184,23 @@
           </div>
         </section>
 
-        <section class="cv-section" id="projects">
+        <section id="projects" class="cv-section">
           <h3><i class="fas fa-project-diagram"></i> Projects</h3>
-
           <div class="projects-grid">
+            <!-- Repeat this .project-card block for each project -->
+            <div class="project-card">
+              <div class="project-header">
+                <h4>XingXing Whisper Karaoke App</h4>
+                <div class="project-links">
+                  <a href="https://github.com/KMKyaw/Xing-Xing" class="project-link"><i class="fab fa-github"></i></a>
+                </div>
+              </div>
+              <div class="project-tags">
+                <span>Whisper</span><span>Demucs</span><span>FastAPI</span><span>WebSockets</span>
+              </div>
+              <p>Built a karaoke web app with real-time music separation using OpenAI Whisper and Demucs, FastAPI backend, and WebSocket communication.</p>
+            </div>
+
             <div class="project-card">
               <div class="project-header">
                 <h4>LegoFIKS</h4>
@@ -173,27 +209,23 @@
                 </div>
               </div>
               <div class="project-tags">
-                <span>GenAI</span>
-                <span>3D Modeling</span>
-                <span>Therapy</span>
+                <span>GenAI</span><span>3D Modeling</span><span>Therapy</span>
               </div>
               <p>A revolutionary approach to social competence therapy for children with Autism Spectrum Disorder, combining creativity, technology, and LEGO. Winner of Best AI for Creativity & Generative Arts at GenAI Genesis 2025.</p>
             </div>
 
             <div class="project-card">
               <div class="project-header">
-                <h4>NEAT Pong Bot</h4>
+                <h4>Krackle: Try Not to Laugh Game</h4>
                 <div class="project-links">
-                  <a href="https://github.com/HaysonC/NEAT-PongBot/" class="project-link"><i class="fab fa-github"></i></a>
-                  <a href="../ProjectPosts/neat" class="project-link"><i class="fas fa-link"></i></a>
+                  <a href="https://krackle-deploy.vercel.app/" class="project-link"><i class="fas fa-external-link-alt"></i></a>
+                  <a href="https://github.com/HaysonC/krackle-deploy" class="project-link"><i class="fab fa-github"></i></a>
                 </div>
               </div>
               <div class="project-tags">
-                <span>NEAT</span>
-                <span>Neural Networks</span>
-                <span>Game AI</span>
+                <span>Three.js</span><span>WebSockets</span><span>Multiplayer</span><span>Data Optimization</span>
               </div>
-              <p>Created a high-performance Pong bot using NeuroEvolution of Augmenting Topologies (NEAT), exploring deep learning techniques like CNNs and Q-learning for improved decision-making.</p>
+              <p>Implemented a multiplayer “Try Not to Laugh” game using Three.js frontend, WebSocket communication, and data optimization for real-time interactions.</p>
             </div>
 
             <div class="project-card">
@@ -205,44 +237,33 @@
                 </div>
               </div>
               <div class="project-tags">
-                <span>AWS</span>
-                <span>NLP</span>
-                <span>Semantic Embeddings</span>
+                <span>AWS</span><span>NLP</span><span>Semantic Embeddings</span>
               </div>
               <p>Designed an AWS-based algorithm to analyze roommate descriptions and compute compatibility through semantic embeddings, efficiently matching roommates with similar habits.</p>
             </div>
 
             <div class="project-card">
               <div class="project-header">
-                <h4>PHY-Pendulum</h4>
-                <div class="project-links">
-                  <a href="https://github.com/HaysonC/PHY180-Pendulum" class="project-link"><i class="fab fa-github"></i></a>
-                  <a href="../ProjectPosts/pendulum" class="project-link"><i class="fas fa-link"></i></a>
-                </div>
+                <h4>KMUTT Quant Finance Trading Model</h4>
               </div>
               <div class="project-tags">
-                <span>OpenCV</span>
-                <span>Data Analysis</span>
-                <span>Physics</span>
+                <span>Python</span><span>TFT</span><span>Automated Trading</span><span>Risk Analysis</span>
               </div>
-              <p>Developed an object detection system using OpenCV to analyze pendulum motion with center origin detection and dynamic graph generation for detailed analysis.</p>
+              <p>Implemented baseline and Temporal Fusion Transformer models for end-to-end automated trading, achieving above-market returns with low risk.</p>
             </div>
 
             <div class="project-card">
               <div class="project-header">
-                <h4>LSTM Encoder-Decoder</h4>
-                <div class="project-links">
-                  <a href="https://github.com/HaysonC/Encoder-DecoderLSTMTranslator" class="project-link"><i class="fab fa-github"></i></a>
-                  <a href="../ProjectPosts/LSTM" class="project-link"><i class="fas fa-link"></i></a>
-                </div>
+                <h4>SkySense – Predictive Aircraft Maintenance</h4>
               </div>
               <div class="project-tags">
-                <span>Machine Learning</span>
-                <span>TensorFlow</span>
-                <span>Python</span>
+                <span>PyTorch</span><span>Computer Vision</span><span>Signal Processing</span>
               </div>
-              <p>Implemented a sequence-to-sequence learning model with LSTM for neural machine translation, adapted from the seminal work of Sutskever, Vinyals, and Le.</p>
+              <p>Developed predictive maintenance solutions for aircraft using PyTorch, computer vision, and signal processing within UTMIST.</p>
             </div>
+          </div>
+          <div class="show-more-container">
+            <button id="toggle-projects">View More</button>
           </div>
         </section>
       </div>
@@ -251,6 +272,7 @@
 
   <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
   <script src="../mobile.js"></script>
+  <script src="scripts/projects.js"></script>
   <script>
     // Initialize particles.js
     document.addEventListener("DOMContentLoaded", function() {
