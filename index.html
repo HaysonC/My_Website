@@ -4,6 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Hayson Cheung | Engineering Science</title>
+
+  <!-- Favicon -->
   <link rel="icon" href="badge.png" type="image/png">
 
   <meta name="description" content="Hayson Cheung - Engineering Science student at University of Toronto specializing in machine learning, robotics, and control systems.">
@@ -17,7 +19,7 @@
   <meta property="og:description" content="Engineering Science student specializing in machine learning, robotics, and control systems.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://haysonc.github.io/My_Website/">
-  <meta property="og:image" content="https://haysonc.github.io/My_Website/badge.png">
+  <meta property="og:image" content="https://haysonc.github.io/My_Website/og-image.jpg">
 
   <!-- Critical inline CSS to ensure basic styling works even if external CSS fails -->
   <style>
@@ -176,57 +178,6 @@
       font-size: 2rem;
       color: var(--primary-color);
     }
-
-    .webring-pointer {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      margin-top: 20px;
-    }
-
-    .pointer-text {
-      color: var(--text-color);
-      margin-bottom: 5px;
-    }
-
-    .curved-arrow {
-      /* You might need to adjust the styling of the arrow as needed */
-    }
-
-    /* Basic mobile styles */
-    @media (max-width: 768px) {
-      h1.glitch {
-        font-size: 2.5rem;
-      }
-
-      .cyber-button {
-        width: 100%;
-        max-width: 250px;
-      }
-
-      .terminal-body {
-        font-size: 0.85rem;
-      }
-
-      .social-icon {
-        font-size: 1.8rem;
-      }
-    }
-
-    @media (max-width: 480px) {
-      h1.glitch {
-        font-size: 2rem;
-      }
-
-      .hero {
-        padding: 1rem;
-      }
-
-      .terminal-body {
-        padding: 10px;
-        font-size: 0.8rem;
-      }
-    }
   </style>
 
   <!-- External CSS files -->
@@ -234,7 +185,6 @@
   <link rel="stylesheet" href="splash.css">
   <link rel="stylesheet" href="theme-styles.css">
   <link rel="stylesheet" href="github-pages-fix.css">
-  <link rel="stylesheet" href="mobile.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
@@ -259,7 +209,7 @@
         <h1 class="glitch" data-text="Hayson Cheung">Hayson Cheung</h1>
 
         <div class="typewriter">
-          <span class="txt-rotate" data-period="2000" data-rotate='[ "Engineering Science Student", "Machine Learning", "Robotics", "Computer Vision", "Neuroevolution" ]'></span>
+          <span class="txt-rotate" data-period="2000" data-rotate='[ "Engineering Science Student", "Machine Learning Enthusiast", "Robotics Developer", "Problem Solver" ]'></span>
         </div>
 
         <div class="terminal">
@@ -348,7 +298,6 @@
   <script src="front.js"></script>
   <script src="theme-switcher.js"></script>
   <script src="scroll-progress.js"></script>
-  <script src="mobile.js"></script>
 
   <!-- Structured Data for Person -->
   <script type="application/ld+json">
@@ -370,24 +319,5 @@
     "knowsAbout": ["Machine Learning", "Robotics", "Control Systems", "Computer Vision", "Neural Networks", "Deep Learning"]
   }
   </script>
-  <!-- Webring Widget -->
-  <div class="webring-widget">
-    <a href="https://webring.ayanali.net/#https://hayson.me/My_Website?nav=prev" class="webring-arrow">
-      <i class="fas fa-chevron-left"></i>
-    </a>
-    <a href="https://webring.ayanali.net/#https://hayson.me/My_Website" target="_blank" class="webring-logo">
-      <img src="https://webring.ayanali.net/img/icon-dark.svg" alt="The Unnamed Webring"/>
-    </a>
-    <a href="https://webring.ayanali.net/#https://hayson.me/My_Website?nav=next" class="webring-arrow">
-      <i class="fas fa-chevron-right"></i>
-    </a>
-  </div>
-  <div class="webring-pointer">
-    <div class="pointer-text">Check out other's websites too!!</div>
-    <svg class="direct-arrow" width="80" height="60" viewBox="0 0 80 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M10,10 L60,50" stroke="var(--primary-color)" stroke-width="3" fill="none" />
-      <path d="M48,45 L60,50 L55,38" stroke="var(--primary-color)" stroke-width="3" fill="none" />
-    </svg>
-  </div>
 </body>
 </html>

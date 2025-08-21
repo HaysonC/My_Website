@@ -3,8 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="icon" href="../../badge.png" type="image/png">
-  <title>LSTM Encoder-Decoder Translator with TensorFlow</title>
+  <title>Evolving Agents with NEAT</title>
   <link rel="stylesheet" href="../../style.css">
   <link rel="stylesheet" href="../blog-style.css">
   <!-- Font Awesome for icons -->
@@ -16,106 +15,125 @@
   </script>
 </head>
 <body>
-  <a href="../index.html" class="back-home-btn">
-  <i class="fas fa-home"></i> Back to Posts
-</a>
+  <a href="../index.html" class="back-home-btn">Back to Posts</a>
   <div class="blog-container">
+    <section class="acknowledgment">
+      <h2>Acknowledgment</h2>
+      <p>I would like to thank my professor, UTMIST, and the contributors to this project:</p>
+      <p><a href="https://www.cs.toronto.edu/~guerzhoy/">Prof. Micheal Guerzhoy</a> created the pong game environment;</p>
+      <p><a href="https://jetchiang.co/">Jet Chiang</a> worked on the pong project with me and also used Deep Q Learning to train the pong bot;</p>
+      <p><a href="https://www.linkedin.com/in/epic-eric/?originalSubdomain=ca">Eric Xie</a> who helped me with the smash bros project;</p>
+      <p><a href="https://www.linkedin.com/in/paul-dong-986531258/?originalSubdomain=ca">Paul Dong</a> who helped me with the smash bros project; and</p>
+      <p><a href="https://utmist.gitlab.io/">UTMIST</a> for organizing the smash bros platform.</p>
+    </section>
+
     <header>
-      <h1>LSTM Encoder-Decoder Translator with TensorFlow</h1>
-      <p class="intro">Sequence to Sequence Learning with LSTM adapted from Ilya Sutskever, Oriol Vinyals, and Quoc V. Le.</p>
+      <h1>Evolving Agents with NEAT</h1>
+      <p class="intro">
+        A deep dive into NeuroEvolution of Augmenting Topologies (NEAT) and its role in evolving intelligent game agents.
+      </p>
       <div class="social-icon">
-        <a href="https://github.com/HaysonC/Encoder-DecoderLSTMTranslator" target="_blank" class="icon"><i class="fab fa-github"></i></a>
-        <a href="https://colab.research.google.com/drive/1qdCU3CGQ1AeH1kQwXrgmcJOrJtX8a8Pn?usp=sharing" target="_blank" class="icon"><i class="fas fa-link"></i></a>
+        <a href="https://github.com/HaysonC/NEAT-PongBot" target="_blank" class="icon" title="Pong Bot">
+          <i class="fab fa-github"></i>
+        </a>
+        <a href="https://github.com/HaysonC/NEAT-PongBot" target="_blank" class="icon" title="Smash Bros">
+          <i class="fab fa-github"></i>
+        </a>
       </div>
     </header>
 
     <section class="blog-post-content">
-      <h2>Project Overview</h2>
       <p>
-        <strong>Sequence to Sequence Learning with Keras (Beta)</strong> – Authored by Hayson Cheung (<a href="mailto:hayson.cheung@mail.utoronto.ca">hayson.cheung@mail.utoronto.ca</a>).<br>
-        Adapted from the seminal work of Ilya Sutskever, Oriol Vinyals, and Quoc V. Le in their paper
-        <a href="https://papers.nips.cc/paper/5346-sequence-to-sequence-learning-with-neural-networks.pdf" target="_blank">Sequence to Sequence Learning with Neural Networks (NIPS 2014)</a>.
+        <a href="https://en.wikipedia.org/wiki/Neuroevolution_of_augmenting_topologies"><strong>NeuroEvolution of Augmenting Topologies (NEAT)</strong></a> is a groundbreaking method for evolving neural networks using genetic algorithms. Unlike traditional methods that rely on fixed architectures, NEAT starts with minimal networks and progressively complexifies them through evolutionary processes.
       </p>
-
-      <h2>Overview LSTM enc-dec</h2>
       <p>
-        Long Short-Term Memory (LSTM) networks are a type of recurrent neural network (RNN) designed to handle sequential data. Unlike traditional RNNs, LSTMs mitigate the vanishing gradient problem by using gating mechanisms that control the flow of information.
+        One of the key ideas behind NEAT is to <a href="https://nn.cs.utexas.edu/downloads/papers/stanley.ec02.pdf" target="_blank">preserve innovation</a> by protecting new structures through speciation. This allows for a more diverse set of network configurations to be explored.
       </p>
-
-      <h3>Encoders and Decoders in LSTM</h3>
       <p>
-        Below is a figure of the LSTM Encoder-Decoder model. The encoder processes the input sequence and generates a context vector, which is then fed into the decoder to generate the output sequence base on the encoder's context vector and its hidden states and previous output.
+        The probability maximizing objective used in many of these evolutionary methods can be expressed as:
       </p>
-
-      <div class="image-container">
-        <img src="lstmencdec.png" alt="LSTM Encoder-Decoder Model">
+      <div style="text-align: center; margin: 20px 0;">
+        $$\max_\theta \mathbb{E}_{x \sim P}\left[ \log p_\theta(x) \right]$$
       </div>
-      <p class="image-description">LSTM Encoder-Decoder architecture for sequence-to-sequence learning.</p>
-
-      <h3>Encoding Process</h3>
       <p>
-        In an LSTM Encoder-Decoder framework, the <strong>encoder</strong> processes the input sequence $$ X = (x_1, x_2, ..., x_T) $$ and compresses it into a fixed-size latent vector $$ h_T $$, also known as the **context vector**. This latent space representation captures the semantics of the entire sequence.
+        and we would maximize the expected likelihood of a favorable policy through gradient. However, in NEAT, the objective is to maximize the expected likelihood of a favorable policy through genetic algorithms.
       </p>
       <p>
-        The LSTM cell is governed by the following equations:
+        In my experiments, I applied NEAT to create a Pong bot and evolve agents for Smash Bros-style games. These projects demonstrate NEAT's potential to generate adaptive, robust solutions even in dynamic and competitive environments.
       </p>
-      \[
-      f_t = \sigma(W_f x_t + U_f h_{t-1} + b_f)
-      \]
-      \[
-      i_t = \sigma(W_i x_t + U_i h_{t-1} + b_i)
-      \]
-      \[
-      \tilde{C}_t = \tanh(W_c x_t + U_c h_{t-1} + b_c)
-      \]
-      \[
-      C_t = f_t \odot C_{t-1} + i_t \odot \tilde{C}_t
-      \]
-      \[
-      o_t = \sigma(W_o x_t + U_o h_{t-1} + b_o)
-      \]
-      \[
-      h_t = o_t \odot \tanh(C_t)
-      \]
       <p>
-        Here, $$ f_t, i_t, o_t $$ represent the forget, input, and output gates, while $$ C_t $$ is the cell state that stores long-term dependencies. The hidden state $$ h_T $$ at the final timestep encodes the full input sequence.
+        Despite its "retro" reputation compared to modern deep learning techniques, NEAT's evolutionary approach provides unique insights into neural network design. For researchers and practitioners alike, it remains a powerful tool for exploring innovative architectures.
       </p>
 
-      <h3>Latent Space Representation</h3>
+      <h2>The Pong Experiment</h2>
+      <p><i>Project done in Collaboration with Jet Chiang, <a href="https://jetchiang.co/post/pong/">check it out</a></i></p>
+      <p><i>Project done using the neat-python library, <a href="https://neat-python.readthedocs.io/en/latest/">check it out</a></i></p>
       <p>
-        The hidden state $$ h_T $$ and cell state $$ C_T $$ together form a **latent representation** of the input sequence. This latent space is crucial because it acts as a bottleneck that forces the model to learn a compact, meaningful representation of the input before generating output.
+        When school started, sun shines warmly. I had some spare time to work on a project that I have been wanting to do for a long time.
+        I saw videos about evolved creatures and different kinds of games or environments that were evolved. I felt it was very interesting compared
+        to deep learning (which are just matrix multiplication in very smart ways). I wanted to simulate the evolution of creatures like how animals evolved.
+      </p>
+      <p>
+        I started with a simple game called <a href="https://en.wikipedia.org/wiki/Pong">Pong</a>. I wanted to see if I could evolve a Pong bot that could play the game well. I used NEAT to evolve the
+        neural network that controlled the Pong bot. I was surprised by how well the bot played after a few generations. It was able to beat the game
+        against me (that is partly due to my subpar Pong skills). However, just the raw neat is <i>not</i> enough to make the bot play well. Evidently, those who are more <i>gifted</i> in the game of Pong can still beat the bot easily.
       </p>
 
-      <h3>Decoding Process</h3>
+      <div class="video-container">
+        <video controls>
+          <source src="pong_demo.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+        <p class="video-description">Demo of a self-play Pong agent trained after 5 minutes.</p>
+      </div>
+
+      <h2>How NEAT Works - Speciation, Crossover, and Mutation</h2>
       <p>
-        The **decoder** receives the latent representation and generates an output sequence $$ Y = (y_1, y_2, ..., y_T') $$. At each timestep, it takes the previous output token and hidden state as input:
+        In NEAT, each generation is composed of a population of "genome" structures, which represent neural networks.
+        We call those network "phenotypes" of the genome. The network, is simply a directed graph,
+        with no concept of "layers" (which we expect in a typical neural network).
+        The genome is composed of nodes and connections, where nodes represent neurons and connections represent synapses. The nodes are divided into three types: input, output, and hidden nodes. The connections are weighted and can be either enabled or disabled. The genome is then evaluated based on a fitness function, which determines its performance in the given task.
+        As in real evolution, the fittest genomes are selected to reproduce, passing on their genes to the next generation. This process involves crossover and mutation, which introduce new genetic material and drive diversity in the population.
       </p>
-      \[
-      s_t = \text{LSTM}(y_{t-1}, s_{t-1})
-      \]
-      \[
-      p(y_t | y_1, ..., y_{t-1}, X) = \text{softmax}(W_s s_t + b_s)
-      \]
       <p>
-        This probability distribution is used to select the next token in the output sequence.
+        One of the important pillars of NEAT is Speciation. Speciation is the process of dividing the population into species based on the similarity of the genomes.
+        This is important because it allows the population to maintain diversity and prevents the population from converging to a local optimum. It also protects new innovations from being wiped out as the genome evolves.
+        We determine the similarity of two genomes by calculating the compatibility distance between them. The compatibility distance is a measure of how similar two genomes are based on their structure, which is given by the formula:
+      </p>
+      <div style="text-align: center; margin: 20px 0;">
+        $$\delta = c_1 \cdot E + c_2 \cdot D + c_3 \cdot W$$
+      </div>
+      <p>
+        where $$E$$ is the number of excess genes, $$D$$ is the number of disjoint genes, and $$W$$ is the average weight difference of matching genes. The coefficients $$c_1$$, $$c_2$$, and $$c_3$$ are constants that determine the importance of each term.
+      </p>
+      <p>
+        Crossover is the process of combining the genetic material of two parents to produce offspring. In NEAT, crossover is performed by aligning the genes of the parents based on their innovation numbers. Matching genes are inherited randomly from either parent, while disjoint or excess genes are inherited from the more fit parent.
+      </p>
+      <p>
+        Mutation introduces genetic diversity by altering the structure of the genome. In NEAT, mutation can occur in three ways: adding a new node, adding a new connection, or modifying the weight of an existing connection. These mutations allow the genome to explore new network topologies and improve its performance.
       </p>
 
-      <h3>Limitations & Future Improvements</h3>
+      <h2>Smash Bros. Evolution</h2>
+      <p><i>Project done in Collaboration with Eric Xie, Paul Dong, and Jet Chiang</i></p>
+      <p><i>Project done on UTMIST AI^2 Platform, <a href="https://www.utmist.ca/ai2">check it out</a></i></p>
       <p>
-        While this approach is effective, using a single context vector $$ h_T $$ to encode the entire sequence can be a bottleneck. To improve performance, modern architectures introduce **attention mechanisms**, which allow the decoder to focus on different parts of the input sequence dynamically.
+        The second time we use neat, is an integration of neat and LSTM on a smash bros game. We used the UTMIST AI^2 platform to create a smash bros game where the agents are evolved using neat. The agents are trained using the neat-python library. The agents are trained to play the game by maximizing the expected likelihood of a favorable policy through genetic algorithms.
       </p>
-    </section>
 
-    <section class="blog-post-content">
-      <h2>Further Improvements: Attention Mechanisms</h2>
+      <h3>Why did I use rNEAT?</h3>
       <p>
-        One key limitation of the basic sequence-to-sequence model is that it relies on a fixed-dimensional context vector to summarize the entire input sequence. This can be problematic for long input sequences, as the context vector may not capture all relevant information.
+        I used rNEAT because it is a powerful tool for evolving neural networks. It allows for the evolution of complex structures through speciation, crossover, and mutation. rNEAT is particularly well-suited for evolving agents in dynamic and competitive environments, such as games. By combining rNEAT with LSTM, we can create agents that adapt to changing conditions and learn complex strategies over time.
       </p>
       <p>
-        To address this, attention mechanisms were introduced in later works, allowing the decoder to focus on different parts of the input sequence at each time step. The <a href="https://arxiv.org/abs/1409.0473" target="_blank">Bahdanau Attention (Neural Machine Translation by Jointly Learning to Align and Translate)</a> model proposed a soft alignment method where the decoder dynamically attends to different encoder hidden states.
+        For more information on LSTM, check out my post on <a href="../LSTM">LSTM</a>.
+      </p>
+
+      <h3>Improvements</h3>
+      <p>
+        We observe that the agent started to evolve "sensible" moves like trying to attack after a short time. However, neat is extremely dependent on the set up of the training (the reward function, the environment, etc.). The agents seemed to be stuck in a certain local optimum where they just spam the same move over and over again. This is a common problem in neat, where the agents are stuck in a local optimum. This is a problem that is still being researched and is a problem that is still being worked on.
       </p>
       <p>
-        This idea was further extended in <a href="https://arxiv.org/abs/1508.04025" target="_blank">Luong Attention (Effective Approaches to Attention-based Neural Machine Translation)</a>, which introduced different types of attention mechanisms. Attention has since become a foundational concept in deep learning for NLP, leading to the development of Transformer models.
+        I spoke with one of the people that worked in <a href="https://www.youtube.com/@aiwarehouse">AI Warehouse</a>: <a href="https://tanayjyot.vercel.app">Tanayjyot</a>. The suggestion is to also evolve with the hyperparameters of the neat algorithm, by trying different training with different hyperparameters. This is a good suggestion and is something that I will try in the future.
       </p>
     </section>
 
@@ -123,24 +141,19 @@
       <h2>Suggested Reading</h2>
       <ul>
         <li>
-          <strong><a href="https://papers.nips.cc/paper/5346-sequence-to-sequence-learning-with-neural-networks.pdf" target="_blank">Sequence to Sequence Learning with Neural Networks</a></strong><br>
-          Authors: Ilya Sutskever, Oriol Vinyals, and Quoc V. Le<br>
-          This foundational paper introduces the sequence-to-sequence model that underpins many modern translation systems.
+          <strong><a href="https://arxiv.org/pdf/1410.7326" target="_blank">Neuroevolution in Games: State of the Art and Open Challenges</a></strong><br>
+          Authors: Sebastian Risi and Julian Togelius<br>
+          This paper surveys the application of neuroevolution techniques in gaming, analyzing various neural network types, evolutionary methods, and fitness evaluations.
         </li>
         <li>
-          <strong><a href="https://arxiv.org/abs/1409.3215" target="_blank">Learning Phrase Representations using RNN Encoder-Decoder for Statistical Machine Translation</a></strong><br>
-          Authors: Kyunghyun Cho, Bart van Merrienboer, Caglar Gulcehre, Dzmitry Bahdanau, Fethi Bougares, Holger Schwenk, and Yoshua Bengio<br>
-          This paper introduces the attention mechanism, a key innovation in sequence-to-sequence models.
+          <strong><a href="https://nn.cs.utexas.edu/downloads/papers/stanley.ec02.pdf" target="_blank">Evolving Neural Networks through Augmenting Topologies</a></strong><br>
+          Authors: Kenneth O. Stanley and Risto Miikkulainen<br>
+          This foundational paper introduces NEAT, explaining how evolving both neural network topologies and weights can outperform fixed-topology methods.
         </li>
         <li>
-          <strong><a href="https://arxiv.org/abs/1409.0473" target="_blank">Neural Machine Translation by Jointly Learning to Align and Translate</a></strong><br>
-          Authors: Dzmitry Bahdanau, Kyunghyun Cho, and Yoshua Bengio<br>
-          This paper presents the Bahdanau (Additive) Attention mechanism, which improves translation quality by dynamically attending to different input words.
-        </li>
-        <li>
-          <strong><a href="https://arxiv.org/abs/1508.04025" target="_blank">Effective Approaches to Attention-based Neural Machine Translation</a></strong><br>
-          Authors: Minh-Thang Luong, Hieu Pham, and Christopher D. Manning<br>
-          This paper introduces different types of attention mechanisms, including global and local attention, refining the alignment process.
+          <strong><a href="https://www.cs.utexas.edu/~mhauskn/projects/atari/movies.html" target="_blank">A Neuroevolution Approach to General Atari Game Playing</a></strong><br>
+          Authors: Matthew Hausknecht et al.<br>
+          This project showcases the application of neuroevolutionary algorithms, including NEAT, to classic Atari 2600 games. The link includes videos demonstrating evolved agents.
         </li>
       </ul>
     </section>
