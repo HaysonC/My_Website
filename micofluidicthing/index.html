@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Microfluidic Annotator (Standalone)</title>
+  <style>
+    * { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Ubuntu, Cantarell, sans-serif; }
+    #app { height: 100%; display: flex; gap: 16px; padding: 12px; background: linear-gradient(180deg,#071126,#041026); color: #cfe8ff; }
+    .sidebar { width: 360px; background: rgba(255,255,255,0.04); border-radius: 10px; padding: 12px; display: flex; flex-direction: column; }
+    .topbar { display: flex; align-items: center; gap: 8px; }
+    .topbar h3 { margin: 0; flex: 1; }
+    .btn { background: linear-gradient(180deg,#36a3ff,#1d80c9); border: none; color: white; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-weight: 600; }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .hint { font-size: 13px; color: #9aa4b2; margin: 8px 0; line-height: 1.4; }
+    .imageList { list-style: none; padding: 0; margin: 8px 0; display: flex; flex-direction: column; gap: 8px; overflow: auto; flex: 1; }
+    .imageList li { display: flex; gap: 8px; align-items: center; padding: 8px; border-radius: 8px; cursor: pointer; border: 1px solid transparent; }
+    .imageList li:hover { background: rgba(255, 255, 255, 0.05); }
+    .imageList li.active { background: rgba(54, 163, 255, 0.15); border-color: rgba(54,163,255,0.3); }
+    .thumb { width: 64px; height: 48px; object-fit: cover; border-radius: 6px; background: #0b1a33; }
+    .meta { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+    .name { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .sub { font-size: 12px; color: #9aa4b2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+    .viewer { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+    .viewerTop { display: flex; align-items: center; gap: 8px; }
+    .controls { display: flex; gap: 8px; align-items: center; }
+    .content { display: flex; flex-direction: column; gap: 12px; margin-top: 12px; }
+    .left { min-width: 0; display: flex; flex-direction: column; gap: 8px; }
+    .image-wrap { position: relative; background: rgba(255,255,255,0.04); border-radius: 10px; padding: 8px; border: 1px solid rgba(255,255,255,0.05); }
+    .image-wrap img { display: block; max-width: 100%; border-radius: 8px; }
+    .image-wrap canvas.overlay { position: absolute; left: 8px; top: 8px; border-radius: 8px; pointer-events: auto; cursor: crosshair; }
+    .note { font-size: 13px; color: #9aa4b2; line-height: 1.4; padding: 8px; background: rgba(0,0,0,0.2); border-radius: 6px; }
+
+    .right { width: 100%; }
+    .table-card { background: rgba(255,255,255,0.04); border-radius: 10px; padding: 12px; border: 1px solid rgba(255,255,255,0.05); }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    thead th { text-align: left; padding: 6px; color: #9aa4b2; background: rgba(255,255,255,0.06); }
+    td,th { padding: 6px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+
+    @media (min-width: 1100px) {
+      .content { flex-direction: row; }
+      .left { flex: 1; }
+      .right { width: 460px; }
+    }
+
+    .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: none; align-items: center; justify-content: center; }
+    .modal .panel { width: min(720px, 92vw); background: #0e1e3a; color: #cfe8ff; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 16px; }
+    .modal .panel h3 { margin-top: 0; }
+  </style>
+  <!-- Libraries from CDN (required): JSZip for ZIP parsing, UTIF for TIFF decoding -->
+  <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/utif@3.0.0/UTIF.min.js"></script>
+</head>
+<body>
+  <div id="app">
+    <aside class="sidebar">
+      <div class="topbar">
+        <h3>Images</h3>
+        <button class="btn" id="btnHelp">Instructions</button>
+      </div>
+      <div class="hint">Upload a .zip containing folders like data/images and data/metadata (XML with Exposure). TIFFs are supported via UTIF.</div>
+      <div style="display:flex; gap:8px; align-items:center;">
+        <input type="file" id="zipInput" accept="application/zip" />
+        <button class="btn" id="btnUseZip" disabled>Use ZIP</button>
+      </div>
+      <ul class="imageList" id="imageList"></ul>
+      <div class="hint">
+        Scale: <input type="number" id="inpScalePx" value="156" style="width:80px"> px per
+        <input type="number" id="inpScaleUm" value="100" style="width:80px"> µm
+      </div>
+    </aside>
+
+    <main class="viewer">
+      <div class="viewerTop">
+        <h3 id="title">No image selected</h3>
+        <div style="flex:1"></div>
+        <div class="controls">
+          <button class="btn" id="btnUndo" disabled>↶ Undo</button>
+          <button class="btn" id="btnClear" disabled>Clear All</button>
+          <input type="file" id="csvInput" accept="text/csv" />
+          <button class="btn" id="btnSaveCsv" disabled>Save CSV</button>
+          <span id="dirtyBadge" style="font-size:12px;color:#ffeb3b;display:none;">Unsaved</span>
+        </div>
+      </div>
+      <div class="content">
+        <div class="left">
+          <div class="image-wrap">
+            <img id="img" alt="" />
+            <canvas id="overlay" class="overlay"></canvas>
+          </div>
+          <div class="note">
+            <b>Click</b>: start or finish a line. <b>Hold 'A' + click</b>: add intermediate points for curved paths.
+            <span id="wipStatus"></span>
+            <br>Exposure from metadata: <span id="expLabel">N/A</span> ms
+          </div>
+        </div>
+        
+        <div class="right">
+          <div class="table-card">
+            <h4>Annotations</h4>
+            <table>
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Points</th>
+                  <th>Start (px)</th>
+                  <th>End (px)</th>
+                  <th>Dist (µm)</th>
+                  <th>Exposure (ms)</th>
+                  <th>Vel (µm/s)</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="tableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <div class="modal" id="helpModal">
+    <div class="panel">
+      <h3>How to use</h3>
+      <ol>
+        <li>Prepare a <b>.zip</b> with your data. Recommended structure:
+          <pre>data/
+  images/   # .tif/.tiff/.png/.jpg
+  metadata/ # .xml with &lt;Exposure&gt;74.7 ms&lt;/Exposure&gt;</pre>
+        </li>
+        <li>Click "Use ZIP" after selecting your file. The app will index images and match metadata.</li>
+        <li>Select an image to annotate. Click to start, hold 'A' to add intermediate points, click again to finish.</li>
+        <li>Use Save CSV to download a CSV. Annotations also auto-save to your browser's localStorage.</li>
+        <li>If you try to close the tab with unsaved changes, you will be warned.</li>
+      </ol>
+      <div style="text-align:right; margin-top:12px;"><button class="btn" id="btnCloseHelp">Close</button></div>
+    </div>
+  </div>
+
+  <script>
+  ;(() => {
+    const $ = (id) => document.getElementById(id)
+
+    // ---------- State ----------
+    let zipFile = null
+    let datasetId = 'session'
+  let images = [] // [{name, url, exposureMs, thumbUrl, objectUrl?}]
+    let selected = null
+    let annotations = [] // current image annotations: [{points:[{x,y}], distPx, distUm, exposureMs, velUmMs, velUmS}]
+    let history = []
+    let currentPoints = []
+    let dirty = false // "Unsaved" relative to CSV download
+    let holdingA = false
+
+    // ---------- Elements ----------
+    const imgEl = document.getElementById('img')
+    const canvas = document.getElementById('overlay')
+    const ctx = canvas.getContext('2d')
+    const imageListEl = document.getElementById('imageList')
+    const titleEl = document.getElementById('title')
+    const expLabel = document.getElementById('expLabel')
+    const wipStatus = document.getElementById('wipStatus')
+    const tableBody = document.getElementById('tableBody')
+    const dirtyBadge = document.getElementById('dirtyBadge')
+
+    const btnHelp = document.getElementById('btnHelp')
+    const helpModal = document.getElementById('helpModal')
+    const btnCloseHelp = document.getElementById('btnCloseHelp')
+    const zipInput = document.getElementById('zipInput')
+    const btnUseZip = document.getElementById('btnUseZip')
+    const btnUndo = document.getElementById('btnUndo')
+    const btnClear = document.getElementById('btnClear')
+    const csvInput = document.getElementById('csvInput')
+    const btnSaveCsv = document.getElementById('btnSaveCsv')
+    const inpScalePx = document.getElementById('inpScalePx')
+    const inpScaleUm = document.getElementById('inpScaleUm')
+
+    // ---------- Utilities ----------
+    const pad = 8 // CSS padding around image inside image-wrap
+    const dpr = () => window.devicePixelRatio || 1
+    const pxToMicron = (px) => px * (Number(inpScaleUm.value) / Number(inpScalePx.value || 1))
+    const storageKey = (imgName) => `standalone::${datasetId}::${imgName}`
+
+    function setDirty(v) {
+      dirty = v
+      dirtyBadge.style.display = dirty ? 'inline-block' : 'none'
+    }
+
+    function pushHistory() {
+      // deep copy annotations for undo
+      history.push(JSON.parse(JSON.stringify(annotations)))
+      btnUndo.disabled = history.length === 0
+    }
+
+    function loadAnnotationsFor(name) {
+      try {
+        const raw = localStorage.getItem(storageKey(name))
+        annotations = raw ? JSON.parse(raw) : []
+      } catch { annotations = [] }
+      history = []
+      btnUndo.disabled = true
+      btnClear.disabled = annotations.length === 0
+      btnSaveCsv.disabled = !selected
+      setDirty(false)
+      renderTable()
+      drawAll()
+    }
+
+    function persist() {
+      if (!selected) return
+      try { localStorage.setItem(storageKey(selected.name), JSON.stringify(annotations)) } catch {}
+    }
+
+    // ---------- Help modal ----------
+    btnHelp.addEventListener('click', () => { helpModal.style.display = 'flex' })
+    btnCloseHelp.addEventListener('click', () => { helpModal.style.display = 'none' })
+
+    // Warn on close if unsaved (dirty)
+    window.addEventListener('beforeunload', (e) => {
+      if (dirty) {
+        e.preventDefault()
+        e.returnValue = ''
+      }
+    })
+
+    // Track 'A' key for multi-point add
+    window.addEventListener('keydown', (e) => { if (e.key === 'a' || e.key === 'A') holdingA = true })
+    window.addEventListener('keyup', (e) => { if (e.key === 'a' || e.key === 'A') holdingA = false })
+
+    // ---------- ZIP handling ----------
+    zipInput.addEventListener('change', (e) => {
+      zipFile = e.target.files && e.target.files[0]
+      btnUseZip.disabled = !zipFile
+      if (zipFile) datasetId = zipFile.name.replace(/\W+/g, '_')
+    })
+
+    const releaseBlobUrls = () => {
+      images.forEach(img => {
+        if (img.objectUrl) {
+          URL.revokeObjectURL(img.objectUrl)
+        }
+      })
+    }
+
+    btnUseZip.addEventListener('click', async () => {
+      if (!zipFile) return
+      btnUseZip.disabled = true
+      releaseBlobUrls()
+      images = []
+      selected = null
+      titleEl.textContent = 'Indexing ZIP…'
+      imageListEl.innerHTML = ''
+  imgEl.src = ''
+      try {
+        const zip = await JSZip.loadAsync(zipFile)
+        const files = Object.values(zip.files)
+        // Collect metadata texts upfront
+        const metaTexts = {} // key by filename (lowercased)
+        for (const f of files) {
+          if (f.dir) continue
+          const lname = f.name.toLowerCase()
+          if (lname.endsWith('.xml')) {
+            metaTexts[lname] = await zip.file(f.name).async('text')
+          }
+        }
+        // Helper to get exposure from candidate xml names
+        const extractExposure = (imgName) => {
+          const base = imgName.replace(/^.*\//, '') // strip path
+          const variants = [
+            `data/metadata/${base}.cal.xml`,
+            `data/metadata/${base}.tif.cal.xml`,
+            `metadata/${base}.cal.xml`,
+            `metadata/${base}.tif.cal.xml`,
+            `${base}.cal.xml`,
+          ]
+          // also try matching by base without ext
+          const m = base.lastIndexOf('.')
+          const noext = m>=0? base.slice(0,m): base
+          variants.push(
+            `data/metadata/${noext}.tif.cal.xml`,
+            `data/metadata/${noext}.cal.xml`,
+            `metadata/${noext}.tif.cal.xml`,
+            `metadata/${noext}.cal.xml`,
+            `${noext}.cal.xml`
+          )
+          for (const v of variants) {
+            const t = metaTexts[v.toLowerCase()]
+            if (t) {
+              const m1 = t.match(/<Exposure>([^<]+)<\/Exposure>/i)
+              if (m1) {
+                const n = (m1[1].match(/([0-9]*\.?[0-9]+)/) || [])[1]
+                if (n) return Number(n)
+              }
+            }
+          }
+          // fallback: search any xml that contains the base name
+          for (const [k, t] of Object.entries(metaTexts)) {
+            if (k.includes(noext.toLowerCase())) {
+              const m1 = t.match(/<Exposure>([^<]+)<\/Exposure>/i)
+              if (m1) {
+                const n = (m1[1].match(/([0-9]*\.?[0-9]+)/) || [])[1]
+                if (n) return Number(n)
+              }
+            }
+          }
+          return null
+        }
+
+        // Build image entries
+        for (const f of files) {
+          if (f.dir) continue
+          const lname = f.name.toLowerCase()
+          if (!(lname.endsWith('.tif') || lname.endsWith('.tiff') || lname.endsWith('.png') || lname.endsWith('.jpg') || lname.endsWith('.jpeg'))) continue
+          let url = ''
+          let objectUrl = null
+          if (lname.endsWith('.tif') || lname.endsWith('.tiff')) {
+            // Decode TIFF via UTIF
+            const buf = await zip.file(f.name).async('arraybuffer')
+            const ifds = UTIF.decode(buf)
+            if (ifds && ifds.length) {
+              UTIF.decodeImage(buf, ifds[0])
+              const rgba = UTIF.toRGBA8(ifds[0])
+              const width = Math.max(1, Math.floor(Number(ifds[0].width || ifds[0].ImageWidth || ifds[0].cols || 0)))
+              const height = Math.max(1, Math.floor(Number(ifds[0].height || ifds[0].ImageLength || ifds[0].rows || 0)))
+              if (width > 0 && height > 0) {
+                const c = document.createElement('canvas')
+                c.width = width
+                c.height = height
+                const cctx = c.getContext('2d')
+                const imgData = cctx.createImageData(width, height)
+                imgData.data.set(rgba)
+                cctx.putImageData(imgData, 0, 0)
+                url = c.toDataURL('image/png')
+              }
+            }
+          } else {
+            const blob = await zip.file(f.name).async('blob')
+            objectUrl = URL.createObjectURL(blob)
+            url = objectUrl
+          }
+          if (!url) continue
+          const exposureMs = extractExposure(f.name)
+          images.push({ name: f.name.replace(/^.*\//,''), url, exposureMs, thumbUrl: url, objectUrl })
+        }
+
+        if (!images.length) {
+          titleEl.textContent = 'No images found in ZIP'
+          return
+        }
+        titleEl.textContent = 'Select an image'
+        renderImageList()
+      } catch (err) {
+        console.error('ZIP error', err)
+        titleEl.textContent = 'Failed to read ZIP'
+      } finally {
+        btnUseZip.disabled = false
+      }
+    })
+
+    function renderImageList() {
+      imageListEl.innerHTML = ''
+      images.forEach((img) => {
+        const li = document.createElement('li')
+        li.addEventListener('click', () => selectImage(img))
+        li.className = selected && selected.name === img.name ? 'active' : ''
+        const thumb = document.createElement('img')
+        thumb.src = img.thumbUrl
+        thumb.className = 'thumb'
+        const meta = document.createElement('div')
+        meta.className = 'meta'
+        const nameDiv = document.createElement('div')
+        nameDiv.className = 'name'
+        nameDiv.textContent = img.name
+        const subDiv = document.createElement('div')
+        subDiv.className = 'sub'
+        subDiv.textContent = img.exposureMs != null ? `Exposure: ${img.exposureMs} ms` : ''
+        meta.appendChild(nameDiv); meta.appendChild(subDiv)
+        li.appendChild(thumb); li.appendChild(meta)
+        imageListEl.appendChild(li)
+      })
+    }
+
+    function selectImage(img) {
+      selected = img
+      titleEl.textContent = img.name
+      expLabel.textContent = img.exposureMs != null ? String(img.exposureMs) : 'N/A'
+      imgEl.src = img.url
+      imgEl.onload = () => { resizeCanvas(); drawAll() }
+      currentPoints = []
+      loadAnnotationsFor(img.name)
+      btnClear.disabled = annotations.length === 0
+      btnSaveCsv.disabled = false
+      updateWip()
+      // highlight selection
+      renderImageList()
+    }
+
+    function updateWip(){
+      wipStatus.textContent = currentPoints.length ? ` (${currentPoints.length} point${currentPoints.length>1?'s':''} added, click to finish or hold A to add more)` : ''
+    }
+
+    function resizeCanvas() {
+      if (!imgEl.naturalWidth) return
+      const DPR = dpr()
+      const displayW = imgEl.clientWidth
+      const displayH = imgEl.clientHeight
+      canvas.width = Math.max(1, Math.floor((displayW - pad*2) * DPR))
+      canvas.height = Math.max(1, Math.floor((displayH - pad*2) * DPR))
+      canvas.style.width = `${displayW - pad*2}px`
+      canvas.style.height = `${displayH - pad*2}px`
+      canvas.style.left = pad + 'px'
+      canvas.style.top = pad + 'px'
+    }
+
+    window.addEventListener('resize', () => { resizeCanvas(); drawAll() })
+
+    function drawAll() {
+      if (!imgEl.naturalWidth) return
+      const DPR = dpr()
+      ctx.setTransform(DPR,0,0,DPR,0,0)
+      const displayW = imgEl.clientWidth - pad*2
+      const displayH = imgEl.clientHeight - pad*2
+      ctx.clearRect(0,0,displayW,displayH)
+      ctx.lineWidth = 2
+
+      const toDisp = (p) => ({
+        x: (p.x * (imgEl.clientWidth / imgEl.naturalWidth)) - pad,
+        y: (p.y * (imgEl.clientHeight / imgEl.naturalHeight)) - pad,
+      })
+
+      // Draw completed annotations
+      annotations.forEach(a => {
+        if (!a.points || a.points.length<2) return
+        const pts = a.points.map(toDisp)
+        ctx.strokeStyle = '#36a3ff'
+        ctx.beginPath(); ctx.moveTo(pts[0].x, pts[0].y)
+        for(let i=1;i<pts.length;i++){ ctx.lineTo(pts[i].x, pts[i].y) }
+        ctx.stroke()
+        pts.forEach((dp, idx)=>{
+          ctx.beginPath();
+          ctx.fillStyle = idx===0? '#2fb8ff' : (idx===pts.length-1? '#ff7b7b':'#ffeb3b')
+          ctx.arc(dp.x, dp.y, 5, 0, Math.PI*2); ctx.fill()
+        })
+      })
+
+      // Draw WIP line
+      if (currentPoints.length>0) {
+        const pts = currentPoints.map(toDisp)
+        ctx.setLineDash([5,5])
+        ctx.strokeStyle = '#36a3ff'
+        ctx.beginPath(); ctx.moveTo(pts[0].x, pts[0].y)
+        for(let i=1;i<pts.length;i++){ ctx.lineTo(pts[i].x, pts[i].y) }
+        ctx.stroke(); ctx.setLineDash([])
+        pts.forEach((dp, idx)=>{
+          ctx.beginPath(); ctx.fillStyle = idx===0? '#2fb8ff':'#ffeb3b'
+          ctx.arc(dp.x, dp.y, 5, 0, Math.PI*2); ctx.fill()
+        })
+      }
+    }
+
+    function annotationToRow(a, idx){
+      const pts = a.points || []
+      const start = pts[0] || {x:0,y:0}
+      const end = pts[pts.length-1] || {x:0,y:0}
+      const tr = document.createElement('tr')
+      tr.innerHTML = `
+        <td>${idx+1}</td>
+        <td>${pts.length}</td>
+        <td>${Math.round(start.x)},${Math.round(start.y)}</td>
+        <td>${Math.round(end.x)},${Math.round(end.y)}</td>
+        <td>${Math.round(a.distUm*1000)/1000}</td>
+        <td>${a.exposureMs ?? ''}</td>
+        <td>${a.velUmS? Math.round(a.velUmS*1000)/1000 : ''}</td>
+        <td><button data-del="${idx}">Delete</button></td>`
+      return tr
+    }
+
+    function renderTable(){
+      tableBody.innerHTML = ''
+      annotations.forEach((a, i)=> tableBody.appendChild(annotationToRow(a,i)))
+    }
+
+    tableBody.addEventListener('click', (e)=>{
+      const btn = e.target.closest('button[data-del]')
+      if (!btn) return
+      const idx = Number(btn.getAttribute('data-del'))
+      pushHistory()
+      annotations = annotations.filter((_,j)=> j!==idx)
+      persist(); setDirty(true)
+      btnClear.disabled = annotations.length===0
+      renderTable(); drawAll()
+    })
+
+    // ---------- Canvas interactions ----------
+    canvas.addEventListener('click', (e)=>{
+      if (!selected || !imgEl.naturalWidth) return
+      const rect = canvas.getBoundingClientRect()
+      const dx = e.clientX - rect.left
+      const dy = e.clientY - rect.top
+      const sx = (dx + pad) * (imgEl.naturalWidth / imgEl.clientWidth)
+      const sy = (dy + pad) * (imgEl.naturalHeight / imgEl.clientHeight)
+      const point = {x:sx, y:sy}
+
+      if (currentPoints.length===0) {
+        currentPoints = [point]
+      } else if (holdingA) {
+        currentPoints = [...currentPoints, point]
+      } else {
+        // Finish line
+        pushHistory()
+        const all = [...currentPoints, point]
+        let distPx = 0
+        for(let i=0;i<all.length-1;i++){
+          const dx = all[i+1].x - all[i].x
+          const dy = all[i+1].y - all[i].y
+          distPx += Math.hypot(dx,dy)
+        }
+        const distUm = pxToMicron(distPx)
+        const exp = selected.exposureMs ?? null
+        const velUmMs = exp? (distUm/exp): null
+        const velUmS = velUmMs? velUmMs*1000 : null
+        annotations = [...annotations, {points: all, distPx, distUm, exposureMs: exp, velUmMs, velUmS}]
+        currentPoints = []
+        persist(); setDirty(true)
+        btnClear.disabled = annotations.length===0
+        renderTable()
+      }
+      updateWip(); drawAll()
+    })
+
+    // ---------- Controls ----------
+    btnUndo.addEventListener('click', ()=>{
+      if (history.length===0) return
+      annotations = history.pop()
+      btnUndo.disabled = history.length===0
+      persist(); setDirty(true)
+      btnClear.disabled = annotations.length===0
+      renderTable(); drawAll()
+    })
+
+    btnClear.addEventListener('click', ()=>{
+      if (!selected || annotations.length===0) return
+      if (!confirm('Clear all annotations for this image?')) return
+      pushHistory()
+      annotations = []
+      persist(); setDirty(true)
+      btnClear.disabled = true
+      renderTable(); drawAll()
+    })
+
+    btnSaveCsv.addEventListener('click', ()=>{
+      if (!selected) return
+      const header = ['points','num_points','dist_um','exposure_ms','vel_um_s']
+      const rows = annotations.map(a=>{
+        const pts = a.points || []
+        const ptsStr = pts.map(p=>`${Math.round(p.x)},${Math.round(p.y)}`).join(';')
+        return [
+          ptsStr,
+          pts.length,
+          Math.round(a.distUm*1000)/1000,
+          a.exposureMs ?? '',
+          a.velUmS? Math.round(a.velUmS*1000)/1000 : ''
+        ].join(',')
+      })
+      const csv = [header.join(','), ...rows].join('\n')
+      const blob = new Blob([csv], {type:'text/csv'})
+      const a = document.createElement('a')
+      a.href = URL.createObjectURL(blob)
+      a.download = `${selected.name}.annotations.csv`
+      a.click()
+      setDirty(false)
+    })
+
+    csvInput.addEventListener('change', ()=>{
+      const f = csvInput.files && csvInput.files[0]
+      if (!f) return
+      const reader = new FileReader()
+      reader.onload = ()=>{
+        const txt = String(reader.result || '')
+        const lines = txt.split(/\r?\n/).map(s=>s.trim()).filter(Boolean)
+        if (lines.length<2) return
+        const header = lines[0].split(',').map(h => h.trim().toLowerCase())
+        const colIndex = (name) => header.indexOf(name)
+        const idxPoints = colIndex('points')
+        const idxDistPx = colIndex('dist_px')
+        const idxDistUm = colIndex('dist_um')
+        const idxExposure = colIndex('exposure_ms')
+        const idxVelUmS = colIndex('vel_um_s')
+        const idxVelUmMs = colIndex('vel_um_ms')
+        pushHistory()
+        const rows = lines.slice(1)
+        const arr = []
+        rows.forEach(r=>{
+          const cols = r.split(',').map(c=>c.trim())
+          const pointsCell = idxPoints >= 0 ? cols[idxPoints] : cols[0]
+          if (!pointsCell) return
+          const pts = pointsCell.split(';').map(pair=>{
+            const [x,y] = pair.split(',').map(n=>Number(n))
+            return {x, y}
+          }).filter(p=>!isNaN(p.x)&&!isNaN(p.y))
+          if (pts.length<2) return
+          let distPx = 0
+          for(let i=0;i<pts.length-1;i++){
+            const dx = pts[i+1].x - pts[i].x
+            const dy = pts[i+1].y - pts[i].y
+            distPx += Math.hypot(dx,dy)
+          }
+          const distPxCol = idxDistPx >= 0 && cols[idxDistPx] ? Number(cols[idxDistPx]) : distPx
+          const distUm = idxDistUm >= 0 && cols[idxDistUm] ? Number(cols[idxDistUm]) : pxToMicron(distPxCol)
+          const exp = idxExposure >= 0 && cols[idxExposure] ? Number(cols[idxExposure]) : (selected?.exposureMs ?? null)
+          const velUmMs = idxVelUmMs >= 0 && cols[idxVelUmMs] ? Number(cols[idxVelUmMs]) : (exp ? (distUm/exp) : null)
+          const velUmS = idxVelUmS >= 0 && cols[idxVelUmS] ? Number(cols[idxVelUmS]) : (velUmMs ? velUmMs * 1000 : null)
+          arr.push({points: pts, distPx: distPxCol, distUm, exposureMs: exp, velUmMs, velUmS})
+        })
+        annotations = arr
+        persist(); setDirty(true)
+        btnClear.disabled = annotations.length===0
+        renderTable(); drawAll()
+      }
+      reader.readAsText(f)
+    })
+
+    inpScalePx.addEventListener('change', ()=> drawAll())
+    inpScaleUm.addEventListener('change', ()=> drawAll())
+
+  })()
+  </script>
+</body>
+</html>
