@@ -3,19 +3,30 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Microfluidic Annotator (Standalone)</title>
+  <title>Microfluidic Flow Annotator - Beta</title>
   <style>
     * { box-sizing: border-box; }
     html, body { height: 100%; margin: 0; font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Ubuntu, Cantarell, sans-serif; }
-    #app { height: 100%; display: flex; gap: 16px; padding: 12px; background: linear-gradient(180deg,#071126,#041026); color: #cfe8ff; }
+    #app { height: 100%; display: flex; flex-direction: column; gap: 0; background: linear-gradient(180deg,#071126,#041026); color: #cfe8ff; }
+    
+    .header { padding: 16px 20px; background: linear-gradient(135deg, #0a1929 0%, #1a2332 100%); border-bottom: 2px solid rgba(54,163,255,0.3); box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
+    .header-content { display: flex; align-items: center; gap: 16px; }
+    .logo-section { display: flex; align-items: center; gap: 12px; }
+    .app-title { font-size: 28px; font-weight: 700; margin: 0; background: linear-gradient(135deg, #36a3ff 0%, #2fb8ff 50%, #4caf50 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .beta-badge { background: linear-gradient(135deg, #ff6b6b, #ee5a6f); color: white; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; box-shadow: 0 2px 8px rgba(255,107,107,0.4); }
+    .subtitle { color: #9aa4b2; font-size: 14px; margin: 4px 0 0 0; }
+    
+    .main-content { display: flex; gap: 16px; padding: 12px; flex: 1; min-height: 0; }
+    
     .sidebar { width: 360px; background: rgba(255,255,255,0.04); border-radius: 10px; padding: 12px; display: flex; flex-direction: column; }
     .topbar { display: flex; align-items: center; gap: 8px; }
     .topbar h3 { margin: 0; flex: 1; }
-    .btn { background: linear-gradient(180deg,#36a3ff,#1d80c9); border: none; color: white; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-weight: 600; }
+    .btn { background: linear-gradient(180deg,#36a3ff,#1d80c9); border: none; color: white; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-weight: 600; transition: all 0.2s; }
+    .btn:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(54,163,255,0.4); }
     .btn:disabled { opacity: 0.5; cursor: not-allowed; }
     .hint { font-size: 13px; color: #9aa4b2; margin: 8px 0; line-height: 1.4; }
     .imageList { list-style: none; padding: 0; margin: 8px 0; display: flex; flex-direction: column; gap: 8px; overflow: auto; flex: 1; }
-    .imageList li { display: flex; gap: 8px; align-items: center; padding: 8px; border-radius: 8px; cursor: pointer; border: 1px solid transparent; }
+    .imageList li { display: flex; gap: 8px; align-items: center; padding: 8px; border-radius: 8px; cursor: pointer; border: 1px solid transparent; transition: all 0.2s; }
     .imageList li:hover { background: rgba(255, 255, 255, 0.05); }
     .imageList li.active { background: rgba(54, 163, 255, 0.15); border-color: rgba(54,163,255,0.3); }
     .thumb { width: 64px; height: 48px; object-fit: cover; border-radius: 6px; background: #0b1a33; }
@@ -25,7 +36,7 @@
 
     .viewer { flex: 1; display: flex; flex-direction: column; min-width: 0; }
     .viewerTop { display: flex; align-items: center; gap: 8px; }
-    .controls { display: flex; gap: 8px; align-items: center; }
+    .controls { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
     .content { display: flex; flex-direction: column; gap: 12px; margin-top: 12px; }
     .left { min-width: 0; display: flex; flex-direction: column; gap: 8px; }
     .image-wrap { position: relative; background: rgba(255,255,255,0.04); border-radius: 10px; padding: 8px; border: 1px solid rgba(255,255,255,0.05); }
@@ -34,10 +45,18 @@
     .note { font-size: 13px; color: #9aa4b2; line-height: 1.4; padding: 8px; background: rgba(0,0,0,0.2); border-radius: 6px; }
 
     .right { width: 100%; }
-    .table-card { background: rgba(255,255,255,0.04); border-radius: 10px; padding: 12px; border: 1px solid rgba(255,255,255,0.05); }
-    table { width: 100%; border-collapse: collapse; font-size: 13px; }
-    thead th { text-align: left; padding: 6px; color: #9aa4b2; background: rgba(255,255,255,0.06); }
-    td,th { padding: 6px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .table-card { background: rgba(255,255,255,0.04); border-radius: 10px; padding: 12px; border: 1px solid rgba(255,255,255,0.05); overflow-x: auto; max-height: 500px; overflow-y: auto; }
+    .table-wrapper { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 12px; min-width: 600px; }
+    thead th { text-align: left; padding: 6px 4px; color: #9aa4b2; background: rgba(255,255,255,0.06); white-space: nowrap; position: sticky; top: 0; z-index: 1; }
+    td,th { padding: 6px 4px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    tbody tr { transition: background-color 0.2s, transform 0.1s; cursor: pointer; }
+    tbody tr:hover { background: rgba(54,163,255,0.15); }
+    tbody tr.highlight { background: rgba(255,235,59,0.25) !important; transform: scale(1.02); box-shadow: 0 0 8px rgba(255,235,59,0.4); }
+    
+    .btn-delete { background: transparent; border: none; color: #ff6b6b; cursor: pointer; padding: 4px 8px; border-radius: 4px; font-size: 16px; transition: all 0.2s; }
+    .btn-delete:hover { background: rgba(255,107,107,0.2); transform: scale(1.1); }
+    .btn-delete:active { transform: scale(0.95); }
 
     @media (min-width: 1100px) {
       .content { flex-direction: row; }
@@ -45,9 +64,102 @@
       .right { width: 460px; }
     }
 
-    .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: none; align-items: center; justify-content: center; }
-    .modal .panel { width: min(720px, 92vw); background: #0e1e3a; color: #cfe8ff; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 16px; }
-    .modal .panel h3 { margin-top: 0; }
+    .modal { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.10); display: none; align-items: center; justify-content: center; z-index: 1000; }
+    .modal .panel { width: min(720px, 92vw); max-height: 85vh; overflow-y: auto; background: #0e1e3a; color: #cfe8ff; border: 1px solid rgba(255,255,255,0.6); border-radius: 12px; padding: 20px; box-shadow: 0 8px 32px rgba(0,0,0,0.5); position: relative; }
+    .modal .panel h3 { margin-top: 0; color: #36a3ff; }
+    .modal .panel h4 { color: #4caf50; margin-top: 16px; }
+    .modal .panel ul { line-height: 1.8; }
+    .modal .panel code { background: rgba(54,163,255,0.2); padding: 2px 6px; border-radius: 4px; color: #2fb8ff; }
+    
+    .modal-buttons-fixed { position: fixed; bottom: 20px; right: 20px; z-index: 1001; }
+    
+    .confirm-modal { background: rgba(0,0,0,0.3) !important; backdrop-filter: blur(4px); }
+    .confirm-modal .panel { background: rgba(14,30,58,0.85) !important; backdrop-filter: blur(10px); }
+    
+    .btn-trajectory { background: linear-gradient(180deg,#9c27b0,#7b1fa2); }
+    .btn-trajectory:hover:not(:disabled) { box-shadow: 0 4px 12px rgba(156,39,176,0.4); }
+    .btn-trajectory.active { background: linear-gradient(180deg,#4caf50,#388e3c); box-shadow: 0 0 12px rgba(76,175,80,0.6); }
+    
+    @keyframes pulse-glow {
+      0%, 100% { 
+        background: rgba(156,39,176,0.3);
+        border-color: rgba(156,39,176,0.6);
+        box-shadow: 0 0 0 0 rgba(156,39,176,0.7);
+      }
+      50% { 
+        background: rgba(156,39,176,0.5);
+        border-color: rgba(156,39,176,0.9);
+        box-shadow: 0 0 20px 5px rgba(156,39,176,0.6);
+      }
+    }
+    
+    .trajectory-mode-hint { 
+      background: rgba(156,39,176,0.2); 
+      border: 1px solid rgba(156,39,176,0.4); 
+      padding: 8px; 
+      border-radius: 6px; 
+      font-size: 13px; 
+      margin-top: 8px; 
+    }
+    
+    .trajectory-mode-hint.drawing { 
+      animation: pulse-glow 2s ease-in-out infinite;
+      font-weight: 600;
+    }
+    
+    .version-badge {
+      position: fixed;
+      bottom: 12px;
+      right: 12px;
+      background: rgba(0,0,0,0.5);
+      color: #9aa4b2;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-family: 'Monaco', 'Courier New', monospace;
+      border: 1px solid rgba(255,255,255,0.1);
+      z-index: 100;
+      backdrop-filter: blur(8px);
+    }
+    
+    .confirm-modal-content {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    
+    .confirm-modal-buttons {
+      display: flex;
+      gap: 12px;
+      justify-content: flex-end;
+    }
+    
+    .btn-confirm {
+      background: linear-gradient(180deg,#4caf50,#388e3c);
+      padding: 10px 20px;
+    }
+    
+    .btn-confirm:hover {
+      box-shadow: 0 4px 12px rgba(76,175,80,0.4);
+    }
+    
+    .btn-cancel {
+      background: linear-gradient(180deg,#ff6b6b,#ee5a6f);
+      padding: 10px 20px;
+    }
+    
+    .btn-cancel:hover {
+      box-shadow: 0 4px 12px rgba(255,107,107,0.4);
+    }
+    
+    .hint-box {
+      background: rgba(54,163,255,0.1);
+      border-left: 3px solid #36a3ff;
+      padding: 10px;
+      border-radius: 4px;
+      font-size: 13px;
+      color: #cfe8ff;
+    }
   </style>
   <!-- Libraries from CDN (required): JSZip for ZIP parsing, UTIF for TIFF decoding -->
   <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
@@ -55,6 +167,17 @@
 </head>
 <body>
   <div id="app">
+    <header class="header">
+      <div class="header-content">
+        <div class="logo-section">
+          <h1 class="app-title">Microfluidic Flow Annotator</h1>
+          <span class="beta-badge">Beta</span>
+        </div>
+      </div>
+      <p class="subtitle">Dedicated for ENGSCI 2T8</p>
+    </header>
+    
+    <div class="main-content">
     <aside class="sidebar">
       <div class="topbar">
         <h3>Images</h3>
@@ -77,6 +200,8 @@
         <h3 id="title">No image selected</h3>
         <div style="flex:1"></div>
         <div class="controls">
+          <button class="btn btn-trajectory" id="btnTrajectory" disabled>Enable Trajectory Analysis</button>
+          <button class="btn" id="btnClearBoundaries" disabled style="display:none;">Clear Boundaries</button>
           <button class="btn" id="btnUndo" disabled>↶ Undo</button>
           <button class="btn" id="btnClear" disabled>Clear All</button>
           <input type="file" id="csvInput" accept="text/csv" />
@@ -94,49 +219,144 @@
             <b>Click</b>: start or finish a line. <b>Hold 'A' + click</b>: add intermediate points for curved paths.
             <span id="wipStatus"></span>
             <br>Exposure from metadata: <span id="expLabel">N/A</span> ms
+            <div id="trajectoryModeHint" class="trajectory-mode-hint" style="display:none;">
+              <b>Trajectory Analysis Mode:</b><br>
+              <span id="trajectoryStep">Step 1: Draw the TOP boundary of the tube (click multiple points, finish at end)</span>
+            </div>
           </div>
         </div>
         
         <div class="right">
           <div class="table-card">
             <h4>Annotations</h4>
-            <table>
-              <thead>
-                <tr>
-                  <th>#</th>
-                  <th>Points</th>
-                  <th>Start (px)</th>
-                  <th>End (px)</th>
-                  <th>Dist (µm)</th>
-                  <th>Exposure (ms)</th>
-                  <th>Vel (µm/s)</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody id="tableBody"></tbody>
-            </table>
+            <div class="table-wrapper">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Actions</th>
+                    <th>#</th>
+                    <th>Pts</th>
+                    <th>Start (px)</th>
+                    <th>End (px)</th>
+                    <th>Dist (µm)</th>
+                    <th>Exp (ms)</th>
+                    <th>Vel (µm/s)</th>
+                    <th id="thDistFromCenter" style="display:none;">Center Dist (µm)</th>
+                  </tr>
+                </thead>
+                <tbody id="tableBody"></tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>
     </main>
+    </div>
+    
+    <div class="version-badge">v1.1 public</div>
   </div>
 
   <div class="modal" id="helpModal">
     <div class="panel">
-      <h3>How to use</h3>
-      <ol>
-        <li>Prepare a <b>.zip</b> with your data. Recommended structure:
-          <pre>data/
+      <h3>📖 How to Use the Microfluidic Flow Annotator</h3>
+      
+      <h4>📁 1. Load Your Data</h4>
+      <ul>
+        <li>Prepare a <b>.zip</b> file with your images and metadata:
+          <pre style="background: rgba(0,0,0,0.3); padding: 8px; border-radius: 6px; overflow-x: auto;">data/
   images/   # .tif/.tiff/.png/.jpg
-  metadata/ # the corresponding XML files with Exposure info in .Metadata 
-            # they would be in the form xxxx.tif.cal.xml
+  metadata/ # XML files with Exposure info
+            # Format: xxxx.tif.cal.xml</pre>
         </li>
-        <li>Click "Use ZIP" after selecting your file. The app will index images and match metadata.</li>
-        <li>Select an image to annotate. Click to start, hold 'A' to add intermediate points, click again to finish.</li>
-        <li>Use Save CSV to download a CSV. Annotations also auto-save to your browser's localStorage.</li>
-        <li>If you try to close the tab with unsaved changes, you will be warned.</li>
-      </ol>
-      <div style="text-align:right; margin-top:12px;"><button class="btn" id="btnCloseHelp">Close</button></div>
+        <li>Click <b>"Use ZIP"</b> to load. The app will index images and match metadata automatically.</li>
+      </ul>
+      
+      <h4>✏️ 2. Annotate Particle Trajectories</h4>
+      <ul>
+        <li><b>Click</b> on the image to start a trajectory line</li>
+        <li><b>Hold 'A' + click</b> to add intermediate points for curved particle paths</li>
+        <li><b>Click again</b> to finish the trajectory</li>
+        <li>The tool automatically calculates:
+          <ul>
+            <li>Distance traveled (in µm)</li>
+            <li>Velocity (µm/s) based on exposure time from metadata</li>
+          </ul>
+        </li>
+      </ul>
+      
+      <h4>🎯 3. Trajectory Analysis Mode (Optional)</h4>
+      <p>Enable advanced positioning analysis to measure particle distances from tube centerline:</p>
+      <ul>
+        <li>Click <b>"Enable Trajectory Analysis"</b> button</li>
+        <li><b>Step 1:</b> Draw the <span style="color: #ff6b6b;">TOP boundary</span> of your tube
+          <ul>
+            <li>Click multiple points along the top edge</li>
+            <li>Hold 'A' to add points for curved sections</li>
+            <li>Click to finish the boundary line</li>
+          </ul>
+        </li>
+        <li><b>Step 2:</b> Draw the <span style="color: #ff6b6b;">BOTTOM boundary</span> of your tube
+          <ul>
+            <li>Same process as top boundary</li>
+            <li>Boundaries can have different lengths</li>
+          </ul>
+        </li>
+        <li>The tool will compute a <span style="color: #4caf50;">green centerline</span> automatically</li>
+        <li>All trajectories now show <code>Dist from Center (µm)</code> data</li>
+        <li>Use <b>"Clear Boundaries"</b> to redraw or adjust boundaries</li>
+      </ul>
+      
+      <h4>💾 4. Save & Export</h4>
+      <ul>
+        <li><b>Auto-save:</b> Annotations save automatically to browser localStorage</li>
+        <li><b>CSV Export:</b> Click "Save CSV" to download analysis data
+          <ul>
+            <li>Includes all trajectory data</li>
+            <li>Distance from center (if trajectory analysis enabled)</li>
+            <li>Compatible with Excel, Python, R, and other analysis tools</li>
+          </ul>
+        </li>
+        <li><b>CSV Import:</b> Load previously saved annotations back into the tool</li>
+      </ul>
+      
+      <h4>🔬 Data Compatibility</h4>
+      <p>The exported data is ready for downstream analysis:</p>
+      <ul>
+        <li>Statistical analysis (mean velocity, position distribution)</li>
+        <li>Flow profile characterization</li>
+        <li>Velocity vs. position correlation studies</li>
+        <li>Machine learning feature extraction</li>
+        <li>Laminar flow validation</li>
+      </ul>
+      
+      <h4>💡 Tips</h4>
+      <ul>
+        <li>Complex tube shapes are supported - just trace the actual boundaries</li>
+        <li>Each image maintains independent tube boundaries</li>
+        <li>Unsaved changes trigger a warning before closing</li>
+        <li>Use the undo button (↶) to remove the last annotation</li>
+        <li>Scale settings (px per µm) apply to all calculations</li>
+      </ul>
+      
+      <div class="modal-buttons-fixed">
+        <button class="btn" id="btnCloseHelp">Got it!</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal confirm-modal" id="confirmBoundaryModal" style="display:none;">
+    <div class="panel">
+      <h3 id="confirmBoundaryTitle">Confirm Boundary Line</h3>
+      <div class="confirm-modal-content">
+        <p id="confirmBoundaryMessage">Is this the boundary line you want to use?</p>
+        <div class="hint-box">
+          💡 <b>Hint:</b> You can hold down 'A' and click to add multiple points for curved boundaries
+        </div>
+        <div class="confirm-modal-buttons">
+          <button class="btn btn-cancel" id="btnCancelBoundary">No, Redo</button>
+          <button class="btn btn-confirm" id="btnConfirmBoundary">Yes, Confirm</button>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -149,11 +369,21 @@
     let datasetId = 'session'
   let images = [] // [{name, url, exposureMs, thumbUrl, objectUrl?}]
     let selected = null
-    let annotations = [] // current image annotations: [{points:[{x,y}], distPx, distUm, exposureMs, velUmMs, velUmS}]
+    let annotations = [] // current image annotations: [{points:[{x,y}], distPx, distUm, exposureMs, velUmMs, velUmS, distFromCenter?}]
     let history = []
     let currentPoints = []
     let dirty = false // "Unsaved" relative to CSV download
     let holdingA = false
+    
+    // Trajectory analysis state
+    let trajectoryMode = false
+    let trajectoryStep = 0 // 0: disabled, 1: drawing top, 2: drawing bottom, 3: complete
+    let topBoundary = null // array of {x,y} points
+    let bottomBoundary = null // array of {x,y} points
+    let tubeCenterline = null // array of {x,y} points (mapped centerline)
+    
+    // Hover state
+    let hoveredAnnotationIndex = -1
 
     // ---------- Elements ----------
     const imgEl = document.getElementById('img')
@@ -165,28 +395,235 @@
     const wipStatus = document.getElementById('wipStatus')
     const tableBody = document.getElementById('tableBody')
     const dirtyBadge = document.getElementById('dirtyBadge')
+    const thDistFromCenter = document.getElementById('thDistFromCenter')
+    const trajectoryModeHint = document.getElementById('trajectoryModeHint')
+    const trajectoryStepEl = document.getElementById('trajectoryStep')
 
     const btnHelp = document.getElementById('btnHelp')
     const helpModal = document.getElementById('helpModal')
     const btnCloseHelp = document.getElementById('btnCloseHelp')
+    const confirmBoundaryModal = document.getElementById('confirmBoundaryModal')
+    const confirmBoundaryTitle = document.getElementById('confirmBoundaryTitle')
+    const confirmBoundaryMessage = document.getElementById('confirmBoundaryMessage')
+    const btnConfirmBoundary = document.getElementById('btnConfirmBoundary')
+    const btnCancelBoundary = document.getElementById('btnCancelBoundary')
     const zipInput = document.getElementById('zipInput')
     const btnUseZip = document.getElementById('btnUseZip')
+    const btnTrajectory = document.getElementById('btnTrajectory')
+    const btnClearBoundaries = document.getElementById('btnClearBoundaries')
     const btnUndo = document.getElementById('btnUndo')
     const btnClear = document.getElementById('btnClear')
     const csvInput = document.getElementById('csvInput')
     const btnSaveCsv = document.getElementById('btnSaveCsv')
     const inpScalePx = document.getElementById('inpScalePx')
     const inpScaleUm = document.getElementById('inpScaleUm')
+    
+    // Pending boundary for confirmation
+    let pendingBoundary = null
+    let pendingBoundaryStep = 0
 
     // ---------- Utilities ----------
     const pad = 8 // CSS padding around image inside image-wrap
     const dpr = () => window.devicePixelRatio || 1
     const pxToMicron = (px) => px * (Number(inpScaleUm.value) / Number(inpScalePx.value || 1))
     const storageKey = (imgName) => `standalone::${datasetId}::${imgName}`
+    const storageKeyTrajectory = (imgName) => `standalone::${datasetId}::${imgName}::trajectory`
 
     function setDirty(v) {
       dirty = v
       dirtyBadge.style.display = dirty ? 'inline-block' : 'none'
+    }
+
+    // ---------- Trajectory Analysis Functions ----------
+    
+    // Compute centerline by mapping top and bottom boundaries
+    function computeCenterline(topPts, bottomPts) {
+      if (!topPts || !bottomPts || topPts.length < 2 || bottomPts.length < 2) return null
+      
+      // Use the longer boundary as reference for parameterization
+      const refPts = topPts.length >= bottomPts.length ? topPts : bottomPts
+      const otherPts = topPts.length >= bottomPts.length ? bottomPts : topPts
+      
+      // Compute cumulative arc length for both curves
+      const getArcLengths = (pts) => {
+        const lengths = [0]
+        for (let i = 1; i < pts.length; i++) {
+          const dx = pts[i].x - pts[i-1].x
+          const dy = pts[i].y - pts[i-1].y
+          lengths.push(lengths[i-1] + Math.hypot(dx, dy))
+        }
+        return lengths
+      }
+      
+      const refLengths = getArcLengths(refPts)
+      const otherLengths = getArcLengths(otherPts)
+      const refTotalLength = refLengths[refLengths.length - 1]
+      const otherTotalLength = otherLengths[otherLengths.length - 1]
+      
+      // Interpolate point on curve at normalized parameter t (0 to 1)
+      const interpolatePoint = (pts, lengths, totalLength, t) => {
+        const targetLength = t * totalLength
+        for (let i = 0; i < lengths.length - 1; i++) {
+          if (targetLength >= lengths[i] && targetLength <= lengths[i + 1]) {
+            const segmentLength = lengths[i + 1] - lengths[i]
+            const localT = segmentLength > 0 ? (targetLength - lengths[i]) / segmentLength : 0
+            return {
+              x: pts[i].x + localT * (pts[i + 1].x - pts[i].x),
+              y: pts[i].y + localT * (pts[i + 1].y - pts[i].y)
+            }
+          }
+        }
+        return pts[pts.length - 1]
+      }
+      
+      // Sample centerline at regular intervals
+      const numSamples = Math.max(refPts.length, otherPts.length, 50)
+      const centerline = []
+      for (let i = 0; i < numSamples; i++) {
+        const t = i / (numSamples - 1)
+        const refPt = interpolatePoint(refPts, refLengths, refTotalLength, t)
+        const otherPt = interpolatePoint(otherPts, otherLengths, otherTotalLength, t)
+        centerline.push({
+          x: (refPt.x + otherPt.x) / 2,
+          y: (refPt.y + otherPt.y) / 2
+        })
+      }
+      
+      return centerline
+    }
+    
+    // Find closest point on centerline and compute distance
+    function distanceFromCenterline(point, centerline) {
+      if (!centerline || centerline.length === 0) return null
+      
+      let minDist = Infinity
+      for (const cpt of centerline) {
+        const dx = point.x - cpt.x
+        const dy = point.y - cpt.y
+        const dist = Math.hypot(dx, dy)
+        if (dist < minDist) minDist = dist
+      }
+      
+      return minDist
+    }
+    
+    // Compute centroid of a line (path of points)
+    function computeLineCentroid(points) {
+      if (!points || points.length === 0) return null
+      
+      // Weight by segment length for multi-point paths
+      if (points.length === 1) return points[0]
+      
+      let totalLength = 0
+      let weightedX = 0
+      let weightedY = 0
+      
+      for (let i = 0; i < points.length - 1; i++) {
+        const dx = points[i + 1].x - points[i].x
+        const dy = points[i + 1].y - points[i].y
+        const segmentLength = Math.hypot(dx, dy)
+        const midX = (points[i].x + points[i + 1].x) / 2
+        const midY = (points[i].y + points[i + 1].y) / 2
+        
+        weightedX += midX * segmentLength
+        weightedY += midY * segmentLength
+        totalLength += segmentLength
+      }
+      
+      if (totalLength === 0) return points[0]
+      
+      return {
+        x: weightedX / totalLength,
+        y: weightedY / totalLength
+      }
+    }
+    
+    // Recompute distances from center for all annotations
+    function recomputeTrajectoryDistances() {
+      if (!tubeCenterline) return
+      
+      annotations.forEach(a => {
+        const centroid = computeLineCentroid(a.points)
+        if (centroid) {
+          const distPx = distanceFromCenterline(centroid, tubeCenterline)
+          a.distFromCenter = distPx !== null ? pxToMicron(distPx) : null
+        }
+      })
+    }
+    
+    function persistTrajectory() {
+      if (!selected) return
+      try {
+        const data = {
+          topBoundary,
+          bottomBoundary,
+          tubeCenterline
+        }
+        localStorage.setItem(storageKeyTrajectory(selected.name), JSON.stringify(data))
+      } catch {}
+    }
+    
+    function loadTrajectoryFor(name) {
+      try {
+        const raw = localStorage.getItem(storageKeyTrajectory(name))
+        if (raw) {
+          const data = JSON.parse(raw)
+          topBoundary = data.topBoundary
+          bottomBoundary = data.bottomBoundary
+          tubeCenterline = data.tubeCenterline
+          
+          if (tubeCenterline) {
+            trajectoryMode = true
+            trajectoryStep = 3
+            updateTrajectoryButtonState()
+            recomputeTrajectoryDistances()
+          } else {
+            resetTrajectoryState()
+          }
+        } else {
+          resetTrajectoryState()
+        }
+      } catch {
+        resetTrajectoryState()
+      }
+    }
+    
+    function resetTrajectoryState() {
+      topBoundary = null
+      bottomBoundary = null
+      tubeCenterline = null
+      trajectoryMode = false
+      trajectoryStep = 0
+      updateTrajectoryButtonState()
+    }
+    
+    function updateTrajectoryButtonState() {
+      if (trajectoryMode && trajectoryStep === 3) {
+        btnTrajectory.textContent = 'Disable Trajectory Analysis'
+        btnTrajectory.classList.add('active')
+        btnClearBoundaries.style.display = 'inline-block'
+        btnClearBoundaries.disabled = false
+        trajectoryModeHint.style.display = 'block'
+        trajectoryModeHint.classList.remove('drawing') // Remove pulsing when complete
+        trajectoryStepEl.textContent = 'Trajectory analysis active. Centerline computed.'
+        thDistFromCenter.style.display = 'table-cell'
+      } else if (trajectoryMode && trajectoryStep < 3) {
+        btnTrajectory.textContent = 'Disable Trajectory Analysis'
+        btnTrajectory.classList.add('active')
+        btnClearBoundaries.style.display = 'inline-block'
+        btnClearBoundaries.disabled = false
+        trajectoryModeHint.style.display = 'block'
+        trajectoryModeHint.classList.add('drawing') // Add pulsing animation when drawing
+        thDistFromCenter.style.display = 'none'
+      } else {
+        btnTrajectory.textContent = 'Enable Trajectory Analysis'
+        btnTrajectory.classList.remove('active')
+        btnClearBoundaries.style.display = 'none'
+        btnClearBoundaries.disabled = true
+        trajectoryModeHint.style.display = 'none'
+        trajectoryModeHint.classList.remove('drawing') // Remove pulsing when disabled
+        thDistFromCenter.style.display = 'none'
+      }
     }
 
     function pushHistory() {
@@ -205,6 +642,7 @@
       btnClear.disabled = annotations.length === 0
       btnSaveCsv.disabled = !selected
       setDirty(false)
+      loadTrajectoryFor(name)
       renderTable()
       drawAll()
     }
@@ -217,6 +655,80 @@
     // ---------- Help modal ----------
     btnHelp.addEventListener('click', () => { helpModal.style.display = 'flex' })
     btnCloseHelp.addEventListener('click', () => { helpModal.style.display = 'none' })
+    
+    // Close help modal when clicking outside the panel
+    helpModal.addEventListener('click', (e) => {
+      if (e.target === helpModal) {
+        helpModal.style.display = 'none'
+      }
+    })
+    
+    // Close confirmation modal when clicking outside the panel
+    confirmBoundaryModal.addEventListener('click', (e) => {
+      if (e.target === confirmBoundaryModal) {
+        // Same as cancel - reset current boundary
+        currentPoints = []
+        pendingBoundary = null
+        pendingBoundaryStep = 0
+        confirmBoundaryModal.style.display = 'none'
+        updateWip()
+        drawAll()
+      }
+    })
+    
+    // ---------- Boundary confirmation modal ----------
+    btnConfirmBoundary.addEventListener('click', () => {
+      if (!pendingBoundary) return
+      
+      if (pendingBoundaryStep === 1) {
+        // Confirmed top boundary
+        topBoundary = pendingBoundary
+        currentPoints = []
+        trajectoryStep = 2
+        trajectoryStepEl.textContent = 'Step 2: Draw the BOTTOM boundary of the tube (click multiple points, finish at end)'
+        updateTrajectoryButtonState()
+      } else if (pendingBoundaryStep === 2) {
+        // Confirmed bottom boundary
+        bottomBoundary = pendingBoundary
+        currentPoints = []
+        trajectoryStep = 3
+        
+        // Compute centerline
+        tubeCenterline = computeCenterline(topBoundary, bottomBoundary)
+        
+        if (tubeCenterline) {
+          // Recompute distances for existing annotations
+          recomputeTrajectoryDistances()
+          updateTrajectoryButtonState()
+          persistTrajectory()
+          persist()
+          setDirty(true)
+          renderTable()
+        } else {
+          alert('Failed to compute centerline. Please try redrawing the boundaries.')
+          trajectoryStep = 1
+          topBoundary = null
+          bottomBoundary = null
+          updateTrajectoryButtonState()
+          trajectoryStepEl.textContent = 'Step 1: Draw the TOP boundary of the tube (click multiple points, finish at end)'
+        }
+      }
+      
+      pendingBoundary = null
+      pendingBoundaryStep = 0
+      confirmBoundaryModal.style.display = 'none'
+      drawAll()
+    })
+    
+    btnCancelBoundary.addEventListener('click', () => {
+      // Reset to start of current boundary
+      currentPoints = []
+      pendingBoundary = null
+      pendingBoundaryStep = 0
+      confirmBoundaryModal.style.display = 'none'
+      updateWip()
+      drawAll()
+    })
 
     // Warn on close if unsaved (dirty)
     window.addEventListener('beforeunload', (e) => {
@@ -313,6 +825,9 @@
         for (const f of files) {
           if (f.dir) continue
           const lname = f.name.toLowerCase()
+          // Skip macOS metadata files (._filename)
+          const basename = f.name.replace(/^.*\//, '')
+          if (basename.startsWith('._')) continue
           if (!(lname.endsWith('.tif') || lname.endsWith('.tiff') || lname.endsWith('.png') || lname.endsWith('.jpg') || lname.endsWith('.jpeg'))) continue
           let url = ''
           let objectUrl = null
@@ -393,6 +908,7 @@
       loadAnnotationsFor(img.name)
       btnClear.disabled = annotations.length === 0
       btnSaveCsv.disabled = false
+      btnTrajectory.disabled = false
       updateWip()
       // highlight selection
       renderImageList()
@@ -431,18 +947,81 @@
         y: (p.y * (imgEl.clientHeight / imgEl.naturalHeight)) - pad,
       })
 
+      // Draw tube boundaries and centerline if trajectory mode is active
+      if (topBoundary && topBoundary.length > 0) {
+        const pts = topBoundary.map(toDisp)
+        ctx.strokeStyle = '#ff6b6b'
+        ctx.lineWidth = 2
+        ctx.beginPath()
+        ctx.moveTo(pts[0].x, pts[0].y)
+        for (let i = 1; i < pts.length; i++) {
+          ctx.lineTo(pts[i].x, pts[i].y)
+        }
+        ctx.stroke()
+      }
+      
+      if (bottomBoundary && bottomBoundary.length > 0) {
+        const pts = bottomBoundary.map(toDisp)
+        ctx.strokeStyle = '#ff6b6b'
+        ctx.lineWidth = 2
+        ctx.beginPath()
+        ctx.moveTo(pts[0].x, pts[0].y)
+        for (let i = 1; i < pts.length; i++) {
+          ctx.lineTo(pts[i].x, pts[i].y)
+        }
+        ctx.stroke()
+      }
+      
+      if (tubeCenterline && tubeCenterline.length > 0) {
+        const pts = tubeCenterline.map(toDisp)
+        ctx.strokeStyle = '#4caf50'
+        ctx.lineWidth = 3
+        ctx.setLineDash([8, 4])
+        ctx.beginPath()
+        ctx.moveTo(pts[0].x, pts[0].y)
+        for (let i = 1; i < pts.length; i++) {
+          ctx.lineTo(pts[i].x, pts[i].y)
+        }
+        ctx.stroke()
+        ctx.setLineDash([])
+      }
+
+      ctx.lineWidth = 2
+
       // Draw completed annotations
-      annotations.forEach(a => {
+      annotations.forEach((a, idx) => {
         if (!a.points || a.points.length<2) return
         const pts = a.points.map(toDisp)
-        ctx.strokeStyle = '#36a3ff'
+        const isHovered = idx === hoveredAnnotationIndex
+        
+        // Highlight hovered annotation
+        if (isHovered) {
+          ctx.strokeStyle = '#ffeb3b'
+          ctx.lineWidth = 4
+          ctx.shadowBlur = 10
+          ctx.shadowColor = 'rgba(255,235,59,0.8)'
+        } else {
+          ctx.strokeStyle = '#36a3ff'
+          ctx.lineWidth = 2
+          ctx.shadowBlur = 0
+        }
+        
         ctx.beginPath(); ctx.moveTo(pts[0].x, pts[0].y)
         for(let i=1;i<pts.length;i++){ ctx.lineTo(pts[i].x, pts[i].y) }
         ctx.stroke()
-        pts.forEach((dp, idx)=>{
+        
+        ctx.shadowBlur = 0
+        
+        pts.forEach((dp, ptIdx)=>{
           ctx.beginPath();
-          ctx.fillStyle = idx===0? '#2fb8ff' : (idx===pts.length-1? '#ff7b7b':'#ffeb3b')
-          ctx.arc(dp.x, dp.y, 5, 0, Math.PI*2); ctx.fill()
+          if (isHovered) {
+            ctx.fillStyle = ptIdx===0? '#ffeb3b' : (ptIdx===pts.length-1? '#ff9800':'#ffc107')
+            ctx.arc(dp.x, dp.y, 7, 0, Math.PI*2)
+          } else {
+            ctx.fillStyle = ptIdx===0? '#2fb8ff' : (ptIdx===pts.length-1? '#ff7b7b':'#ffeb3b')
+            ctx.arc(dp.x, dp.y, 5, 0, Math.PI*2)
+          }
+          ctx.fill()
         })
       })
 
@@ -450,7 +1029,8 @@
       if (currentPoints.length>0) {
         const pts = currentPoints.map(toDisp)
         ctx.setLineDash([5,5])
-        ctx.strokeStyle = '#36a3ff'
+        ctx.strokeStyle = trajectoryMode && trajectoryStep < 3 ? '#ff6b6b' : '#36a3ff'
+        ctx.lineWidth = trajectoryMode && trajectoryStep < 3 ? 3 : 2
         ctx.beginPath(); ctx.moveTo(pts[0].x, pts[0].y)
         for(let i=1;i<pts.length;i++){ ctx.lineTo(pts[i].x, pts[i].y) }
         ctx.stroke(); ctx.setLineDash([])
@@ -465,8 +1045,11 @@
       const pts = a.points || []
       const start = pts[0] || {x:0,y:0}
       const end = pts[pts.length-1] || {x:0,y:0}
+      const showDistFromCenter = trajectoryMode && trajectoryStep === 3
       const tr = document.createElement('tr')
+      tr.dataset.annotationIndex = idx
       tr.innerHTML = `
+        <td><button class="btn-delete" data-del="${idx}" title="Delete annotation">🗑️</button></td>
         <td>${idx+1}</td>
         <td>${pts.length}</td>
         <td>${Math.round(start.x)},${Math.round(start.y)}</td>
@@ -474,13 +1057,27 @@
         <td>${Math.round(a.distUm*1000)/1000}</td>
         <td>${a.exposureMs ?? ''}</td>
         <td>${a.velUmS? Math.round(a.velUmS*1000)/1000 : ''}</td>
-        <td><button data-del="${idx}">Delete</button></td>`
+        <td style="display:${showDistFromCenter ? 'table-cell' : 'none'}">${a.distFromCenter != null ? Math.round(a.distFromCenter*1000)/1000 : ''}</td>`
+      
+      // Add hover event listeners
+      tr.addEventListener('mouseenter', () => {
+        hoveredAnnotationIndex = idx
+        drawAll()
+      })
+      
+      tr.addEventListener('mouseleave', () => {
+        hoveredAnnotationIndex = -1
+        drawAll()
+      })
+      
       return tr
     }
 
     function renderTable(){
       tableBody.innerHTML = ''
       annotations.forEach((a, i)=> tableBody.appendChild(annotationToRow(a,i)))
+      const showDistFromCenter = trajectoryMode && trajectoryStep === 3
+      thDistFromCenter.style.display = showDistFromCenter ? 'table-cell' : 'none'
     }
 
     tableBody.addEventListener('click', (e)=>{
@@ -494,16 +1091,186 @@
       renderTable(); drawAll()
     })
 
+    // ---------- Trajectory buttons ----------
+    btnTrajectory.addEventListener('click', () => {
+      if (!selected) return
+      
+      if (trajectoryMode) {
+        // Disable trajectory mode
+        if (!confirm('Disable trajectory analysis? This will clear the tube boundaries.')) return
+        resetTrajectoryState()
+        currentPoints = []
+        
+        // Remove distFromCenter from annotations
+        annotations.forEach(a => delete a.distFromCenter)
+        
+        persistTrajectory()
+        persist()
+        setDirty(true)
+        renderTable()
+        drawAll()
+      } else {
+        // Enable trajectory mode
+        trajectoryMode = true
+        trajectoryStep = 1
+        topBoundary = null
+        bottomBoundary = null
+        tubeCenterline = null
+        currentPoints = []
+        updateTrajectoryButtonState()
+        trajectoryStepEl.textContent = 'Step 1: Draw the TOP boundary of the tube (click multiple points, finish at end)'
+        drawAll()
+      }
+    })
+    
+    btnClearBoundaries.addEventListener('click', () => {
+      if (!selected || !trajectoryMode) return
+      if (!confirm('Clear tube boundaries and restart? This will remove distance-from-center data.')) return
+      
+      // Reset to step 1
+      trajectoryStep = 1
+      topBoundary = null
+      bottomBoundary = null
+      tubeCenterline = null
+      currentPoints = []
+      
+      // Remove distFromCenter from annotations
+      annotations.forEach(a => delete a.distFromCenter)
+      
+      updateTrajectoryButtonState()
+      trajectoryStepEl.textContent = 'Step 1: Draw the TOP boundary of the tube (click multiple points, finish at end)'
+      
+      persistTrajectory()
+      persist()
+      setDirty(true)
+      renderTable()
+      drawAll()
+    })
+
     // ---------- Canvas interactions ----------
+    
+    // Helper function to check if a point is near a line
+    function isPointNearLine(point, linePoints, threshold = 10) {
+      if (!linePoints || linePoints.length < 2) return false
+      
+      for (let i = 0; i < linePoints.length - 1; i++) {
+        const p1 = linePoints[i]
+        const p2 = linePoints[i + 1]
+        
+        // Calculate distance from point to line segment
+        const dx = p2.x - p1.x
+        const dy = p2.y - p1.y
+        const len2 = dx * dx + dy * dy
+        
+        if (len2 === 0) {
+          // Point-to-point distance
+          const dist = Math.hypot(point.x - p1.x, point.y - p1.y)
+          if (dist <= threshold) return true
+        } else {
+          // Point-to-line-segment distance
+          let t = ((point.x - p1.x) * dx + (point.y - p1.y) * dy) / len2
+          t = Math.max(0, Math.min(1, t))
+          const projX = p1.x + t * dx
+          const projY = p1.y + t * dy
+          const dist = Math.hypot(point.x - projX, point.y - projY)
+          if (dist <= threshold) return true
+        }
+      }
+      return false
+    }
+    
+    // Canvas mousemove for hover detection
+    canvas.addEventListener('mousemove', (e) => {
+      if (!selected || !imgEl.naturalWidth || annotations.length === 0) return
+      
+      const rect = canvas.getBoundingClientRect()
+      const dx = e.clientX - rect.left
+      const dy = e.clientY - rect.top
+      const canvasDisplayW = canvas.clientWidth
+      const canvasDisplayH = canvas.clientHeight
+      const sx = dx * (imgEl.naturalWidth / canvasDisplayW)
+      const sy = dy * (imgEl.naturalHeight / canvasDisplayH)
+      const mousePoint = {x: sx, y: sy}
+      
+      let newHoveredIndex = -1
+      const threshold = 15 / (imgEl.clientWidth / imgEl.naturalWidth) // Scale threshold to image coordinates
+      
+      for (let i = 0; i < annotations.length; i++) {
+        if (isPointNearLine(mousePoint, annotations[i].points, threshold)) {
+          newHoveredIndex = i
+          break
+        }
+      }
+      
+      if (newHoveredIndex !== hoveredAnnotationIndex) {
+        hoveredAnnotationIndex = newHoveredIndex
+        
+        // Update table row highlighting
+        const rows = tableBody.querySelectorAll('tr')
+        rows.forEach((row, idx) => {
+          if (idx === hoveredAnnotationIndex) {
+            row.classList.add('highlight')
+          } else {
+            row.classList.remove('highlight')
+          }
+        })
+        
+        drawAll()
+      }
+    })
+    
+    // Reset hover when mouse leaves canvas
+    canvas.addEventListener('mouseleave', () => {
+      if (hoveredAnnotationIndex !== -1) {
+        hoveredAnnotationIndex = -1
+        const rows = tableBody.querySelectorAll('tr')
+        rows.forEach(row => row.classList.remove('highlight'))
+        drawAll()
+      }
+    })
+    
     canvas.addEventListener('click', (e)=>{
       if (!selected || !imgEl.naturalWidth) return
       const rect = canvas.getBoundingClientRect()
       const dx = e.clientX - rect.left
       const dy = e.clientY - rect.top
-      const sx = (dx + pad) * (imgEl.naturalWidth / imgEl.clientWidth)
-      const sy = (dy + pad) * (imgEl.naturalHeight / imgEl.clientHeight)
+      
+      // Convert from canvas display coordinates to image natural coordinates
+      // Canvas already accounts for padding, so we just need to scale
+      const canvasDisplayW = canvas.clientWidth
+      const canvasDisplayH = canvas.clientHeight
+      const sx = dx * (imgEl.naturalWidth / canvasDisplayW)
+      const sy = dy * (imgEl.naturalHeight / canvasDisplayH)
       const point = {x:sx, y:sy}
 
+      // Handle trajectory mode boundary drawing
+      if (trajectoryMode && trajectoryStep < 3) {
+        if (currentPoints.length === 0) {
+          currentPoints = [point]
+        } else if (holdingA) {
+          currentPoints = [...currentPoints, point]
+        } else {
+          // Finish boundary line - show confirmation
+          const all = [...currentPoints, point]
+          pendingBoundary = all
+          pendingBoundaryStep = trajectoryStep
+          
+          if (trajectoryStep === 1) {
+            confirmBoundaryTitle.textContent = 'Confirm TOP Boundary'
+            confirmBoundaryMessage.textContent = 'Is this TOP boundary line correct?'
+          } else if (trajectoryStep === 2) {
+            confirmBoundaryTitle.textContent = 'Confirm BOTTOM Boundary'
+            confirmBoundaryMessage.textContent = 'Is this BOTTOM boundary line correct?'
+          }
+          
+          confirmBoundaryModal.style.display = 'flex'
+        }
+        updateWip()
+        drawAll()
+        return
+      }
+
+      // Normal annotation mode
       if (currentPoints.length===0) {
         currentPoints = [point]
       } else if (holdingA) {
@@ -522,7 +1289,31 @@
         const exp = selected.exposureMs ?? null
         const velUmMs = exp? (distUm/exp): null
         const velUmS = velUmMs? velUmMs*1000 : null
-        annotations = [...annotations, {points: all, distPx, distUm, exposureMs: exp, velUmMs, velUmS}]
+        
+        // Compute distance from center if trajectory mode is active
+        let distFromCenter = null
+        if (trajectoryMode && trajectoryStep === 3 && tubeCenterline) {
+          const centroid = computeLineCentroid(all)
+          if (centroid) {
+            const distPxFromCenter = distanceFromCenterline(centroid, tubeCenterline)
+            distFromCenter = distPxFromCenter !== null ? pxToMicron(distPxFromCenter) : null
+          }
+        }
+        
+        const newAnnotation = {
+          points: all, 
+          distPx, 
+          distUm, 
+          exposureMs: exp, 
+          velUmMs, 
+          velUmS
+        }
+        
+        if (distFromCenter !== null) {
+          newAnnotation.distFromCenter = distFromCenter
+        }
+        
+        annotations = [...annotations, newAnnotation]
         currentPoints = []
         persist(); setDirty(true)
         btnClear.disabled = annotations.length===0
@@ -553,17 +1344,27 @@
 
     btnSaveCsv.addEventListener('click', ()=>{
       if (!selected) return
-      const header = ['points','num_points','dist_um','exposure_ms','vel_um_s']
+      const showDistFromCenter = trajectoryMode && trajectoryStep === 3
+      const header = showDistFromCenter 
+        ? ['points','num_points','dist_um','exposure_ms','vel_um_s','dist_from_center_um']
+        : ['points','num_points','dist_um','exposure_ms','vel_um_s']
+      
       const rows = annotations.map(a=>{
         const pts = a.points || []
         const ptsStr = pts.map(p=>`${Math.round(p.x)},${Math.round(p.y)}`).join(';')
-        return [
+        const baseRow = [
           ptsStr,
           pts.length,
           Math.round(a.distUm*1000)/1000,
           a.exposureMs ?? '',
           a.velUmS? Math.round(a.velUmS*1000)/1000 : ''
-        ].join(',')
+        ]
+        
+        if (showDistFromCenter) {
+          baseRow.push(a.distFromCenter != null ? Math.round(a.distFromCenter*1000)/1000 : '')
+        }
+        
+        return baseRow.join(',')
       })
       const csv = [header.join(','), ...rows].join('\n')
       const blob = new Blob([csv], {type:'text/csv'})
@@ -590,6 +1391,8 @@
         const idxExposure = colIndex('exposure_ms')
         const idxVelUmS = colIndex('vel_um_s')
         const idxVelUmMs = colIndex('vel_um_ms')
+        const idxDistFromCenter = colIndex('dist_from_center_um')
+        
         pushHistory()
         const rows = lines.slice(1)
         const arr = []
@@ -613,7 +1416,15 @@
           const exp = idxExposure >= 0 && cols[idxExposure] ? Number(cols[idxExposure]) : (selected?.exposureMs ?? null)
           const velUmMs = idxVelUmMs >= 0 && cols[idxVelUmMs] ? Number(cols[idxVelUmMs]) : (exp ? (distUm/exp) : null)
           const velUmS = idxVelUmS >= 0 && cols[idxVelUmS] ? Number(cols[idxVelUmS]) : (velUmMs ? velUmMs * 1000 : null)
-          arr.push({points: pts, distPx: distPxCol, distUm, exposureMs: exp, velUmMs, velUmS})
+          
+          const annotation = {points: pts, distPx: distPxCol, distUm, exposureMs: exp, velUmMs, velUmS}
+          
+          // Load distance from center if available
+          if (idxDistFromCenter >= 0 && cols[idxDistFromCenter]) {
+            annotation.distFromCenter = Number(cols[idxDistFromCenter])
+          }
+          
+          arr.push(annotation)
         })
         annotations = arr
         persist(); setDirty(true)
