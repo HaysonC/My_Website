@@ -42,6 +42,37 @@
     .image-wrap { position: relative; background: rgba(255,255,255,0.04); border-radius: 10px; padding: 8px; border: 1px solid rgba(255,255,255,0.05); }
     .image-wrap img { display: block; max-width: 100%; border-radius: 8px; }
     .image-wrap canvas.overlay { position: absolute; left: 8px; top: 8px; border-radius: 8px; pointer-events: auto; cursor: crosshair; }
+    /* added visual crosshair indicator for better click precision */
+    .crosshair-indicator { 
+      position: absolute; 
+      pointer-events: none; 
+      display: none; 
+      width: 20px; 
+      height: 20px; 
+      margin: -10px 0 0 -10px;
+      z-index: 10; 
+    }
+    .crosshair-indicator::before, .crosshair-indicator::after { 
+      content: ''; 
+      position: absolute; 
+      background: rgba(54, 163, 255, 0.9); 
+      box-shadow: 0 0 3px rgba(0,0,0,0.5);
+    }
+    .crosshair-indicator::before { 
+      width: 1px; 
+      height: 20px; 
+      left: 50%; 
+      top: 0; 
+      transform: translateX(-50%); 
+    }
+    .crosshair-indicator::after { 
+      width: 20px; 
+      height: 1px; 
+      left: 0; 
+      top: 50%; 
+      transform: translateY(-50%); 
+    }
+    .crosshair-indicator.active { display: block; }
     .note { font-size: 13px; color: #9aa4b2; line-height: 1.4; padding: 8px; background: rgba(0,0,0,0.2); border-radius: 6px; }
 
     .right { width: 100%; }
@@ -211,9 +242,10 @@
       </div>
       <div class="content">
         <div class="left">
-          <div class="image-wrap">
+          <div class="image-wrap" id="imageWrap">
             <img id="img" alt="" />
             <canvas id="overlay" class="overlay"></canvas>
+            <div id="crosshair" class="crosshair-indicator"></div>
           </div>
           <div class="note">
             <b>Click</b>: start or finish a line. <b>Hold 'A' + click</b>: add intermediate points for curved paths.
@@ -253,7 +285,7 @@
     </main>
     </div>
     
-    <div class="version-badge">v1.1 public</div>
+    <div class="version-badge">v1.2 improved</div>
   </div>
 
   <div class="modal" id="helpModal">
@@ -367,67 +399,99 @@
     // ---------- State ----------
     let zipFile = null
     let datasetId = 'session'
-  let images = [] // [{name, url, exposureMs, thumbUrl, objectUrl?}]
+    let images = []
     let selected = null
-    let annotations = [] // current image annotations: [{points:[{x,y}], distPx, distUm, exposureMs, velUmMs, velUmS, distFromCenter?}]
+    let annotations = []
     let history = []
     let currentPoints = []
-    let dirty = false // "Unsaved" relative to CSV download
+    let dirty = false
     let holdingA = false
     
     // Trajectory analysis state
     let trajectoryMode = false
-    let trajectoryStep = 0 // 0: disabled, 1: drawing top, 2: drawing bottom, 3: complete
-    let topBoundary = null // array of {x,y} points
-    let bottomBoundary = null // array of {x,y} points
-    let tubeCenterline = null // array of {x,y} points (mapped centerline)
+    let trajectoryStep = 0
+    let topBoundary = null
+    let bottomBoundary = null
+    let tubeCenterline = null
     
     // Hover state
     let hoveredAnnotationIndex = -1
 
     // ---------- Elements ----------
-    const imgEl = document.getElementById('img')
-    const canvas = document.getElementById('overlay')
+    const imgEl = $('img')
+    const canvas = $('overlay')
     const ctx = canvas.getContext('2d')
-    const imageListEl = document.getElementById('imageList')
-    const titleEl = document.getElementById('title')
-    const expLabel = document.getElementById('expLabel')
-    const wipStatus = document.getElementById('wipStatus')
-    const tableBody = document.getElementById('tableBody')
-    const dirtyBadge = document.getElementById('dirtyBadge')
-    const thDistFromCenter = document.getElementById('thDistFromCenter')
-    const trajectoryModeHint = document.getElementById('trajectoryModeHint')
-    const trajectoryStepEl = document.getElementById('trajectoryStep')
+    const crosshair = $('crosshair')
+    const imageWrap = $('imageWrap')
+    const imageListEl = $('imageList')
+    const titleEl = $('title')
+    const expLabel = $('expLabel')
+    const wipStatus = $('wipStatus')
+    const tableBody = $('tableBody')
+    const dirtyBadge = $('dirtyBadge')
+    const thDistFromCenter = $('thDistFromCenter')
+    const trajectoryModeHint = $('trajectoryModeHint')
+    const trajectoryStepEl = $('trajectoryStep')
 
-    const btnHelp = document.getElementById('btnHelp')
-    const helpModal = document.getElementById('helpModal')
-    const btnCloseHelp = document.getElementById('btnCloseHelp')
-    const confirmBoundaryModal = document.getElementById('confirmBoundaryModal')
-    const confirmBoundaryTitle = document.getElementById('confirmBoundaryTitle')
-    const confirmBoundaryMessage = document.getElementById('confirmBoundaryMessage')
-    const btnConfirmBoundary = document.getElementById('btnConfirmBoundary')
-    const btnCancelBoundary = document.getElementById('btnCancelBoundary')
-    const zipInput = document.getElementById('zipInput')
-    const btnUseZip = document.getElementById('btnUseZip')
-    const btnTrajectory = document.getElementById('btnTrajectory')
-    const btnClearBoundaries = document.getElementById('btnClearBoundaries')
-    const btnUndo = document.getElementById('btnUndo')
-    const btnClear = document.getElementById('btnClear')
-    const csvInput = document.getElementById('csvInput')
-    const btnSaveCsv = document.getElementById('btnSaveCsv')
-    const inpScalePx = document.getElementById('inpScalePx')
-    const inpScaleUm = document.getElementById('inpScaleUm')
+    const btnHelp = $('btnHelp')
+    const helpModal = $('helpModal')
+    const btnCloseHelp = $('btnCloseHelp')
+    const confirmBoundaryModal = $('confirmBoundaryModal')
+    const confirmBoundaryTitle = $('confirmBoundaryTitle')
+    const confirmBoundaryMessage = $('confirmBoundaryMessage')
+    const btnConfirmBoundary = $('btnConfirmBoundary')
+    const btnCancelBoundary = $('btnCancelBoundary')
+    const zipInput = $('zipInput')
+    const btnUseZip = $('btnUseZip')
+    const btnTrajectory = $('btnTrajectory')
+    const btnClearBoundaries = $('btnClearBoundaries')
+    const btnUndo = $('btnUndo')
+    const btnClear = $('btnClear')
+    const csvInput = $('csvInput')
+    const btnSaveCsv = $('btnSaveCsv')
+    const inpScalePx = $('inpScalePx')
+    const inpScaleUm = $('inpScaleUm')
     
     // Pending boundary for confirmation
     let pendingBoundary = null
     let pendingBoundaryStep = 0
 
     // ---------- Utilities ----------
-    const pad = 8 // CSS padding around image inside image-wrap
+    const pad = 8
     const dpr = () => window.devicePixelRatio || 1
     const pxToMicron = (px) => px * (Number(inpScaleUm.value) / Number(inpScalePx.value || 1))
     const storageKey = (imgName) => `standalone::${datasetId}::${imgName}`
     const storageKeyTrajectory = (imgName) => `standalone::${datasetId}::${imgName}::trajectory`
+
+    function canvasToImage(canvasX, canvasY) {
+      if (!imgEl.naturalWidth || !imgEl.naturalHeight) return { x: 0, y: 0 }
+      
+      const imgDisplayWidth = imgEl.clientWidth
+      const imgDisplayHeight = imgEl.clientHeight
+      
+      const scaleX = imgEl.naturalWidth / imgDisplayWidth
+      const scaleY = imgEl.naturalHeight / imgDisplayHeight
+      
+      const imageX = canvasX * scaleX
+      const imageY = canvasY * scaleY
+      
+      return { x: imageX, y: imageY }
+    }
+    
+    function imageToCanvas(imageX, imageY) {
+      if (!imgEl.naturalWidth || !imgEl.naturalHeight) return { x: 0, y: 0 }
+      
+      const imgDisplayWidth = imgEl.clientWidth
+      const imgDisplayHeight = imgEl.clientHeight
+      
+      const scaleX = imgDisplayWidth / imgEl.naturalWidth
+      const scaleY = imgDisplayHeight / imgEl.naturalHeight
+      
+      const canvasX = imageX * scaleX
+      const canvasY = imageY * scaleY
+      
+      return { x: canvasX, y: canvasY }
+    }
 
     function setDirty(v) {
       dirty = v
@@ -436,15 +500,12 @@
 
     // ---------- Trajectory Analysis Functions ----------
     
-    // Compute centerline by mapping top and bottom boundaries
     function computeCenterline(topPts, bottomPts) {
       if (!topPts || !bottomPts || topPts.length < 2 || bottomPts.length < 2) return null
       
-      // Use the longer boundary as reference for parameterization
       const refPts = topPts.length >= bottomPts.length ? topPts : bottomPts
       const otherPts = topPts.length >= bottomPts.length ? bottomPts : topPts
       
-      // Compute cumulative arc length for both curves
       const getArcLengths = (pts) => {
         const lengths = [0]
         for (let i = 1; i < pts.length; i++) {
@@ -460,7 +521,6 @@
       const refTotalLength = refLengths[refLengths.length - 1]
       const otherTotalLength = otherLengths[otherLengths.length - 1]
       
-      // Interpolate point on curve at normalized parameter t (0 to 1)
       const interpolatePoint = (pts, lengths, totalLength, t) => {
         const targetLength = t * totalLength
         for (let i = 0; i < lengths.length - 1; i++) {
@@ -476,7 +536,6 @@
         return pts[pts.length - 1]
       }
       
-      // Sample centerline at regular intervals
       const numSamples = Math.max(refPts.length, otherPts.length, 50)
       const centerline = []
       for (let i = 0; i < numSamples; i++) {
@@ -492,26 +551,72 @@
       return centerline
     }
     
-    // Find closest point on centerline and compute distance
+    // Find closest point on centerline and compute signed distance
+    // Returns negative for left side, positive for right side
     function distanceFromCenterline(point, centerline) {
       if (!centerline || centerline.length === 0) return null
       
       let minDist = Infinity
-      for (const cpt of centerline) {
-        const dx = point.x - cpt.x
-        const dy = point.y - cpt.y
-        const dist = Math.hypot(dx, dy)
-        if (dist < minDist) minDist = dist
+      let closestSegmentIdx = -1
+      let closestPointOnSegment = null
+      
+      // Find closest point on centerline segments
+      for (let i = 0; i < centerline.length - 1; i++) {
+        const p1 = centerline[i]
+        const p2 = centerline[i + 1]
+        
+        // Calculate closest point on line segment
+        const dx = p2.x - p1.x
+        const dy = p2.y - p1.y
+        const len2 = dx * dx + dy * dy
+        
+        let closestPt
+        if (len2 === 0) {
+          closestPt = p1
+        } else {
+          let t = ((point.x - p1.x) * dx + (point.y - p1.y) * dy) / len2
+          t = Math.max(0, Math.min(1, t))
+          closestPt = {
+            x: p1.x + t * dx,
+            y: p1.y + t * dy
+          }
+        }
+        
+        const dist = Math.hypot(point.x - closestPt.x, point.y - closestPt.y)
+        if (dist < minDist) {
+          minDist = dist
+          closestSegmentIdx = i
+          closestPointOnSegment = closestPt
+        }
       }
       
-      return minDist
+      if (closestSegmentIdx === -1) return 0
+      
+      // Determine sign using cross product
+      // Vector from closest point to particle
+      const toPoint = {
+        x: point.x - closestPointOnSegment.x,
+        y: point.y - closestPointOnSegment.y
+      }
+      
+      // Direction vector of centerline segment
+      const p1 = centerline[closestSegmentIdx]
+      const p2 = centerline[closestSegmentIdx + 1]
+      const direction = {
+        x: p2.x - p1.x,
+        y: p2.y - p1.y
+      }
+      
+      // Cross product to determine left/right
+      // Positive cross product = right side, negative = left side
+      const cross = direction.x * toPoint.y - direction.y * toPoint.x
+      
+      return cross >= 0 ? minDist : -minDist
     }
     
-    // Compute centroid of a line (path of points)
     function computeLineCentroid(points) {
       if (!points || points.length === 0) return null
       
-      // Weight by segment length for multi-point paths
       if (points.length === 1) return points[0]
       
       let totalLength = 0
@@ -538,7 +643,6 @@
       }
     }
     
-    // Recompute distances from center for all annotations
     function recomputeTrajectoryDistances() {
       if (!tubeCenterline) return
       
@@ -554,11 +658,7 @@
     function persistTrajectory() {
       if (!selected) return
       try {
-        const data = {
-          topBoundary,
-          bottomBoundary,
-          tubeCenterline
-        }
+        const data = { topBoundary, bottomBoundary, tubeCenterline }
         localStorage.setItem(storageKeyTrajectory(selected.name), JSON.stringify(data))
       } catch {}
     }
@@ -604,7 +704,7 @@
         btnClearBoundaries.style.display = 'inline-block'
         btnClearBoundaries.disabled = false
         trajectoryModeHint.style.display = 'block'
-        trajectoryModeHint.classList.remove('drawing') // Remove pulsing when complete
+        trajectoryModeHint.classList.remove('drawing')
         trajectoryStepEl.textContent = 'Trajectory analysis active. Centerline computed.'
         thDistFromCenter.style.display = 'table-cell'
       } else if (trajectoryMode && trajectoryStep < 3) {
@@ -613,7 +713,7 @@
         btnClearBoundaries.style.display = 'inline-block'
         btnClearBoundaries.disabled = false
         trajectoryModeHint.style.display = 'block'
-        trajectoryModeHint.classList.add('drawing') // Add pulsing animation when drawing
+        trajectoryModeHint.classList.add('drawing')
         thDistFromCenter.style.display = 'none'
       } else {
         btnTrajectory.textContent = 'Enable Trajectory Analysis'
@@ -621,13 +721,12 @@
         btnClearBoundaries.style.display = 'none'
         btnClearBoundaries.disabled = true
         trajectoryModeHint.style.display = 'none'
-        trajectoryModeHint.classList.remove('drawing') // Remove pulsing when disabled
+        trajectoryModeHint.classList.remove('drawing')
         thDistFromCenter.style.display = 'none'
       }
     }
 
     function pushHistory() {
-      // deep copy annotations for undo
       history.push(JSON.parse(JSON.stringify(annotations)))
       btnUndo.disabled = history.length === 0
     }
@@ -656,17 +755,12 @@
     btnHelp.addEventListener('click', () => { helpModal.style.display = 'flex' })
     btnCloseHelp.addEventListener('click', () => { helpModal.style.display = 'none' })
     
-    // Close help modal when clicking outside the panel
     helpModal.addEventListener('click', (e) => {
-      if (e.target === helpModal) {
-        helpModal.style.display = 'none'
-      }
+      if (e.target === helpModal) helpModal.style.display = 'none'
     })
     
-    // Close confirmation modal when clicking outside the panel
     confirmBoundaryModal.addEventListener('click', (e) => {
       if (e.target === confirmBoundaryModal) {
-        // Same as cancel - reset current boundary
         currentPoints = []
         pendingBoundary = null
         pendingBoundaryStep = 0
@@ -681,23 +775,19 @@
       if (!pendingBoundary) return
       
       if (pendingBoundaryStep === 1) {
-        // Confirmed top boundary
         topBoundary = pendingBoundary
         currentPoints = []
         trajectoryStep = 2
         trajectoryStepEl.textContent = 'Step 2: Draw the BOTTOM boundary of the tube (click multiple points, finish at end)'
         updateTrajectoryButtonState()
       } else if (pendingBoundaryStep === 2) {
-        // Confirmed bottom boundary
         bottomBoundary = pendingBoundary
         currentPoints = []
         trajectoryStep = 3
         
-        // Compute centerline
         tubeCenterline = computeCenterline(topBoundary, bottomBoundary)
         
         if (tubeCenterline) {
-          // Recompute distances for existing annotations
           recomputeTrajectoryDistances()
           updateTrajectoryButtonState()
           persistTrajectory()
@@ -721,7 +811,6 @@
     })
     
     btnCancelBoundary.addEventListener('click', () => {
-      // Reset to start of current boundary
       currentPoints = []
       pendingBoundary = null
       pendingBoundaryStep = 0
@@ -730,7 +819,6 @@
       drawAll()
     })
 
-    // Warn on close if unsaved (dirty)
     window.addEventListener('beforeunload', (e) => {
       if (dirty) {
         e.preventDefault()
@@ -738,7 +826,6 @@
       }
     })
 
-    // Track 'A' key for multi-point add
     window.addEventListener('keydown', (e) => { if (e.key === 'a' || e.key === 'A') holdingA = true })
     window.addEventListener('keyup', (e) => { if (e.key === 'a' || e.key === 'A') holdingA = false })
 
@@ -765,12 +852,11 @@
       selected = null
       titleEl.textContent = 'Indexing ZIP…'
       imageListEl.innerHTML = ''
-  imgEl.src = ''
+      imgEl.src = ''
       try {
         const zip = await JSZip.loadAsync(zipFile)
         const files = Object.values(zip.files)
-        // Collect metadata texts upfront
-        const metaTexts = {} // key by filename (lowercased)
+        const metaTexts = {}
         for (const f of files) {
           if (f.dir) continue
           const lname = f.name.toLowerCase()
@@ -778,9 +864,8 @@
             metaTexts[lname] = await zip.file(f.name).async('text')
           }
         }
-        // Helper to get exposure from candidate xml names
         const extractExposure = (imgName) => {
-          const base = imgName.replace(/^.*\//, '') // strip path
+          const base = imgName.replace(/^.*\//, '')
           const variants = [
             `data/metadata/${base}.cal.xml`,
             `data/metadata/${base}.tif.cal.xml`,
@@ -788,7 +873,6 @@
             `metadata/${base}.tif.cal.xml`,
             `${base}.cal.xml`,
           ]
-          // also try matching by base without ext
           const m = base.lastIndexOf('.')
           const noext = m>=0? base.slice(0,m): base
           variants.push(
@@ -808,7 +892,6 @@
               }
             }
           }
-          // fallback: search any xml that contains the base name
           for (const [k, t] of Object.entries(metaTexts)) {
             if (k.includes(noext.toLowerCase())) {
               const m1 = t.match(/<Exposure>([^<]+)<\/Exposure>/i)
@@ -821,18 +904,15 @@
           return null
         }
 
-        // Build image entries
         for (const f of files) {
           if (f.dir) continue
           const lname = f.name.toLowerCase()
-          // Skip macOS metadata files (._filename)
           const basename = f.name.replace(/^.*\//, '')
           if (basename.startsWith('._')) continue
           if (!(lname.endsWith('.tif') || lname.endsWith('.tiff') || lname.endsWith('.png') || lname.endsWith('.jpg') || lname.endsWith('.jpeg'))) continue
           let url = ''
           let objectUrl = null
           if (lname.endsWith('.tif') || lname.endsWith('.tiff')) {
-            // Decode TIFF via UTIF
             const buf = await zip.file(f.name).async('arraybuffer')
             const ifds = UTIF.decode(buf)
             if (ifds && ifds.length) {
@@ -910,7 +990,6 @@
       btnSaveCsv.disabled = false
       btnTrajectory.disabled = false
       updateWip()
-      // highlight selection
       renderImageList()
     }
 
@@ -942,10 +1021,7 @@
       ctx.clearRect(0,0,displayW,displayH)
       ctx.lineWidth = 2
 
-      const toDisp = (p) => ({
-        x: (p.x * (imgEl.clientWidth / imgEl.naturalWidth)) - pad,
-        y: (p.y * (imgEl.clientHeight / imgEl.naturalHeight)) - pad,
-      })
+      const toDisp = (p) => imageToCanvas(p.x, p.y)
 
       // Draw tube boundaries and centerline if trajectory mode is active
       if (topBoundary && topBoundary.length > 0) {
@@ -994,7 +1070,6 @@
         const pts = a.points.map(toDisp)
         const isHovered = idx === hoveredAnnotationIndex
         
-        // Highlight hovered annotation
         if (isHovered) {
           ctx.strokeStyle = '#ffeb3b'
           ctx.lineWidth = 4
@@ -1059,7 +1134,6 @@
         <td>${a.velUmS? Math.round(a.velUmS*1000)/1000 : ''}</td>
         <td style="display:${showDistFromCenter ? 'table-cell' : 'none'}">${a.distFromCenter != null ? Math.round(a.distFromCenter*1000)/1000 : ''}</td>`
       
-      // Add hover event listeners
       tr.addEventListener('mouseenter', () => {
         hoveredAnnotationIndex = idx
         drawAll()
@@ -1096,12 +1170,10 @@
       if (!selected) return
       
       if (trajectoryMode) {
-        // Disable trajectory mode
         if (!confirm('Disable trajectory analysis? This will clear the tube boundaries.')) return
         resetTrajectoryState()
         currentPoints = []
         
-        // Remove distFromCenter from annotations
         annotations.forEach(a => delete a.distFromCenter)
         
         persistTrajectory()
@@ -1110,7 +1182,6 @@
         renderTable()
         drawAll()
       } else {
-        // Enable trajectory mode
         trajectoryMode = true
         trajectoryStep = 1
         topBoundary = null
@@ -1127,14 +1198,12 @@
       if (!selected || !trajectoryMode) return
       if (!confirm('Clear tube boundaries and restart? This will remove distance-from-center data.')) return
       
-      // Reset to step 1
       trajectoryStep = 1
       topBoundary = null
       bottomBoundary = null
       tubeCenterline = null
       currentPoints = []
       
-      // Remove distFromCenter from annotations
       annotations.forEach(a => delete a.distFromCenter)
       
       updateTrajectoryButtonState()
@@ -1149,7 +1218,6 @@
 
     // ---------- Canvas interactions ----------
     
-    // Helper function to check if a point is near a line
     function isPointNearLine(point, linePoints, threshold = 10) {
       if (!linePoints || linePoints.length < 2) return false
       
@@ -1157,17 +1225,14 @@
         const p1 = linePoints[i]
         const p2 = linePoints[i + 1]
         
-        // Calculate distance from point to line segment
         const dx = p2.x - p1.x
         const dy = p2.y - p1.y
         const len2 = dx * dx + dy * dy
         
         if (len2 === 0) {
-          // Point-to-point distance
           const dist = Math.hypot(point.x - p1.x, point.y - p1.y)
           if (dist <= threshold) return true
         } else {
-          // Point-to-line-segment distance
           let t = ((point.x - p1.x) * dx + (point.y - p1.y) * dy) / len2
           t = Math.max(0, Math.min(1, t))
           const projX = p1.x + t * dx
@@ -1179,24 +1244,31 @@
       return false
     }
     
-    // Canvas mousemove for hover detection
     canvas.addEventListener('mousemove', (e) => {
-      if (!selected || !imgEl.naturalWidth || annotations.length === 0) return
+      if (!selected || !imgEl.naturalWidth) {
+        crosshair.classList.remove('active')
+        return
+      }
       
       const rect = canvas.getBoundingClientRect()
-      const dx = e.clientX - rect.left
-      const dy = e.clientY - rect.top
-      const canvasDisplayW = canvas.clientWidth
-      const canvasDisplayH = canvas.clientHeight
-      const sx = dx * (imgEl.naturalWidth / canvasDisplayW)
-      const sy = dy * (imgEl.naturalHeight / canvasDisplayH)
-      const mousePoint = {x: sx, y: sy}
+      const canvasX = e.clientX - rect.left
+      const canvasY = e.clientY - rect.top
+      
+      // Position crosshair in page coordinates relative to imageWrap
+      const wrapRect = imageWrap.getBoundingClientRect()
+      crosshair.style.left = `${e.clientX - wrapRect.left}px`
+      crosshair.style.top = `${e.clientY - wrapRect.top}px`
+      crosshair.classList.add('active')
+      
+      if (annotations.length === 0) return
+      
+      const imagePoint = canvasToImage(canvasX, canvasY)
       
       let newHoveredIndex = -1
-      const threshold = 15 / (imgEl.clientWidth / imgEl.naturalWidth) // Scale threshold to image coordinates
+      const threshold = 15
       
       for (let i = 0; i < annotations.length; i++) {
-        if (isPointNearLine(mousePoint, annotations[i].points, threshold)) {
+        if (isPointNearLine(imagePoint, annotations[i].points, threshold)) {
           newHoveredIndex = i
           break
         }
@@ -1205,7 +1277,6 @@
       if (newHoveredIndex !== hoveredAnnotationIndex) {
         hoveredAnnotationIndex = newHoveredIndex
         
-        // Update table row highlighting
         const rows = tableBody.querySelectorAll('tr')
         rows.forEach((row, idx) => {
           if (idx === hoveredAnnotationIndex) {
@@ -1219,8 +1290,8 @@
       }
     })
     
-    // Reset hover when mouse leaves canvas
     canvas.addEventListener('mouseleave', () => {
+      crosshair.classList.remove('active')
       if (hoveredAnnotationIndex !== -1) {
         hoveredAnnotationIndex = -1
         const rows = tableBody.querySelectorAll('tr')
@@ -1231,17 +1302,19 @@
     
     canvas.addEventListener('click', (e)=>{
       if (!selected || !imgEl.naturalWidth) return
-      const rect = canvas.getBoundingClientRect()
-      const dx = e.clientX - rect.left
-      const dy = e.clientY - rect.top
       
-      // Convert from canvas display coordinates to image natural coordinates
-      // Canvas already accounts for padding, so we just need to scale
-      const canvasDisplayW = canvas.clientWidth
-      const canvasDisplayH = canvas.clientHeight
-      const sx = dx * (imgEl.naturalWidth / canvasDisplayW)
-      const sy = dy * (imgEl.naturalHeight / canvasDisplayH)
-      const point = {x:sx, y:sy}
+      const rect = canvas.getBoundingClientRect()
+      const canvasX = e.clientX - rect.left
+      const canvasY = e.clientY - rect.top
+      
+      // Convert to image coordinates
+      const point = canvasToImage(canvasX, canvasY)
+      
+      // Clamp to image bounds to handle edge cases properly
+      point.x = Math.max(0, Math.min(imgEl.naturalWidth, point.x))
+      point.y = Math.max(0, Math.min(imgEl.naturalHeight, point.y))
+      
+      console.log('[v0] Click:', { canvas: {x: canvasX, y: canvasY}, image: point })
 
       // Handle trajectory mode boundary drawing
       if (trajectoryMode && trajectoryStep < 3) {
@@ -1250,7 +1323,6 @@
         } else if (holdingA) {
           currentPoints = [...currentPoints, point]
         } else {
-          // Finish boundary line - show confirmation
           const all = [...currentPoints, point]
           pendingBoundary = all
           pendingBoundaryStep = trajectoryStep
@@ -1276,7 +1348,6 @@
       } else if (holdingA) {
         currentPoints = [...currentPoints, point]
       } else {
-        // Finish line
         pushHistory()
         const all = [...currentPoints, point]
         let distPx = 0
@@ -1290,7 +1361,6 @@
         const velUmMs = exp? (distUm/exp): null
         const velUmS = velUmMs? velUmMs*1000 : null
         
-        // Compute distance from center if trajectory mode is active
         let distFromCenter = null
         if (trajectoryMode && trajectoryStep === 3 && tubeCenterline) {
           const centroid = computeLineCentroid(all)
@@ -1419,7 +1489,6 @@
           
           const annotation = {points: pts, distPx: distPxCol, distUm, exposureMs: exp, velUmMs, velUmS}
           
-          // Load distance from center if available
           if (idxDistFromCenter >= 0 && cols[idxDistFromCenter]) {
             annotation.distFromCenter = Number(cols[idxDistFromCenter])
           }
@@ -1441,3 +1510,4 @@
   </script>
 </body>
 </html>
+ 
