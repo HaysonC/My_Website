@@ -191,6 +191,62 @@
       font-size: 13px;
       color: #cfe8ff;
     }
+    
+    .measurement-popup {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
+      color: white;
+      padding: 30px 40px;
+      border-radius: 16px;
+      box-shadow: 0 8px 32px rgba(255,152,0,0.6), 0 0 0 3px rgba(255,152,0,0.3);
+      z-index: 2001;
+      display: none;
+      text-align: center;
+      min-width: 300px;
+      animation: popIn 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      cursor: pointer;
+    }
+    
+    .measurement-popup-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 2000;
+      display: none;
+      backdrop-filter: blur(2px);
+    }
+    
+    @keyframes popIn {
+      0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+      100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+    }
+    
+    .measurement-popup h3 {
+      margin: 0 0 16px 0;
+      font-size: 24px;
+      color: white;
+    }
+    
+    .measurement-popup .value {
+      font-size: 48px;
+      font-weight: 700;
+      margin: 16px 0;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+    
+    .measurement-popup .unit {
+      font-size: 24px;
+      opacity: 0.9;
+    }
+    
+    .measurement-popup .info {
+      font-size: 14px;
+      opacity: 0.8;
+      margin-top: 12px;
+    }
   </style>
   <!-- Libraries from CDN (required): JSZip for ZIP parsing, UTIF for TIFF decoding -->
   <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
@@ -224,6 +280,9 @@
         Scale: <input type="number" id="inpScalePx" value="156" style="width:80px"> px per
         <input type="number" id="inpScaleUm" value="100" style="width:80px"> µm
       </div>
+      <div class="hint">
+        Time Error: ±<input type="number" id="inpTimeError" value="0.5" step="0.1" style="width:60px"> ms
+      </div>
     </aside>
 
     <main class="viewer">
@@ -232,6 +291,7 @@
         <div style="flex:1"></div>
         <div class="controls">
           <button class="btn btn-trajectory" id="btnTrajectory" disabled>Enable Trajectory Analysis</button>
+          <button class="btn" id="btnMeasure" disabled style="background: linear-gradient(180deg,#ff9800,#f57c00);">📏 Measure Length</button>
           <button class="btn" id="btnClearBoundaries" disabled style="display:none;">Clear Boundaries</button>
           <button class="btn" id="btnUndo" disabled>↶ Undo</button>
           <button class="btn" id="btnClear" disabled>Clear All</button>
@@ -246,10 +306,12 @@
             <img id="img" alt="" />
             <canvas id="overlay" class="overlay"></canvas>
             <div id="crosshair" class="crosshair-indicator"></div>
+            <canvas id="magnifier" style="display:none; position:absolute; border:3px solid #36a3ff; border-radius:50%; pointer-events:none; z-index:15; box-shadow: 0 0 20px rgba(54,163,255,0.8);"></canvas>
           </div>
           <div class="note">
-            <b>Click</b>: start or finish a line. <b>Hold 'A' + click</b>: add intermediate points for curved paths.
+            <b>Click</b>: start or finish a line. <b>Hold 'A' + click</b>: add intermediate points for curved paths. <b>Press 'U'</b>: toggle magnifier.
             <span id="wipStatus"></span>
+            <span id="measureStatus" style="color:#ff9800;display:none;"></span>
             <br>Exposure from metadata: <span id="expLabel">N/A</span> ms
             <div id="trajectoryModeHint" class="trajectory-mode-hint" style="display:none;">
               <b>Trajectory Analysis Mode:</b><br>
@@ -271,8 +333,11 @@
                     <th>Start (px)</th>
                     <th>End (px)</th>
                     <th>Dist (µm)</th>
+                    <th>±Err</th>
                     <th>Exp (ms)</th>
+                    <th>±Err</th>
                     <th>Vel (µm/s)</th>
+                    <th>±Err</th>
                     <th id="thDistFromCenter" style="display:none;">Center Dist (µm)</th>
                   </tr>
                 </thead>
@@ -285,7 +350,15 @@
     </main>
     </div>
     
-    <div class="version-badge">v1.3 las vegas</div>
+    <div class="version-badge">v1.4 Seattle</div>
+  </div>
+
+  <div class="measurement-popup-backdrop" id="measurementBackdrop"></div>
+  <div class="measurement-popup" id="measurementPopup">
+    <h3>📏 Measurement Result</h3>
+    <div class="value" id="measurementValue">0.000</div>
+    <div class="unit">µm</div>
+    <div class="info">Click anywhere to continue</div>
   </div>
 
   <div class="modal" id="helpModal">
@@ -310,10 +383,22 @@
         <li><b>Click again</b> to finish the trajectory</li>
         <li>The tool automatically calculates:
           <ul>
-            <li>Distance traveled (in µm)</li>
-            <li>Velocity (µm/s) based on exposure time from metadata</li>
+            <li>Distance traveled (in µm) with propagated error</li>
+            <li>Velocity (µm/s) with propagated error based on exposure time</li>
+            <li>Error propagation: Distance error = ±0.25 pixels (converted to µm)</li>
+            <li>Time error: adjustable in sidebar (default ±0.5 ms)</li>
+            <li>Velocity error: √[(dist_err/dist)² + (time_err/time)²] × velocity</li>
           </ul>
         </li>
+      </ul>
+      
+      <h4>📏 2.5. Length Measurement Tool</h4>
+      <ul>
+        <li>Click <b>"📏 Measure Length"</b> to activate measurement mode</li>
+        <li>Draw lines just like annotations (click to add points, hold 'A' for curves)</li>
+        <li>Length is displayed in real-time but <b>not saved</b> to annotations</li>
+        <li>Useful for quick measurements or calibration checks</li>
+        <li>Click the button again to exit measurement mode</li>
       </ul>
       
       <h4>🎯 3. Trajectory Analysis Mode (Optional)</h4>
@@ -361,13 +446,23 @@
         <li>Laminar flow validation</li>
       </ul>
       
-      <h4>💡 Tips</h4>
+      <h4>� 5. Magnifier Tool</h4>
+      <ul>
+        <li>Press <b>'U'</b> key to toggle magnifier on/off</li>
+        <li>When enabled, a 3× magnified view follows your cursor</li>
+        <li>Helps with precise point placement on particle trajectories</li>
+        <li>Magnifier shows a crosshair at the exact click location</li>
+      </ul>
+      
+      <h4>�💡 Tips</h4>
       <ul>
         <li>Complex tube shapes are supported - just trace the actual boundaries</li>
         <li>Each image maintains independent tube boundaries</li>
         <li>Unsaved changes trigger a warning before closing</li>
         <li>Use the undo button (↶) to remove the last annotation</li>
         <li>Scale settings (px per µm) apply to all calculations</li>
+        <li>Adjust time error in sidebar to reflect your experimental uncertainty</li>
+        <li>Use measurement tool for quick checks without cluttering annotation data</li>
       </ul>
       
       <div class="modal-buttons-fixed">
@@ -414,6 +509,13 @@
     let bottomBoundary = null
     let tubeCenterline = null
     
+    // Measurement mode state
+    let measureMode = false
+    let measurePoints = []
+    
+    // Magnifier state
+    let magnifierEnabled = false
+    
     // Hover state
     let hoveredAnnotationIndex = -1
 
@@ -422,11 +524,14 @@
     const canvas = $('overlay')
     const ctx = canvas.getContext('2d')
     const crosshair = $('crosshair')
+    const magnifierCanvas = $('magnifier')
+    const magnifierCtx = magnifierCanvas.getContext('2d')
     const imageWrap = $('imageWrap')
     const imageListEl = $('imageList')
     const titleEl = $('title')
     const expLabel = $('expLabel')
     const wipStatus = $('wipStatus')
+    const measureStatus = $('measureStatus')
     const tableBody = $('tableBody')
     const dirtyBadge = $('dirtyBadge')
     const thDistFromCenter = $('thDistFromCenter')
@@ -444,6 +549,7 @@
     const zipInput = $('zipInput')
     const btnUseZip = $('btnUseZip')
     const btnTrajectory = $('btnTrajectory')
+    const btnMeasure = $('btnMeasure')
     const btnClearBoundaries = $('btnClearBoundaries')
     const btnUndo = $('btnUndo')
     const btnClear = $('btnClear')
@@ -451,6 +557,10 @@
     const btnSaveCsv = $('btnSaveCsv')
     const inpScalePx = $('inpScalePx')
     const inpScaleUm = $('inpScaleUm')
+    const inpTimeError = $('inpTimeError')
+    const measurementPopup = $('measurementPopup')
+    const measurementBackdrop = $('measurementBackdrop')
+    const measurementValue = $('measurementValue')
     
     // Pending boundary for confirmation
     let pendingBoundary = null
@@ -759,6 +869,29 @@
       if (e.target === helpModal) helpModal.style.display = 'none'
     })
     
+    // Close measurement popup on click
+    const closeMeasurementPopup = () => {
+      measurementPopup.style.display = 'none'
+      measurementBackdrop.style.display = 'none'
+    }
+    
+    measurementPopup.addEventListener('click', (e) => {
+      e.stopPropagation()
+      closeMeasurementPopup()
+    })
+    
+    measurementBackdrop.addEventListener('click', (e) => {
+      e.stopPropagation()
+      closeMeasurementPopup()
+    })
+    
+    // Also close on escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && measurementPopup.style.display === 'block') {
+        closeMeasurementPopup()
+      }
+    })
+    
     confirmBoundaryModal.addEventListener('click', (e) => {
       if (e.target === confirmBoundaryModal) {
         currentPoints = []
@@ -826,7 +959,16 @@
       }
     })
 
-    window.addEventListener('keydown', (e) => { if (e.key === 'a' || e.key === 'A') holdingA = true })
+    window.addEventListener('keydown', (e) => { 
+      if (e.key === 'a' || e.key === 'A') holdingA = true 
+      if (e.key === 'u' || e.key === 'U') {
+        magnifierEnabled = !magnifierEnabled
+        magnifierCanvas.style.display = magnifierEnabled ? 'block' : 'none'
+        if (!magnifierEnabled) {
+          magnifierCanvas.style.display = 'none'
+        }
+      }
+    })
     window.addEventListener('keyup', (e) => { if (e.key === 'a' || e.key === 'A') holdingA = false })
 
     // ---------- ZIP handling ----------
@@ -989,12 +1131,32 @@
       btnClear.disabled = annotations.length === 0
       btnSaveCsv.disabled = false
       btnTrajectory.disabled = false
+      btnMeasure.disabled = false
       updateWip()
       renderImageList()
     }
 
     function updateWip(){
-      wipStatus.textContent = currentPoints.length ? ` (${currentPoints.length} point${currentPoints.length>1?'s':''} added, click to finish or hold A to add more)` : ''
+      if (measureMode) {
+        wipStatus.style.display = 'none'
+        if (measurePoints.length > 0) {
+          let distPx = 0
+          for(let i = 0; i < measurePoints.length - 1; i++){
+            const dx = measurePoints[i+1].x - measurePoints[i].x
+            const dy = measurePoints[i+1].y - measurePoints[i].y
+            distPx += Math.hypot(dx, dy)
+          }
+          const distUm = pxToMicron(distPx)
+          measureStatus.textContent = ` 📏 Measuring: ${Math.round(distUm * 1000) / 1000} µm (${measurePoints.length} point${measurePoints.length > 1 ? 's' : ''}, click to add more or finish)`
+          measureStatus.style.display = 'inline'
+        } else {
+          measureStatus.style.display = 'none'
+        }
+      } else {
+        measureStatus.style.display = 'none'
+        wipStatus.style.display = 'inline'
+        wipStatus.textContent = currentPoints.length ? ` (${currentPoints.length} point${currentPoints.length>1?'s':''} added, click to finish or hold A to add more)` : ''
+      }
     }
 
     function resizeCanvas() {
@@ -1114,6 +1276,21 @@
           ctx.arc(dp.x, dp.y, 5, 0, Math.PI*2); ctx.fill()
         })
       }
+      
+      // Draw measurement line
+      if (measureMode && measurePoints.length > 0) {
+        const pts = measurePoints.map(toDisp)
+        ctx.setLineDash([5,5])
+        ctx.strokeStyle = '#ff9800'
+        ctx.lineWidth = 3
+        ctx.beginPath(); ctx.moveTo(pts[0].x, pts[0].y)
+        for(let i=1;i<pts.length;i++){ ctx.lineTo(pts[i].x, pts[i].y) }
+        ctx.stroke(); ctx.setLineDash([])
+        pts.forEach((dp, idx)=>{
+          ctx.beginPath(); ctx.fillStyle = '#ff9800'
+          ctx.arc(dp.x, dp.y, 6, 0, Math.PI*2); ctx.fill()
+        })
+      }
     }
 
     function annotationToRow(a, idx){
@@ -1130,8 +1307,11 @@
         <td>${Math.round(start.x)},${Math.round(start.y)}</td>
         <td>${Math.round(end.x)},${Math.round(end.y)}</td>
         <td>${Math.round(a.distUm*1000)/1000}</td>
+        <td>${a.distError != null ? Math.round(a.distError*1000)/1000 : ''}</td>
         <td>${a.exposureMs ?? ''}</td>
+        <td>${a.timeError != null ? Math.round(a.timeError*1000)/1000 : ''}</td>
         <td>${a.velUmS? Math.round(a.velUmS*1000)/1000 : ''}</td>
+        <td>${a.velError != null ? Math.round(a.velError*1000)/1000 : ''}</td>
         <td style="display:${showDistFromCenter ? 'table-cell' : 'none'}">${a.distFromCenter != null ? Math.round(a.distFromCenter*1000)/1000 : ''}</td>`
       
       tr.addEventListener('mouseenter', () => {
@@ -1165,6 +1345,28 @@
       renderTable(); drawAll()
     })
 
+    // ---------- Measure button ----------
+    btnMeasure.addEventListener('click', () => {
+      if (!selected) return
+      
+      if (measureMode) {
+        // Disable measure mode
+        measureMode = false
+        measurePoints = []
+        btnMeasure.textContent = '📏 Measure Length'
+        btnMeasure.style.background = 'linear-gradient(180deg,#ff9800,#f57c00)'
+        updateWip()
+        drawAll()
+      } else {
+        // Enable measure mode
+        measureMode = true
+        measurePoints = []
+        btnMeasure.textContent = '❌ Cancel Measure'
+        btnMeasure.style.background = 'linear-gradient(180deg,#f44336,#d32f2f)'
+        updateWip()
+      }
+    })
+    
     // ---------- Trajectory buttons ----------
     btnTrajectory.addEventListener('click', () => {
       if (!selected) return
@@ -1247,6 +1449,7 @@
     canvas.addEventListener('mousemove', (e) => {
       if (!selected || !imgEl.naturalWidth) {
         crosshair.classList.remove('active')
+        magnifierCanvas.style.display = 'none'
         return
       }
       
@@ -1259,6 +1462,44 @@
       crosshair.style.left = `${e.clientX - wrapRect.left}px`
       crosshair.style.top = `${e.clientY - wrapRect.top}px`
       crosshair.classList.add('active')
+      
+      // Handle magnifier
+      if (magnifierEnabled) {
+        const magnifierSize = 150
+        const zoomFactor = 3
+        magnifierCanvas.width = magnifierSize
+        magnifierCanvas.height = magnifierSize
+        magnifierCanvas.style.width = magnifierSize + 'px'
+        magnifierCanvas.style.height = magnifierSize + 'px'
+        
+        // Position magnifier offset from cursor
+        const offsetX = 20
+        const offsetY = 20
+        magnifierCanvas.style.left = `${e.clientX - wrapRect.left + offsetX}px`
+        magnifierCanvas.style.top = `${e.clientY - wrapRect.top + offsetY}px`
+        magnifierCanvas.style.display = 'block'
+        
+        // Draw magnified section
+        const imagePoint = canvasToImage(canvasX, canvasY)
+        const srcSize = magnifierSize / zoomFactor
+        const srcX = Math.max(0, Math.min(imgEl.naturalWidth - srcSize, imagePoint.x - srcSize / 2))
+        const srcY = Math.max(0, Math.min(imgEl.naturalHeight - srcSize, imagePoint.y - srcSize / 2))
+        
+        magnifierCtx.clearRect(0, 0, magnifierSize, magnifierSize)
+        magnifierCtx.drawImage(imgEl, srcX, srcY, srcSize, srcSize, 0, 0, magnifierSize, magnifierSize)
+        
+        // Draw crosshair in magnifier center
+        magnifierCtx.strokeStyle = '#36a3ff'
+        magnifierCtx.lineWidth = 2
+        magnifierCtx.beginPath()
+        magnifierCtx.moveTo(magnifierSize / 2, 0)
+        magnifierCtx.lineTo(magnifierSize / 2, magnifierSize)
+        magnifierCtx.moveTo(0, magnifierSize / 2)
+        magnifierCtx.lineTo(magnifierSize, magnifierSize / 2)
+        magnifierCtx.stroke()
+      } else {
+        magnifierCanvas.style.display = 'none'
+      }
       
       if (annotations.length === 0) return
       
@@ -1292,6 +1533,7 @@
     
     canvas.addEventListener('mouseleave', () => {
       crosshair.classList.remove('active')
+      magnifierCanvas.style.display = 'none'
       if (hoveredAnnotationIndex !== -1) {
         hoveredAnnotationIndex = -1
         const rows = tableBody.querySelectorAll('tr')
@@ -1315,6 +1557,36 @@
       point.y = Math.max(0, Math.min(imgEl.naturalHeight, point.y))
       
       console.log('[v0] Click:', { canvas: {x: canvasX, y: canvasY}, image: point })
+
+      // Handle measure mode
+      if (measureMode) {
+        if (measurePoints.length === 0) {
+          measurePoints = [point]
+        } else if (holdingA) {
+          measurePoints = [...measurePoints, point]
+        } else {
+          // Finish measurement - calculate and show popup
+          const all = [...measurePoints, point]
+          let distPx = 0
+          for(let i = 0; i < all.length - 1; i++){
+            const dx = all[i+1].x - all[i].x
+            const dy = all[i+1].y - all[i].y
+            distPx += Math.hypot(dx, dy)
+          }
+          const distUm = pxToMicron(distPx)
+          
+          // Show popup with result
+          measurementValue.textContent = (Math.round(distUm * 1000) / 1000).toFixed(3)
+          measurementBackdrop.style.display = 'block'
+          measurementPopup.style.display = 'block'
+          
+          // Reset measurement
+          measurePoints = []
+        }
+        updateWip()
+        drawAll()
+        return
+      }
 
       // Handle trajectory mode boundary drawing
       if (trajectoryMode && trajectoryStep < 3) {
@@ -1357,9 +1629,25 @@
           distPx += Math.hypot(dx,dy)
         }
         const distUm = pxToMicron(distPx)
+        
+        // Calculate errors
+        const pixelError = 0.5 // error in pixels
+        const distError = pxToMicron(pixelError / 2) // distance error in µm
+        
         const exp = selected.exposureMs ?? null
+        const timeError = exp ? Number(inpTimeError.value) : null // time error in ms
+        
         const velUmMs = exp? (distUm/exp): null
         const velUmS = velUmMs? velUmMs*1000 : null
+        
+        // Error propagation for velocity: sqrt((distError/dist)^2 + (timeError/time)^2) * velocity
+        let velError = null
+        if (velUmS && distUm && exp && distError && timeError) {
+          const relDistError = distError / distUm
+          const relTimeError = timeError / exp
+          const relVelError = Math.sqrt(relDistError * relDistError + relTimeError * relTimeError)
+          velError = relVelError * velUmS
+        }
         
         let distFromCenter = null
         if (trajectoryMode && trajectoryStep === 3 && tubeCenterline) {
@@ -1373,10 +1661,13 @@
         const newAnnotation = {
           points: all, 
           distPx, 
-          distUm, 
-          exposureMs: exp, 
+          distUm,
+          distError,
+          exposureMs: exp,
+          timeError,
           velUmMs, 
-          velUmS
+          velUmS,
+          velError
         }
         
         if (distFromCenter !== null) {
@@ -1416,8 +1707,8 @@
       if (!selected) return
       const showDistFromCenter = trajectoryMode && trajectoryStep === 3
       const header = showDistFromCenter 
-        ? ['points','num_points','dist_um','exposure_ms','vel_um_s','dist_from_center_um']
-        : ['points','num_points','dist_um','exposure_ms','vel_um_s']
+        ? ['points','num_points','dist_um','dist_error_um','exposure_ms','time_error_ms','vel_um_s','vel_error_um_s','dist_from_center_um']
+        : ['points','num_points','dist_um','dist_error_um','exposure_ms','time_error_ms','vel_um_s','vel_error_um_s']
       
       const rows = annotations.map(a=>{
         const pts = a.points || []
@@ -1426,8 +1717,11 @@
           ptsStr,
           pts.length,
           Math.round(a.distUm*1000)/1000,
+          a.distError != null ? Math.round(a.distError*1000)/1000 : '',
           a.exposureMs ?? '',
-          a.velUmS? Math.round(a.velUmS*1000)/1000 : ''
+          a.timeError != null ? Math.round(a.timeError*1000)/1000 : '',
+          a.velUmS? Math.round(a.velUmS*1000)/1000 : '',
+          a.velError != null ? Math.round(a.velError*1000)/1000 : ''
         ]
         
         if (showDistFromCenter) {
