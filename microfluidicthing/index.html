@@ -42,6 +42,8 @@
     .image-wrap { position: relative; background: rgba(255,255,255,0.04); border-radius: 10px; padding: 8px; border: 1px solid rgba(255,255,255,0.05); }
     .image-wrap img { display: block; max-width: 100%; border-radius: 8px; }
     .image-wrap canvas.overlay { position: absolute; left: 8px; top: 8px; border-radius: 8px; pointer-events: auto; cursor: crosshair; }
+  /* Doodle canvas sits above the main overlay and is ephemeral (not persisted) */
+  .image-wrap canvas.doodle-canvas { position: absolute; left: 8px; top: 8px; border-radius: 8px; pointer-events: auto; cursor: crosshair; z-index: 20; }
     /* added visual crosshair indicator for better click precision */
     .crosshair-indicator { 
       position: absolute; 
@@ -292,6 +294,7 @@
         <div class="controls">
           <button class="btn btn-trajectory" id="btnTrajectory" disabled>Enable Trajectory Analysis</button>
           <button class="btn" id="btnMeasure" disabled style="background: linear-gradient(180deg,#ff9800,#f57c00);">📏 Measure Length</button>
+          <button class="btn" id="btnDoodle" disabled>✏️ Doodle</button>
           <button class="btn" id="btnClearBoundaries" disabled style="display:none;">Clear Boundaries</button>
           <button class="btn" id="btnUndo" disabled>↶ Undo</button>
           <button class="btn" id="btnClear" disabled>Clear All</button>
@@ -305,6 +308,8 @@
           <div class="image-wrap" id="imageWrap">
             <img id="img" alt="" />
             <canvas id="overlay" class="overlay"></canvas>
+            <!-- Ephemeral doodle canvas: user can sketch flow paths; cleared when exiting doodle mode -->
+            <canvas id="doodleCanvas" class="doodle-canvas" style="display:none;"></canvas>
             <div id="crosshair" class="crosshair-indicator"></div>
             <canvas id="magnifier" style="display:none; position:absolute; border:3px solid #36a3ff; border-radius:50%; pointer-events:none; z-index:15; box-shadow: 0 0 20px rgba(54,163,255,0.8);"></canvas>
           </div>
@@ -350,7 +355,7 @@
     </main>
     </div>
     
-    <div class="version-badge">v1.4 Seattle</div>
+    <div class="version-badge">v1.4.3 Olympia</div>
   </div>
 
   <div class="measurement-popup-backdrop" id="measurementBackdrop"></div>
@@ -539,6 +544,7 @@
     const trajectoryStepEl = $('trajectoryStep')
 
     const btnHelp = $('btnHelp')
+  const btnDoodle = $('btnDoodle')
     const helpModal = $('helpModal')
     const btnCloseHelp = $('btnCloseHelp')
     const confirmBoundaryModal = $('confirmBoundaryModal')
@@ -561,6 +567,8 @@
     const measurementPopup = $('measurementPopup')
     const measurementBackdrop = $('measurementBackdrop')
     const measurementValue = $('measurementValue')
+  const doodleCanvas = $('doodleCanvas')
+  const doodleCtx = doodleCanvas.getContext('2d')
     
     // Pending boundary for confirmation
     let pendingBoundary = null
@@ -606,6 +614,24 @@
     function setDirty(v) {
       dirty = v
       dirtyBadge.style.display = dirty ? 'inline-block' : 'none'
+    }
+
+  // Doodle helpers (support multiple strokes)
+  let doodleMode = false
+  let doodleStrokes = [] // array of strokes; each stroke is array of points
+
+    function resizeDoodleCanvas() {
+      if (!imgEl.naturalWidth) return
+      const DPR = dpr()
+      const displayW = imgEl.clientWidth
+      const displayH = imgEl.clientHeight
+      doodleCanvas.width = Math.max(1, Math.floor((displayW - pad*2) * DPR))
+      doodleCanvas.height = Math.max(1, Math.floor((displayH - pad*2) * DPR))
+      doodleCanvas.style.width = `${displayW - pad*2}px`
+      doodleCanvas.style.height = `${displayH - pad*2}px`
+      doodleCanvas.style.left = pad + 'px'
+      doodleCanvas.style.top = pad + 'px'
+      doodleCtx.setTransform(DPR,0,0,DPR,0,0)
     }
 
     // ---------- Trajectory Analysis Functions ----------
@@ -868,6 +894,94 @@
     helpModal.addEventListener('click', (e) => {
       if (e.target === helpModal) helpModal.style.display = 'none'
     })
+
+    // ---------- Doodle Mode (ephemeral) ----------
+    // Toggle doodle mode via button; drawings are NOT persisted and cleared when exiting
+    function clearDoodle() {
+      doodleStrokes = []
+      doodleCtx.clearRect(0,0,doodleCanvas.width, doodleCanvas.height)
+      // restore undo button state to annotation history availability
+      try { btnUndo.disabled = history.length === 0 } catch(e){}
+    }
+
+    function drawDoodle() {
+      doodleCtx.clearRect(0,0,doodleCanvas.width, doodleCanvas.height)
+      if (!doodleStrokes || doodleStrokes.length === 0) return
+      doodleCtx.lineWidth = 2
+      doodleCtx.strokeStyle = 'rgba(76,175,80,0.95)'
+      doodleCtx.fillStyle = 'rgba(76,175,80,0.95)'
+      doodleStrokes.forEach(stroke => {
+        if (!stroke || stroke.length === 0) return
+        doodleCtx.beginPath()
+        stroke.forEach((p, i) => {
+          const c = imageToCanvas(p.x, p.y)
+          if (i===0) doodleCtx.moveTo(c.x, c.y)
+          else doodleCtx.lineTo(c.x, c.y)
+        })
+        doodleCtx.stroke()
+      })
+    }
+
+    // Doodle input handling (freehand with mouse)
+    let doodleDrawing = false
+    doodleCanvas.addEventListener('mousedown', (e) => {
+      if (!doodleMode || !selected) return
+      doodleDrawing = true
+      const rect = doodleCanvas.getBoundingClientRect()
+      const cx = e.clientX - rect.left
+      const cy = e.clientY - rect.top
+      const p = canvasToImage(cx, cy)
+      // start a new stroke
+      doodleStrokes.push([p])
+      // enable undo for doodle strokes
+      try { btnUndo.disabled = false } catch(e){}
+      drawDoodle()
+    })
+  // Prevent clicks on doodle canvas from falling through to the annotation canvas
+  doodleCanvas.addEventListener('click', (e) => { e.stopPropagation(); })
+    window.addEventListener('mousemove', (e) => {
+      if (!doodleDrawing) return
+      const rect = doodleCanvas.getBoundingClientRect()
+      const cx = e.clientX - rect.left
+      const cy = e.clientY - rect.top
+      const p = canvasToImage(cx, cy)
+      const cur = doodleStrokes[doodleStrokes.length - 1]
+      if (cur) cur.push(p)
+      drawDoodle()
+    })
+    window.addEventListener('mouseup', (e) => {
+      if (!doodleDrawing) return
+      doodleDrawing = false
+    })
+
+    // Toggle via button
+    btnDoodle.addEventListener('click', () => {
+      if (!selected) return
+      doodleMode = !doodleMode
+      btnDoodle.textContent = doodleMode ? '❌ Exit Doodle' : '✏️ Doodle'
+      doodleCanvas.style.display = doodleMode ? 'block' : 'none'
+      if (doodleMode) {
+        resizeDoodleCanvas()
+        drawDoodle()
+        // enable undo if there are doodle strokes
+        try { btnUndo.disabled = doodleStrokes.length === 0 } catch(e){}
+      } else {
+        clearDoodle()
+        // when exiting doodle mode, restore undo to annotation history
+        try { btnUndo.disabled = history.length === 0 } catch(e){}
+      }
+    })
+
+    // Escape clears doodle and exits doodle mode (but does not affect saved annotations)
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && doodleMode) {
+        doodleMode = false
+        doodleCanvas.style.display = 'none'
+        clearDoodle()
+        btnDoodle.textContent = '✏️ Doodle'
+      }
+    })
+
     
     // Close measurement popup on click
     const closeMeasurementPopup = () => {
@@ -1125,13 +1239,14 @@
       titleEl.textContent = img.name
       expLabel.textContent = img.exposureMs != null ? String(img.exposureMs) : 'N/A'
       imgEl.src = img.url
-      imgEl.onload = () => { resizeCanvas(); drawAll() }
+      imgEl.onload = () => { resizeCanvas(); try { resizeDoodleCanvas() } catch(e){}; drawAll(); try { drawDoodle() } catch(e){} }
       currentPoints = []
       loadAnnotationsFor(img.name)
       btnClear.disabled = annotations.length === 0
       btnSaveCsv.disabled = false
       btnTrajectory.disabled = false
       btnMeasure.disabled = false
+  btnDoodle.disabled = false
       updateWip()
       renderImageList()
     }
@@ -1170,9 +1285,11 @@
       canvas.style.height = `${displayH - pad*2}px`
       canvas.style.left = pad + 'px'
       canvas.style.top = pad + 'px'
+      // Keep doodle canvas in sync
+      try { resizeDoodleCanvas() } catch(e){}
     }
 
-    window.addEventListener('resize', () => { resizeCanvas(); drawAll() })
+    window.addEventListener('resize', () => { resizeCanvas(); drawAll(); try { drawDoodle() } catch(e){} })
 
     function drawAll() {
       if (!imgEl.naturalWidth) return
@@ -1685,6 +1802,16 @@
 
     // ---------- Controls ----------
     btnUndo.addEventListener('click', ()=>{
+      // If in doodle mode, undo the last doodle stroke
+      if (doodleMode) {
+        if (!doodleStrokes || doodleStrokes.length === 0) return
+        doodleStrokes.pop()
+        drawDoodle()
+        btnUndo.disabled = doodleStrokes.length === 0
+        return
+      }
+
+      // Otherwise, undo the last annotation change
       if (history.length===0) return
       annotations = history.pop()
       btnUndo.disabled = history.length===0
