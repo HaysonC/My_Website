@@ -84,6 +84,9 @@ figcaption{margin-top:8px;color:var(--muted);font-size:12px;line-height:1.45}
 .webring-home img{width:18px;height:18px;display:block;opacity:.9}
 
 .webring--header{justify-content:flex-end;align-self:flex-start;margin-top:2px}
+.footer{margin-top:40px;text-align:center;color:var(--muted);font-size:13px;line-height:1.5}
+
+.footer a{color:var(--text);text-decoration:none;border-bottom:1px solid rgba(255,255,255,.18)}
 
 @media (max-width:720px){
 	.webring--header{justify-content:flex-start}
