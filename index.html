@@ -35,9 +35,31 @@
       ]
     }
   </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Serif:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="researcher.css">
 </head>
 <body>
+  <div class="theme-switcher">
+    <button id="theme-toggle" class="theme-btn" aria-label="Toggle theme">
+      <svg class="sun-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="5"></circle>
+        <line x1="12" y1="1" x2="12" y2="3"></line>
+        <line x1="12" y1="21" x2="12" y2="23"></line>
+        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+        <line x1="1" y1="12" x2="3" y2="12"></line>
+        <line x1="21" y1="12" x2="23" y2="12"></line>
+        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+      </svg>
+      <svg class="moon-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+      </svg>
+    </button>
+  </div>
+
   <main class="page">
     <div class="top">
       <div class="id">
@@ -46,13 +68,13 @@
         </div>
         <div class="header">
           <h1>Hayson Cheung</h1>
-          <div class="meta">Robotics • machine learning • embedded ML systems</div>
+          <div class="meta">Robotics · Machine Learning · Embedded AI Systems</div>
           <div class="links" aria-label="Profile links">
-            <a href="https://github.com/HaysonC" target="_blank" rel="noopener">GitHub</a>⋅
-            <a href="https://www.linkedin.com/in/hayson-cheung-3688a5241/" target="_blank" rel="noopener">LinkedIn</a>⋅
-            <a href="https://scholar.google.com/citations?user=S-SivN8AAAAJ" target="_blank" rel="noopener">Google Scholar</a>⋅
-            <a href="https://github.com/HaysonC/skulenotes" target="_blank" rel="noopener">University notes</a>⋅
-            <a href="mailto:hayson.cheing@mail.utoronto.ca">hayson.cheing@mail.utoronto.ca</a>
+            <a href="https://github.com/HaysonC" target="_blank" rel="noopener">GitHub</a>
+            <a href="https://www.linkedin.com/in/hayson-cheung-3688a5241/" target="_blank" rel="noopener">LinkedIn</a>
+            <a href="https://scholar.google.com/citations?user=S-SivN8AAAAJ" target="_blank" rel="noopener">Scholar</a>
+            <a href="https://github.com/HaysonC/skulenotes" target="_blank" rel="noopener">Notes</a>
+            <a href="mailto:hayson.cheing@mail.utoronto.ca">Email</a>
           </div>
         </div>
         <div class="spacer"></div>
@@ -68,24 +90,22 @@
       </div>
     </div>
 
-    <div class="section-title">Interests</div>
+    <div class="section-title">Research Interests</div>
     <section class="list" aria-label="Research interests">
-      <div class="item">
+      <div class="item item--featured">
         <div class="desc">
-          <p>My research sits at the intersection of hardware-aware AI and embodied intelligence. I focus on learning systems that are mathematically grounded yet deployable on robots and edge devices under strict latency, power, and memory constraints—bridging high-level generative modeling with low-level system execution.</p>
-          <p>Concretely, I’m interested in:</p>
-          <ol>
-            <li>Algorithm–system co-design for latent world models where SoC constraints shape the training objective (e.g., structured sparsity and quantization-aware training for real-time control).</li>
-            <li>Robustness from incomplete and “dead” industrial data via offline ML and causal reasoning.</li>
-            <li>Efficient generative 3D reconstruction and motion representations (e.g., dynamics-aware scene models for interpolation and segmentation).</li>
+          <p class="intro-text">My research sits at the intersection of hardware-aware AI and embodied intelligence. I focus on learning systems that are mathematically grounded yet deployable on robots and edge devices under strict latency, power, and memory constraints—bridging high-level generative modeling with low-level system execution.</p>
+          <p class="subheading">Core Focus Areas</p>
+          <ol class="focus-list">
+            <li><strong>Algorithm–system co-design</strong> for latent world models where SoC constraints shape the training objective (e.g., structured sparsity and quantization-aware training for real-time control).</li>
+            <li><strong>Robustness from incomplete data</strong> via offline ML and causal reasoning applied to industrial datasets.</li>
+            <li><strong>Efficient generative 3D reconstruction</strong> and motion representations (e.g., dynamics-aware scene models for interpolation and segmentation).</li>
           </ol>
         </div>
       </div>
     </section>
 
-
-
-    <div class="section-title" id="selected">highlights</div>
+    <div class="section-title" id="selected">Featured Research</div>
     <section class="grid" aria-label="Selected research and project demos">
 
       <article class="card">
@@ -94,28 +114,23 @@
         </div>
         <div class="cap">
           <p class="title">SAMUEL</p>
-          <p class="sub">Vocal-conditioned music generation · Accepted to IEEE/WI IAT · <a href="https://arxiv.org/abs/2507.19991" target="_blank" rel="noopener">arXiv:2507.19991</a></p>
+          <p class="sub">Vocal-conditioned music generation · IEEE/WI IAT · <a href="https://arxiv.org/abs/2507.19991" target="_blank" rel="noopener">arXiv</a></p>
         </div>
       </article>
 
-
-
-    
       <article class="card">
         <div class="media"><img src="assets/worldModels.gif" alt="World model robotics inference"></div>
         <div class="cap">
-          <p class="title">World model</p>
-          <p class="sub">Robotics inference + predictive representations</p>
+          <p class="title">World Models</p>
+          <p class="sub">Predictive representations for embodied agents</p>
         </div>
       </article>
 
-
-
-    <article class="card">
+      <article class="card">
         <div class="media"><img src="assets/robots.gif" alt="Robotic arm picking objects"></div>
         <div class="cap">
-          <p class="title">Robotic manipulation</p>
-          <p class="sub">World Models + visual foresight</p>
+          <p class="title">Robotic Manipulation</p>
+          <p class="sub">World models + visual foresight for control</p>
         </div>
       </article>
 
@@ -123,56 +138,53 @@
         <div class="media"><img src="assets/pivo.png" alt="Pivo project visual"></div>
         <div class="cap">
           <p class="title">Pivo</p>
-          <p class="sub">Efficient Fluid Modeling with ML and Probabilistic Methods</p>
+          <p class="sub">Efficient fluid modeling with ML</p>
         </div>
       </article>
 
       <article class="card">
         <div class="media"><img src="assets/industrial_data.png" alt="Industrial data visual"></div>
         <div class="cap">
-          <p class="title">Industrial data</p>
-          <p class="sub">SkySense — production data + predictive maintenance</p>
+          <p class="title">Industrial ML</p>
+          <p class="sub">SkySense — Predictive maintenance at scale</p>
         </div>
       </article>
+
       <article class="card">
         <div class="media"><img src="assets/3d_lego.gif" alt="LegoFIKS demo"></div>
         <div class="cap">
           <p class="title">LegoFIKS</p>
-          <p class="sub">Generative 3D + instruction generation · <a href="projectpost/legoFiks/">Post</a> · <a href="https://devpost.com/software/legofiks" target="_blank" rel="noopener">Devpost</a></p>
+          <p class="sub">3D generation + instruction synthesis · <a href="projectpost/legoFiks/">Post</a></p>
         </div>
       </article>
 
-          <article class="card">
+      <article class="card">
         <div class="media">
           <img src="assets/candidly.png" alt="Candidly project screenshot">
         </div>
         <div class="cap">
           <p class="title">Candidly</p>
-          <p class="sub">Cloud P2P + Webgazer Anti Cheat · <a href="https://devpost.com/software/candidly" target="_blank" rel="noopener">Devpost</a></p>
-      </div>
+          <p class="sub">Anti-cheat platform for interviews · <a href="https://devpost.com/software/candidly" target="_blank" rel="noopener">Devpost</a></p>
+        </div>
       </article>
-
-      
 
       <article class="card">
         <div class="media"><img src="assets/neat_2.gif" alt="NEAT agent in Smash Bros"></div>
         <div class="cap">
-          <p class="title">NEAT agent (Smash Bros)</p>
-          <p class="sub">Neuroevolution + sequence modeling (rNEAT/LSTM) · <a href="projectpost/neat/">Post</a> · <a href="https://github.com/HaysonC/NEAT-PongBot" target="_blank" rel="noopener">GitHub</a></p>
+          <p class="title">NEAT Agent</p>
+          <p class="sub">Neuroevolution in Smash Bros · <a href="projectpost/neat/">Post</a></p>
         </div>
       </article>
 
-            <article class="card">
+      <article class="card">
         <div class="media">
           <img src="assets/ensemble.gif" alt="Ensemble methods for robotics"> 
         </div>
         <div class="cap">
-          <p class="title">Ensemble CV for Robotics</p>
-          <p class="sub">Ensemble Methods (NN + Classical) for robust and efficient Inference and CV Heuristics</p>
+          <p class="title">Ensemble CV</p>
+          <p class="sub">Robust inference for robotic perception</p>
         </div>
       </article>
-
-
 
       <article class="card">
         <div class="media">
@@ -180,150 +192,216 @@
         </div>
         <div class="cap">
           <p class="title">Pong</p>
-          <p class="sub">Neuroevolution for Atari games · <a href="projectpost/neat/">Post</a> · <a href="https://github.com/HaysonC/NEAT-PongBot" target="_blank" rel="noopener">GitHub</a></p>
+          <p class="sub">Neuroevolution for Atari games</p>
         </div>
       </article>
 
- 
-            <article class="card">
+      <article class="card">
         <div class="media"><img src="assets/cv.gif" alt="Pendulum demo"></div>
         <div class="cap">
           <p class="title">Pendulum</p>
-          <p class="sub">OpenCV tracking + dynamics modeling · <a href="projectpost/pendulum/">Post</a> · <a href="https://github.com/HaysonC/phy180-pendulum" target="_blank" rel="noopener">GitHub</a></p>
+          <p class="sub">OpenCV tracking + dynamics modeling</p>
         </div>
       </article>
-
-    
-    
     </section>
-      <div class="section-title" id="projects">Projects</div>
 
-
-
-      <article class="item">
-        <div class="titleline">
-          <span class="projtitle">SAMUEL</span>
-          <span class="hint">· paper (accepted to IEEE/WI IAT):</span>
-          <a href="https://arxiv.org/abs/2507.19991" target="_blank" rel="noopener">arXiv:2507.19991</a>
-        </div>
-        <div class="desc">We present a lightweight latent diffusion model for vocal-conditioned musical accompaniment generation. A soft alignment attention mechanism adaptively combines local and global temporal dependencies across diffusion timesteps, capturing multi-scale musical structure efficiently. Operating in the compressed latent space of a pre-trained VAE, the model achieves a 220× parameter reduction and 52× faster inference while maintaining competitive quality with only 15M parameters—enabling real-time deployment on consumer hardware.</div>
-        <div class="pillrow">Keywords: latent diffusion, attention, controllable generation, efficient inference</div>
-      </article>
-
-      <article class="item">
-        <div class="titleline">
-          <span class="projtitle">SkySense</span>
-          <span class="hint">· industrial-scale ML systems</span>
-        </div>
-        <div class="desc">End-to-end predictive maintenance pipelines in manufacturing environments, with a focus on robustness to noise, missing modalities, and out-of-distribution behavior.</div>
-        <div class="pillrow">Keywords: production ML, reliability, data-centric AI</div>
-      </article>
+    <div class="section-title" id="projects">Projects & Papers</div>
 
     <section class="list" aria-label="Projects and papers">
       <article class="item">
         <div class="titleline">
-          <span class="projtitle">Candidly</span>
-          <span class="hint">· project:</span>
-          <a href="https://devpost.com/software/candidly" target="_blank" rel="noopener">devpost.com/software/candidly</a>
+          <span class="projtitle">SAMUEL: Soft Alignment for Music Enhancement</span>
+          <span class="badge-accent">Paper</span>
         </div>
         <div class="desc">
-          <p><strong>Inspiration.</strong> While doomscrolling I came across “Cluely” (with the slogan “cheat on everything”). We don’t think that’s fair—many candidates work hard to earn roles—and it adds workload and inconsistency for interviewers and senior engineers.</p>
-          <p><strong>What it does.</strong> Candidly is an “Anti‑Cluely” layer for candidates and a Databricks-style platform for interviewers:</p>
-          <ol>
-            <li>Detects and surfaces suspicious gaze and typing patterns during interviews.</li>
-            <li>Provides a video interviewing tool with templates, coding questions, and an editor for interviewers and candidates.</li>
-            <li>Records sessions, flags notable moments, and provides HR-facing insights on interviewer performance and improvement directions.</li>
-          </ol>
+          <p>A lightweight latent diffusion model for vocal-conditioned musical accompaniment generation. We present soft alignment attention that adaptively combines local and global temporal dependencies across diffusion timesteps. The model achieves 220× parameter reduction and 52× faster inference (15M params) while maintaining competitive quality—enabling real-time deployment on consumer hardware.</p>
+          <div class="pillrow">
+            <a href="https://arxiv.org/abs/2507.19991" target="_blank" rel="noopener">arXiv:2507.19991</a> · 
+            <span class="pill">Latent Diffusion</span>
+            <span class="pill">Attention Mechanisms</span>
+            <span class="pill">Efficient Inference</span>
+          </div>
         </div>
-        <div class="pillrow">Keywords: interview integrity, gaze/typing signals, video interviews, interviewer analytics</div>
       </article>
 
       <article class="item">
         <div class="titleline">
-          <span class="projtitle">World models for robotics</span>
-          <span class="hint">· representation learning for control</span>
+          <span class="projtitle">SkySense: Industrial-Scale ML Systems</span>
+          <span class="badge-accent">Production</span>
         </div>
-        <div class="desc">Predictive representations for embodied agents, aiming to bridge generative modeling with real-time inference constraints in closed-loop control.</div>
-        <div class="pillrow">Keywords: latent dynamics, planning, hardware-aware inference</div>
+        <div class="desc">
+          <p>End-to-end predictive maintenance pipelines deployed in manufacturing environments, with emphasis on robustness to noise, missing modalities, and out-of-distribution behavior. Focus on bridging research-grade models with real production constraints.</p>
+          <div class="pillrow">
+            <span class="pill">Production ML</span>
+            <span class="pill">Reliability</span>
+            <span class="pill">Data-Centric AI</span>
+          </div>
+        </div>
       </article>
 
       <article class="item">
         <div class="titleline">
-          <a class="projtitle" href="projectpost/legoFiks/">LegoFIKS</a>
-          <span class="hint">· project:</span>
-          <a href="https://devpost.com/software/legofiks" target="_blank" rel="noopener">devpost.com/software/legofiks</a>
+          <span class="projtitle">Candidly: Anti-Cheat Interview Platform</span>
+          <span class="badge-accent">Project</span>
         </div>
-        <div class="desc">Generates a 3D LEGO model and role-playing instructions from an input image using generative tooling and structured outputs.</div>
-        <div class="pillrow">Keywords: 3D generation, human-centered tools</div>
+        <div class="desc">
+          <p>A comprehensive platform ensuring interview integrity through gaze and typing pattern detection, combined with a video interviewing tool for candidates and a Databricks-style analytics dashboard for interviewers. Features session recording, anomaly flagging, and insights on interviewer performance.</p>
+          <div class="pillrow">
+            <a href="https://devpost.com/software/candidly" target="_blank" rel="noopener">Devpost</a> · 
+            <span class="pill">Computer Vision</span>
+            <span class="pill">Interview Analytics</span>
+            <span class="pill">Full-Stack</span>
+          </div>
+        </div>
       </article>
 
       <article class="item">
         <div class="titleline">
-          <a class="projtitle" href="projectpost/aws/">MapMatch (AWS Hackathon)</a>
-          <span class="hint">· project:</span>
-          <a href="https://devpost.com/software/roomiematch-xoe75b" target="_blank" rel="noopener">Devpost</a>
+          <span class="projtitle">World Models for Robotics</span>
+          <span class="badge-accent">Research</span>
         </div>
-        <div class="desc">A semantic-based matching algorithm built on AWS primitives (Lambda + embeddings + DynamoDB) under a 6-hour hackathon constraint.</div>
-        <div class="pillrow">Keywords: semantic search, embeddings, AWS, DynamoDB</div>
+        <div class="desc">
+          <p>Predictive representations for embodied agents, bridging generative modeling with real-time inference constraints in closed-loop control. Explores latent dynamics learning and planning in compressed state spaces.</p>
+          <div class="pillrow">
+            <span class="pill">Representation Learning</span>
+            <span class="pill">Latent Dynamics</span>
+            <span class="pill">Hardware-Aware</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="item">
+        <div class="titleline">
+          <a class="projtitle" href="projectpost/legoFiks/">LegoFIKS: Generative 3D Instructions</a>
+          <span class="badge-accent">Hackathon</span>
+        </div>
+        <div class="desc">
+          <p>Generates 3D LEGO models and step-by-step role-playing instructions from input images using modern generative models and structured outputs. Demonstrates human-centered AI applications.</p>
+          <div class="pillrow">
+            <a href="https://devpost.com/software/legofiks" target="_blank" rel="noopener">Devpost</a> · 
+            <span class="pill">3D Generation</span>
+            <span class="pill">Structured Outputs</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="item">
+        <div class="titleline">
+          <a class="projtitle" href="projectpost/aws/">MapMatch: Semantic Matching (AWS Hackathon)</a>
+          <span class="badge-accent">Hackathon</span>
+        </div>
+        <div class="desc">
+          <p>A semantic-based matching algorithm built on AWS primitives (Lambda + embeddings + DynamoDB) developed under hackathon constraints. Demonstrates rapid prototyping with cloud services.</p>
+          <div class="pillrow">
+            <a href="https://devpost.com/software/roomiematch-xoe75b" target="_blank" rel="noopener">Devpost</a> · 
+            <span class="pill">Embeddings</span>
+            <span class="pill">AWS</span>
+          </div>
+        </div>
       </article>
 
       <article class="item">
         <div class="titleline">
           <a class="projtitle" href="projectpost/LSTM/">LSTM Encoder–Decoder Translator</a>
-          <span class="hint">· project:</span>
-          <a href="https://github.com/HaysonC/Encoder-DecoderLSTMTranslator" target="_blank" rel="noopener">GitHub</a>
-          <a href="https://colab.research.google.com/drive/1qdCU3CGQ1AeH1kQwXrgmcJOrJtX8a8Pn?usp=sharing" target="_blank" rel="noopener">Colab</a>
+          <span class="badge-accent">Learning</span>
         </div>
-        <div class="desc">A sequence-to-sequence encoder–decoder implementation for translation tasks, with an LSTM bottleneck and discussion of attention as the next step.</div>
-        <div class="pillrow">Keywords: seq2seq, LSTM, NLP, attention</div>
+        <div class="desc">
+          <p>Sequence-to-sequence encoder–decoder implementation for translation tasks with LSTM bottleneck. Includes discussion of attention mechanisms as next iteration. Fully documented with interactive Colab notebook.</p>
+          <div class="pillrow">
+            <a href="https://github.com/HaysonC/Encoder-DecoderLSTMTranslator" target="_blank" rel="noopener">GitHub</a> · 
+            <span class="pill">Seq2Seq</span>
+            <span class="pill">NLP</span>
+          </div>
+        </div>
       </article>
 
       <article class="item">
         <div class="titleline">
-          <a class="projtitle" href="projectpost/pendulum/">Pendulum motion analysis</a>
-          <span class="hint">· computer vision + system identification</span>
+          <a class="projtitle" href="projectpost/pendulum/">Pendulum Motion Analysis</a>
+          <span class="badge-accent">Physics</span>
         </div>
-        <div class="desc">OpenCV-based tracking of a pendulum and downstream analysis of period and damping behavior using fitted models.</div>
-        <div class="pillrow">Keywords: perception, dynamics, data fitting</div>
+        <div class="desc">
+          <p>OpenCV-based real-time pendulum tracking with downstream analysis of period and damping behavior. Demonstrates integration of computer vision with system identification.</p>
+          <div class="pillrow">
+            <a href="https://github.com/HaysonC/phy180-pendulum" target="_blank" rel="noopener">GitHub</a> · 
+            <span class="pill">Computer Vision</span>
+            <span class="pill">Dynamics</span>
+          </div>
+        </div>
       </article>
 
       <article class="item">
         <div class="titleline">
-          <a class="projtitle" href="projectpost/neat/">NEAT agents (Pong / Smash)</a>
-          <span class="hint">· neuroevolution</span>
+          <a class="projtitle" href="projectpost/neat/">NEAT Agents: Pong & Smash Bros</a>
+          <span class="badge-accent">Neuroevolution</span>
         </div>
-        <div class="desc">NeuroEvolution of Augmenting Topologies (NEAT) for game agents, including a Pong self-play demo and an evolved Smash-style agent.</div>
-        <div class="pillrow">Keywords: evolutionary optimization, agents</div>
+        <div class="desc">
+          <p>NeuroEvolution of Augmenting Topologies (NEAT) implementations including self-play Pong demo and evolved Smash Bros agents. Demonstrates evolutionary optimization for agent design.</p>
+          <div class="pillrow">
+            <a href="https://github.com/HaysonC/NEAT-PongBot" target="_blank" rel="noopener">GitHub</a> · 
+            <span class="pill">Evolutionary Algorithms</span>
+            <span class="pill">Game AI</span>
+          </div>
+        </div>
       </article>
     </section>
 
-        <div class="section-title" id="teaching">Teaching</div>
+    <div class="section-title" id="teaching">Teaching & Mentorship</div>
     <section class="list" aria-label="Teaching and mentorship">
       <article class="item">
         <div class="desc">
-          <p>I enjoy teaching and community-building around technical tools and research papers.</p>
-          <ol>
-            <li><strong>Ridley College (2026):</strong> Tutored students in LaTeX and mathematics. <a href="https://github.com/HaysonC/latex_tutorial" target="_blank" rel="noopener">LaTeX Notes</a>.</li>
-            <li><strong>University of Toronto Machine Intelligence Student Team (Fall 2025 / Winter 2026):</strong> Ran paper-reading sessions.</li>
-          </ol>
+          <p>I enjoy teaching and building technical communities around tools and research:</p>
+          <ul class="teaching-list">
+            <li><strong>Ridley College (2026):</strong> Tutoring in LaTeX and advanced mathematics. <a href="https://github.com/HaysonC/latex_tutorial" target="_blank" rel="noopener">LaTeX Notes</a>.</li>
+            <li><strong>University of Toronto Machine Intelligence Student Team (2025–2026):</strong> Facilitating paper-reading sessions on state-of-the-art research.</li>
+          </ul>
         </div>
       </article>
     </section>
 
-    <div class="section-title" id="drive">Public Drive</div>
-    <div class="drive-line">
-      Access public drive here: <a href="https://drive.google.com/drive/folders/1xhqCztJlUuTp6Mt_hBwCth1OVkyLrshf?usp=sharing" target="_blank" rel="noopener">Google Drive link</a>
-     
+    <div class="section-title" id="resources">Resources</div>
+    <div class="resources-grid">
+      <div class="resource-card">
+        <h3>Public Drive</h3>
+        <p>Research notes, datasets, and materials</p>
+        <a href="https://drive.google.com/drive/folders/1xhqCztJlUuTp6Mt_hBwCth1OVkyLrshf?usp=sharing" target="_blank" rel="noopener" class="resource-link">Access Drive →</a>
+      </div>
+      <div class="resource-card">
+        <h3>Microfluidic Tool</h3>
+        <p>Interactive visualization and simulation tool</p>
+        <a href="microFluidicTool/index.html" target="_blank" rel="noopener" class="resource-link">Open Tool →</a>
+      </div>
     </div>
-    <div class="drive-line">
-      Access microfluidic tool here: <a href="microFluidicTool/index.html" target="_blank" rel="noopener">Micro Fluidic Tool link</a>
+
+    <hr class="divider">
+    <div class="footer">
+      <p>© 2026 Hayson Cheung · Built with semantic HTML and CSS · <a href="https://webring.ayanali.net/#https://hayson.me/My_Website" target="_blank" rel="noopener">SKULE Webring</a></p>
     </div>
-  <hr size="1" style="border:none;border-top:1px solid var(--hairline);margin:20px 0">
-  <div class="footer">
-    <p>© 2026 Hayson Cheung. Built with HTML and CSS. Hosted on GitHub Pages. <a href="https://webring.ayanali.net/#https://hayson.me/My_Website" target="_blank" rel="noopener">SKULE Webring</a>.</p>
-  </div>
 
   </main>
 
+  <script>
+    // Initialize theme from localStorage or system preference
+    function initTheme() {
+      const saved = localStorage.getItem('theme');
+      const preferred = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      const theme = saved || preferred;
+      document.documentElement.setAttribute('data-theme', theme);
+    }
+
+    // Toggle theme
+    function toggleTheme() {
+      const current = document.documentElement.getAttribute('data-theme');
+      const next = current === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+    }
+
+    const themeBtn = document.getElementById('theme-toggle');
+    themeBtn.addEventListener('click', toggleTheme);
+
+    // Initialize on load
+    initTheme();
+  </script>
 </body>
 </html>
