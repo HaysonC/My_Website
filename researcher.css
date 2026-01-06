@@ -1,7 +1,9 @@
 :root{--bg:#1f1f1f;--panel:#262626;--panel2:#2c2c2c;--text:#e9e9e9;--muted:#b6b6b6;--hairline:rgba(255,255,255,.06)}
 html,body{height:100%}
 body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica Neue,Arial;color:var(--text);background:var(--bg)}
-
+ a{color:var(--text);text-decoration:none;border-bottom:1px solid rgba(255,255,255,.18)}
+a:hover{border-bottom-color:rgba(255,255,255,.38)}
+a:hover{text-decoration:underline}
 .page{max-width:1120px;margin:0 auto;padding:44px 22px 64px}
 
 .top{display:flex;align-items:flex-start;gap:16px;justify-content:space-between;margin-bottom:26px}
