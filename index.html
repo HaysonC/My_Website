@@ -1,356 +1,313 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Hayson Cheung | Engineering Science</title>
-  <link rel="icon" href="badge.png" type="image/png">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Hayson Cheung — Research</title>
+  <meta name="description" content="Hayson Cheung — robotics, machine learning, and embedded systems. Visual research/project demos.">
+  <meta name="robots" content="index,follow">
+  <meta name="keywords" content="Hayson Cheung, robotics, machine learning, embedded ML, world models, neuroevolution, generative models">
+  <link rel="canonical" href="https://hayson.me/My_Website/">
+  <link rel="icon" href="assets/badge.png" type="image/png">
 
-  <meta name="description" content="Hayson Cheung - Engineering Science student at University of Toronto specializing in machine learning, robotics, and control systems.">
-  <meta name="keywords" content="Hayson Cheung, Engineering Science, University of Toronto, Machine Learning, Robotics, Control Systems, NEAT, LSTM, Computer Vision">
-  <meta name="author" content="Hayson Cheung">
-  <meta name="robots" content="index, follow">
-  <link rel="canonical" href="https://haysonc.github.io/My_Website/" />
-
-  <!-- Open Graph / Social Media Meta Tags -->
-  <meta property="og:title" content="Hayson Cheung | Engineering Science">
-  <meta property="og:description" content="Engineering Science student specializing in machine learning, robotics, and control systems.">
+  <meta property="og:title" content="Hayson Cheung — Research">
+  <meta property="og:description" content="Robotics, machine learning, and embedded ML systems. Selected research/project demos and write-ups.">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://haysonc.github.io/My_Website/">
-  <meta property="og:image" content="https://haysonc.github.io/My_Website/og-image.jpg">
+  <meta property="og:url" content="https://hayson.me/My_Website/">
+  <meta property="og:image" content="https://hayson.me/My_Website/assets/face.jpeg">
 
-  <!-- Critical inline CSS to ensure basic styling works even if external CSS fails -->
-  <style>
-    :root {
-      --primary-color: #00eaff;
-      --secondary-color: #ff00a0;
-      --bg-color: #0a0a0a;
-      --text-color: #ffffff;
-      --terminal-bg: rgba(16, 16, 16, 0.9);
-      --terminal-prompt: #00eaff;
-      --terminal-command: #ffffff;
-      --terminal-output: #cccccc;
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Hayson Cheung — Research">
+  <meta name="twitter:description" content="Robotics, machine learning, and embedded ML systems. Selected research/project demos and write-ups.">
+  <meta name="twitter:image" content="https://hayson.me/My_Website/assets/face.jpeg">
+
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Hayson Cheung",
+      "url": "https://hayson.me/My_Website/",
+      "email": "mailto:hayson.cheing@mail.utoronto.ca",
+      "sameAs": [
+        "https://github.com/HaysonC",
+        "https://www.linkedin.com/in/hayson-cheung-3688a5241/",
+        "https://scholar.google.com/citations?user=S-SivN8AAAAJ"
+      ]
     }
-
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: monospace;
-      background-color: var(--bg-color);
-      color: var(--text-color);
-      min-height: 100vh;
-    }
-
-    #particles-js {
-      position: fixed;
-      width: 100%;
-      height: 100%;
-      top: 0;
-      left: 0;
-      z-index: 0;
-    }
-
-    .hero {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      position: relative;
-      z-index: 2;
-      padding: 2rem;
-    }
-
-    .hero-content {
-      max-width: 900px;
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-    }
-
-    h1.glitch {
-      font-size: 4rem;
-      margin-bottom: 1rem;
-      color: var(--primary-color);
-      text-shadow: 0 0 8px rgba(0, 234, 255, 0.8);
-    }
-
-    .terminal {
-      width: 100%;
-      margin-bottom: 2rem;
-      background-color: var(--terminal-bg);
-      border-radius: 8px;
-      overflow: hidden;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
-      text-align: left;
-    }
-
-    .terminal-header {
-      background-color: #2d2d2d;
-      padding: 10px;
-      display: flex;
-      align-items: center;
-    }
-
-    .terminal-buttons {
-      display: flex;
-      gap: 6px;
-      margin-right: 15px;
-    }
-
-    .terminal-button {
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-    }
-
-    .terminal-button.red { background-color: #ff5f56; }
-    .terminal-button.yellow { background-color: #ffbd2e; }
-    .terminal-button.green { background-color: #27c93f; }
-
-    .terminal-title {
-      color: #ddd;
-      font-size: 0.9rem;
-    }
-
-    .terminal-body {
-      padding: 15px;
-      font-size: 0.95rem;
-    }
-
-    .line {
-      margin-bottom: 8px;
-      display: flex;
-      align-items: center;
-    }
-
-    .prompt {
-      color: var(--terminal-prompt);
-      margin-right: 10px;
-    }
-
-    .command {
-      color: var(--terminal-command);
-    }
-
-    .output {
-      color: var(--terminal-output);
-      margin-bottom: 15px;
-      line-height: 1.5;
-    }
-
-    .nav-buttons {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 15px;
-      margin-bottom: 2rem;
-    }
-
-    .cyber-button {
-      display: inline-block;
-      position: relative;
-      width: 200px;
-      height: 50px;
-      background-color: transparent;
-      color: var(--primary-color);
-      border: 2px solid var(--primary-color);
-      border-radius: 4px;
-      text-decoration: none;
-      font-size: 1rem;
-      font-weight: 500;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .social-links {
-      display: flex;
-      justify-content: center;
-      gap: 25px;
-      margin-top: 15px;
-    }
-
-    .social-icon {
-      font-size: 2rem;
-      color: var(--primary-color);
-    }
-
-    .webring-pointer {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      margin-top: 20px;
-    }
-
-    .pointer-text {
-      color: var(--text-color);
-      margin-bottom: 5px;
-    }
-
-    .curved-arrow {
-      /* You might need to adjust the styling of the arrow as needed */
-    }
-  </style>
-
-  <!-- External CSS files -->
-  <link rel="stylesheet" href="front.css">
-  <link rel="stylesheet" href="splash.css">
-  <link rel="stylesheet" href="theme-styles.css">
-  <link rel="stylesheet" href="github-pages-fix.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  </script>
+  <link rel="stylesheet" href="researcher.css">
 </head>
 <body>
-  <!-- Splash Screen -->
-  <div id="splash-screen">
-    <div class="splash-content">
-      <div class="splash-letter letter-h">H</div>
-      <div class="splash-letter letter-c">C</div>
-    </div>
-  </div>
-
-  <!-- Main Content -->
-  <div id="main-content" style="display: none;">
-    <div id="particles-js"></div>
-    <div class="terminal-lines"></div>
-
-    <div class="hero">
-      <div class="hero-content">
-        <div class="logo-container">
-          <div class="logo">HC</div>
+  <main class="page">
+    <div class="top">
+      <div class="id">
+        <div class="badge" aria-hidden="true">
+          <img src="assets/face.jpeg" alt="">
         </div>
-        <h1 class="glitch" data-text="Hayson Cheung">Hayson Cheung</h1>
-
-        <div class="typewriter">
-          <span class="txt-rotate" data-period="2000" data-rotate='[ "Engineering Science Student", "Machine Learning", "Robotics", "Computer Vision", "Engineering" ]'></span>
-        </div>
-
-        <div class="terminal">
-          <div class="terminal-header">
-            <div class="terminal-buttons">
-              <span class="terminal-button red"></span>
-              <span class="terminal-button yellow"></span>
-              <span class="terminal-button green"></span>
-            </div>
-            <div class="terminal-title">hayson@uoft:~</div>
-          </div>
-          <div class="terminal-body">
-            <div class="line">
-              <span class="prompt">$</span> <span class="command">cat about.txt</span>
-            </div>
-            <div class="output">
-              I'm a second-year Engineering Science student at the University of Toronto, with a deep interest in machine learning, robotics, and control systems. I'm passionate about solving real-world problems using cutting-edge technologies and exploring how artificial intelligence can simulate sentient behaviors.
-            </div>
-            <div class="line">
-              <span class="prompt">$</span> <span class="command">echo $CONTACT</span>
-            </div>
-            <div class="output contact-email">hayson [dot] cheung [at] mail [dot] utoronto [dot] ca</div>
-            <div class="line">
-              <span class="prompt">$</span> <span class="command">ls projects/</span>
-            </div>
-            <div class="output">
-              <span class="file">LegoFIKS</span>
-              <span class="file">NEAT-PongBot</span>
-              <span class="file">LSTM-Translator</span>
-              <span class="file">MapMatch</span>
-              <span class="file">PHY-Pendulum</span>
-            </div>
-            <div class="line">
-              <span class="prompt">$</span> <span class="command blink">_</span>
-            </div>
+        <div class="header">
+          <h1>Hayson Cheung</h1>
+          <div class="meta">Robotics • machine learning • embedded ML systems</div>
+          <div class="links" aria-label="Profile links">
+            <a href="https://github.com/HaysonC" target="_blank" rel="noopener">GitHub</a>⋅
+            <a href="https://www.linkedin.com/in/hayson-cheung-3688a5241/" target="_blank" rel="noopener">LinkedIn</a>⋅
+            <a href="https://scholar.google.com/citations?user=S-SivN8AAAAJ" target="_blank" rel="noopener">Google Scholar</a>⋅
+            <a href="https://github.com/HaysonC/skulenotes" target="_blank" rel="noopener">University notes</a>⋅
+            <a href="mailto:hayson.cheing@mail.utoronto.ca">hayson.cheing@mail.utoronto.ca</a>
           </div>
         </div>
+        <div class="spacer"></div>
+      </div>
 
-        <div class="nav-buttons">
-          <a href="CV" class="cyber-button">
-            <span class="cyber-button-text">Curriculum Vitae</span>
-            <span class="cyber-button-glitch"></span>
-          </a>
-          <a href="ProjectPosts" class="cyber-button">
-            <span class="cyber-button-text">Project Posts</span>
-            <span class="cyber-button-glitch"></span>
-          </a>
-          <a href="github-viewer.html" class="cyber-button">
-            <span class="cyber-button-text">University Notes</span>
-            <span class="cyber-button-glitch"></span>
-          </a>
-        </div>
-
-        <div class="social-links">
-          <a href="https://github.com/HaysonC" target="_blank" class="social-icon">
-            <i class="fab fa-github"></i>
-          </a>
-          <a href="https://linkedin.com/in/hayson-cheung-3688a5241/" target="_blank" class="social-icon">
-            <i class="fab fa-linkedin"></i>
-          </a>
-          <a href="https://www.instagram.com/hayson.cheunggggg/" target="_blank" class="social-icon">
-            <i class="fab fa-instagram"></i>
-          </a>
-        </div>
+      <div class="webring webring--header" aria-label="Webring">
+        <a class="webring-link" href="https://webring.ayanali.net/#https://hayson.me/My_Website?nav=prev" rel="noopener">Prev</a>
+        <a class="webring-home" href="https://webring.ayanali.net/#https://hayson.me/My_Website" target="_blank" rel="noopener">
+          <img src="https://webring.ayanali.net/img/icon-dark.svg" alt="The Unnamed Webring">
+          <span>SKULE Webring</span>
+        </a>
+        <a class="webring-link" href="https://webring.ayanali.net/#https://hayson.me/My_Website?nav=next" rel="noopener">Next</a>
       </div>
     </div>
-  </div>
 
-  <!-- Fallback script to ensure content displays -->
-  <script>
-    // Force display content after 3 seconds if something goes wrong
-    setTimeout(function() {
-      var mainContent = document.getElementById('main-content');
-      var splashScreen = document.getElementById('splash-screen');
+    <div class="section-title">Interests</div>
+    <section class="list" aria-label="Research interests">
+      <div class="item">
+        <div class="desc">
+          <p>My research sits at the intersection of hardware-aware AI and embodied intelligence. I focus on learning systems that are mathematically grounded yet deployable on robots and edge devices under strict latency, power, and memory constraints—bridging high-level generative modeling with low-level system execution.</p>
+          <p>Concretely, I’m interested in:</p>
+          <ol>
+            <li>Algorithm–system co-design for latent world models where SoC constraints shape the training objective (e.g., structured sparsity and quantization-aware training for real-time control).</li>
+            <li>Robustness from incomplete and “dead” industrial data via offline ML and causal reasoning.</li>
+            <li>Efficient generative 3D reconstruction and motion representations (e.g., dynamics-aware scene models for interpolation and segmentation).</li>
+          </ol>
+        </div>
+      </div>
+    </section>
 
-      if (mainContent && mainContent.style.display === 'none') {
-        if (splashScreen) splashScreen.style.display = 'none';
-        mainContent.style.display = 'block';
-        mainContent.style.opacity = '1';
-        console.log('Fallback: Forced content display');
-      }
-    }, 3000);
-  </script>
+    <div class="section-title" id="selected">highlights</div>
+    <section class="grid" aria-label="Selected research and project demos">
 
-  <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
-  <script src="front.js"></script>
-  <script src="theme-switcher.js"></script>
-  <script src="scroll-progress.js"></script>
+      <article class="card">
+        <div class="media">
+          <img src="assets/samuel.png" alt="SAMUEL architecture diagram">
+        </div>
+        <div class="cap">
+          <p class="title">SAMUEL</p>
+          <p class="sub">Vocal-conditioned music generation · Accepted to IEEE/WI IAT · <a href="https://arxiv.org/abs/2507.19991" target="_blank" rel="noopener">arXiv:2507.19991</a></p>
+        </div>
+      </article>
 
-  <!-- Structured Data for Person -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Person",
-    "name": "Hayson Cheung",
-    "url": "https://haysonc.github.io/My_Website/",
-    "sameAs": [
-      "https://github.com/HaysonC",
-      "https://linkedin.com/in/hayson-cheung-3688a5241/",
-      "https://www.instagram.com/hayson.cheunggggg/"
-    ],
-    "jobTitle": "Engineering Science Student",
-    "worksFor": {
-      "@type": "Organization",
-      "name": "University of Toronto"
-    },
-    "knowsAbout": ["Machine Learning", "Robotics", "Control Systems", "Computer Vision", "Neural Networks", "Deep Learning"]
-  }
-  </script>
-  <!-- Webring Widget -->
-  <div class="webring-widget">
-    <a href="https://webring.ayanali.net/#https://hayson.me/My_Website?nav=prev" class="webring-arrow">
-      <i class="fas fa-chevron-left"></i>
-    </a>
-    <a href="https://webring.ayanali.net/#https://hayson.me/My_Website" target="_blank" class="webring-logo">
-      <img src="https://webring.ayanali.net/img/icon-dark.svg" alt="The Unnamed Webring"/>
-    </a>
-    <a href="https://webring.ayanali.net/#https://hayson.me/My_Website?nav=next" class="webring-arrow">
-      <i class="fas fa-chevron-right"></i>
-    </a>
-  </div>
-  <div class="webring-pointer">
-    <div class="pointer-text">Check out other's websites too!!</div>
-    <svg class="direct-arrow" width="80" height="60" viewBox="0 0 80 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M10,10 L60,50" stroke="var(--primary-color)" stroke-width="3" fill="none" />
-      <path d="M48,45 L60,50 L55,38" stroke="var(--primary-color)" stroke-width="3" fill="none" />
-    </svg>
-  </div>
+
+
+    
+      <article class="card">
+        <div class="media"><img src="assets/worldModels.gif" alt="World model robotics inference"></div>
+        <div class="cap">
+          <p class="title">World model</p>
+          <p class="sub">Robotics inference + predictive representations</p>
+        </div>
+      </article>
+
+
+
+    <article class="card">
+        <div class="media"><img src="assets/robots.gif" alt="Robotic arm picking objects"></div>
+        <div class="cap">
+          <p class="title">Robotic manipulation</p>
+          <p class="sub">World Models + visual foresight</p>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="media"><img src="assets/pivo.png" alt="Pivo project visual"></div>
+        <div class="cap">
+          <p class="title">Pivo</p>
+          <p class="sub">Efficient Fluid Modeling with ML and Probabilistic Methods</p>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="media"><img src="assets/industrial_data.png" alt="Industrial data visual"></div>
+        <div class="cap">
+          <p class="title">Industrial data</p>
+          <p class="sub">SkySense — production data + predictive maintenance</p>
+        </div>
+      </article>
+      <article class="card">
+        <div class="media"><img src="assets/3d_lego.gif" alt="LegoFIKS demo"></div>
+        <div class="cap">
+          <p class="title">LegoFIKS</p>
+          <p class="sub">Generative 3D + instruction generation · <a href="projectpost/legoFiks/">Post</a> · <a href="https://devpost.com/software/legofiks" target="_blank" rel="noopener">Devpost</a></p>
+        </div>
+      </article>
+
+          <article class="card">
+        <div class="media">
+          <img src="assets/candidly.png" alt="Candidly project screenshot">
+        </div>
+        <div class="cap">
+          <p class="title">Candidly</p>
+          <p class="sub">Cloud P2P + Webgazer Anti Cheat · <a href="https://devpost.com/software/candidly" target="_blank" rel="noopener">Devpost</a></p>
+      </div>
+      </article>
+
+      
+
+      <article class="card">
+        <div class="media"><img src="assets/neat_2.gif" alt="NEAT agent in Smash Bros"></div>
+        <div class="cap">
+          <p class="title">NEAT agent (Smash Bros)</p>
+          <p class="sub">Neuroevolution + sequence modeling (rNEAT/LSTM) · <a href="projectpost/neat/">Post</a> · <a href="https://github.com/HaysonC/NEAT-PongBot" target="_blank" rel="noopener">GitHub</a></p>
+        </div>
+      </article>
+
+            <article class="card">
+        <div class="media">
+          <img src="assets/ensemble.gif" alt="Ensemble methods for robotics"> 
+        </div>
+        <div class="cap">
+          <p class="title">Ensemble CV for Robotics</p>
+          <p class="sub">Ensemble Methods (NN + Classical) for robutst and efficient Inference and CV Heuristics</p>
+        </div>
+      </article>
+
+
+
+      <article class="card">
+        <div class="media">
+          <video src="assets/pong_demo.mp4" muted playsinline autoplay loop preload="metadata"></video>
+        </div>
+        <div class="cap">
+          <p class="title">Pong</p>
+          <p class="sub">Neuroevolution for Atari games · <a href="projectpost/neat/">Post</a> · <a href="https://github.com/HaysonC/NEAT-PongBot" target="_blank" rel="noopener">GitHub</a></p>
+        </div>
+      </article>
+
+ 
+            <article class="card">
+        <div class="media"><img src="assets/cv.gif" alt="Pendulum demo"></div>
+        <div class="cap">
+          <p class="title">Pendulum</p>
+          <p class="sub">OpenCV tracking + dynamics modeling · <a href="projectpost/pendulum/">Post</a> · <a href="https://github.com/HaysonC/phy180-pendulum" target="_blank" rel="noopener">GitHub</a></p>
+        </div>
+      </article>
+
+    
+    
+    </section>
+      <div class="section-title" id="projects">Projects</div>
+
+
+
+      <article class="item">
+        <div class="titleline">
+          <span class="projtitle">SAMUEL</span>
+          <span class="hint">· paper (accepted to IEEE/WI IAT):</span>
+          <a href="https://arxiv.org/abs/2507.19991" target="_blank" rel="noopener">arXiv:2507.19991</a>
+        </div>
+        <div class="desc">We present a lightweight latent diffusion model for vocal-conditioned musical accompaniment generation. A soft alignment attention mechanism adaptively combines local and global temporal dependencies across diffusion timesteps, capturing multi-scale musical structure efficiently. Operating in the compressed latent space of a pre-trained VAE, the model achieves a 220× parameter reduction and 52× faster inference while maintaining competitive quality with only 15M parameters—enabling real-time deployment on consumer hardware.</div>
+        <div class="pillrow">Keywords: latent diffusion, attention, controllable generation, efficient inference</div>
+      </article>
+
+      <article class="item">
+        <div class="titleline">
+          <span class="projtitle">SkySense</span>
+          <span class="hint">· industrial-scale ML systems</span>
+        </div>
+        <div class="desc">End-to-end predictive maintenance pipelines in manufacturing environments, with a focus on robustness to noise, missing modalities, and out-of-distribution behavior.</div>
+        <div class="pillrow">Keywords: production ML, reliability, data-centric AI</div>
+      </article>
+
+    <section class="list" aria-label="Projects and papers">
+      <article class="item">
+        <div class="titleline">
+          <span class="projtitle">Candidly</span>
+          <span class="hint">· project:</span>
+          <a href="https://devpost.com/software/candidly" target="_blank" rel="noopener">devpost.com/software/candidly</a>
+        </div>
+        <div class="desc">
+          <p><strong>Inspiration.</strong> While doomscrolling I came across “Cluely” (with the slogan “cheat on everything”). We don’t think that’s fair—many candidates work hard to earn roles—and it adds workload and inconsistency for interviewers and senior engineers.</p>
+          <p><strong>What it does.</strong> Candidly is an “Anti‑Cluely” layer for candidates and a Databricks-style platform for interviewers:</p>
+          <ol>
+            <li>Detects and surfaces suspicious gaze and typing patterns during interviews.</li>
+            <li>Provides a video interviewing tool with templates, coding questions, and an editor for interviewers and candidates.</li>
+            <li>Records sessions, flags notable moments, and provides HR-facing insights on interviewer performance and improvement directions.</li>
+          </ol>
+        </div>
+        <div class="pillrow">Keywords: interview integrity, gaze/typing signals, video interviews, interviewer analytics</div>
+      </article>
+
+      <article class="item">
+        <div class="titleline">
+          <span class="projtitle">World models for robotics</span>
+          <span class="hint">· representation learning for control</span>
+        </div>
+        <div class="desc">Predictive representations for embodied agents, aiming to bridge generative modeling with real-time inference constraints in closed-loop control.</div>
+        <div class="pillrow">Keywords: latent dynamics, planning, hardware-aware inference</div>
+      </article>
+
+      <article class="item">
+        <div class="titleline">
+          <a class="projtitle" href="projectpost/legoFiks/">LegoFIKS</a>
+          <span class="hint">· project:</span>
+          <a href="https://devpost.com/software/legofiks" target="_blank" rel="noopener">devpost.com/software/legofiks</a>
+        </div>
+        <div class="desc">Generates a 3D LEGO model and role-playing instructions from an input image using generative tooling and structured outputs.</div>
+        <div class="pillrow">Keywords: 3D generation, human-centered tools</div>
+      </article>
+
+      <article class="item">
+        <div class="titleline">
+          <a class="projtitle" href="projectpost/aws/">MapMatch (AWS Hackathon)</a>
+          <span class="hint">· project:</span>
+          <a href="https://devpost.com/software/roomiematch-xoe75b" target="_blank" rel="noopener">Devpost</a>
+        </div>
+        <div class="desc">A semantic-based matching algorithm built on AWS primitives (Lambda + embeddings + DynamoDB) under a 6-hour hackathon constraint.</div>
+        <div class="pillrow">Keywords: semantic search, embeddings, AWS, DynamoDB</div>
+      </article>
+
+      <article class="item">
+        <div class="titleline">
+          <a class="projtitle" href="projectpost/LSTM/">LSTM Encoder–Decoder Translator</a>
+          <span class="hint">· project:</span>
+          <a href="https://github.com/HaysonC/Encoder-DecoderLSTMTranslator" target="_blank" rel="noopener">GitHub</a>
+          <a href="https://colab.research.google.com/drive/1qdCU3CGQ1AeH1kQwXrgmcJOrJtX8a8Pn?usp=sharing" target="_blank" rel="noopener">Colab</a>
+        </div>
+        <div class="desc">A sequence-to-sequence encoder–decoder implementation for translation tasks, with an LSTM bottleneck and discussion of attention as the next step.</div>
+        <div class="pillrow">Keywords: seq2seq, LSTM, NLP, attention</div>
+      </article>
+
+      <article class="item">
+        <div class="titleline">
+          <a class="projtitle" href="projectpost/pendulum/">Pendulum motion analysis</a>
+          <span class="hint">· computer vision + system identification</span>
+        </div>
+        <div class="desc">OpenCV-based tracking of a pendulum and downstream analysis of period and damping behavior using fitted models.</div>
+        <div class="pillrow">Keywords: perception, dynamics, data fitting</div>
+      </article>
+
+      <article class="item">
+        <div class="titleline">
+          <a class="projtitle" href="projectpost/neat/">NEAT agents (Pong / Smash)</a>
+          <span class="hint">· neuroevolution</span>
+        </div>
+        <div class="desc">NeuroEvolution of Augmenting Topologies (NEAT) for game agents, including a Pong self-play demo and an evolved Smash-style agent.</div>
+        <div class="pillrow">Keywords: evolutionary optimization, agents</div>
+      </article>
+    </section>
+
+    <div class="section-title" id="drive">Public Drive</div>
+    <div class="drive-line">
+      Access public drive here: <a href="https://drive.google.com/drive/folders/1xhqCztJlUuTp6Mt_hBwCth1OVkyLrshf?usp=sharing" target="_blank" rel="noopener">Google Drive link</a>
+    </div>
+  <hr size="1" style="border:none;border-top:1px solid var(--hairline);margin:20px 0">
+    
+   <div class="drive-line">
+    Currently, this website is not complete yet.
+    </div>
+    
+
+
+  </main>
+
 </body>
 </html>
