@@ -41,6 +41,7 @@
   <link rel="stylesheet" href="researcher.css">
 </head>
 <body>
+
   <div class="theme-switcher">
     <button id="theme-toggle" class="theme-btn" aria-label="Toggle theme">
       <svg class="sun-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -90,7 +91,7 @@
       </div>
     </div>
 
-    <div class="section-title">Research Interests</div>
+    <div class="section-title" id="research">Research Interests</div>
     <section class="list" aria-label="Research interests">
       <div class="item item--featured">
         <div class="desc">
@@ -105,15 +106,15 @@
       </div>
     </section>
 
-    <div class="section-title" id="selected">Featured Research</div>
-    <section class="grid" aria-label="Selected research and project demos">
+    <div class="section-title" id="featured">Research</div>
+    <section class="grid" aria-label="Selected research">
 
       <article class="card">
         <div class="media">
           <img src="assets/samuel.png" alt="SAMUEL architecture diagram">
         </div>
         <div class="cap">
-          <p class="title">SAMUEL</p>
+          <p class="title">Efficient Diffusion Models as Low-Cost Synthesizers</p>
           <p class="sub">Vocal-conditioned music generation · IEEE/WI IAT · <a href="https://arxiv.org/abs/2507.19991" target="_blank" rel="noopener">arXiv</a></p>
         </div>
       </article>
@@ -121,7 +122,7 @@
       <article class="card">
         <div class="media"><img src="assets/worldModels.gif" alt="World model robotics inference"></div>
         <div class="cap">
-          <p class="title">World Models</p>
+          <p class="title">World Models as a Proxy for Robotics</p>
           <p class="sub">Predictive representations for embodied agents</p>
         </div>
       </article>
@@ -129,7 +130,7 @@
       <article class="card">
         <div class="media"><img src="assets/robots.gif" alt="Robotic arm picking objects"></div>
         <div class="cap">
-          <p class="title">Robotic Manipulation</p>
+          <p class="title">Robotic Manipulation that Combines DL and Classical Controls</p>
           <p class="sub">World models + visual foresight for control</p>
         </div>
       </article>
@@ -137,16 +138,55 @@
       <article class="card">
         <div class="media"><img src="assets/pivo.png" alt="Pivo project visual"></div>
         <div class="cap">
-          <p class="title">Pivo</p>
-          <p class="sub">Efficient fluid modeling with ML</p>
+          <p class="title">DL Microfluidics Simulation as a CFD surrogate</p>
+          <p class="sub">Efficient Simulation of Flows where advection and diffusion both matter</p>
         </div>
       </article>
 
       <article class="card">
         <div class="media"><img src="assets/industrial_data.png" alt="Industrial data visual"></div>
         <div class="cap">
-          <p class="title">Industrial ML</p>
-          <p class="sub">SkySense — Predictive maintenance at scale</p>
+          <p class="title">Industrial Predictive Modeling as a Data-Centric Challenge</p>
+          <p class="sub">SkySense — Predicting from Industrial Data at Scale</p>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="media"><img src="assets/neat_2.gif" alt="NEAT agent in Smash Bros"></div>
+        <div class="cap">
+          <p class="title">Exploring Legacy Neuroevolution Methods for Understanding Trained Behavior</p>
+          <p class="sub">Neuroevolution in Smash Bros · <a href="projectpost/neat/">Post</a></p>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="media">
+          <img src="assets/ensemble.gif" alt="Ensemble methods for robotics"> 
+        </div>
+        <div class="cap">
+          <p class="title">Ensembling NN as a Heuristic for Robust CV</p>
+          <p class="sub">Robust inference for robotic perception</p>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="media">
+          <video src="assets/pong_demo.mp4" muted playsinline autoplay loop preload="metadata"></video>
+        </div>
+        <div class="cap">
+          <p class="title">Classical NEAT Implementation for Atari Games</p>
+          <p class="sub">Neuroevolution for Atari games</p>
+        </div>
+      </article>
+
+    </section>
+    <div class="section-title" id="software">Software Demos</div>
+    <section class="grid" aria-label="Software Projects">
+           <article class="card">
+        <div class="media"><img src="assets/cv.gif" alt="Pendulum demo"></div>
+        <div class="cap">
+          <p class="title">Pendulum</p>
+          <p class="sub">OpenCV tracking + dynamics modeling</p>
         </div>
       </article>
 
@@ -165,42 +205,6 @@
         <div class="cap">
           <p class="title">Candidly</p>
           <p class="sub">Anti-cheat platform for interviews · <a href="https://devpost.com/software/candidly" target="_blank" rel="noopener">Devpost</a></p>
-        </div>
-      </article>
-
-      <article class="card">
-        <div class="media"><img src="assets/neat_2.gif" alt="NEAT agent in Smash Bros"></div>
-        <div class="cap">
-          <p class="title">NEAT Agent</p>
-          <p class="sub">Neuroevolution in Smash Bros · <a href="projectpost/neat/">Post</a></p>
-        </div>
-      </article>
-
-      <article class="card">
-        <div class="media">
-          <img src="assets/ensemble.gif" alt="Ensemble methods for robotics"> 
-        </div>
-        <div class="cap">
-          <p class="title">Ensemble CV</p>
-          <p class="sub">Robust inference for robotic perception</p>
-        </div>
-      </article>
-
-      <article class="card">
-        <div class="media">
-          <video src="assets/pong_demo.mp4" muted playsinline autoplay loop preload="metadata"></video>
-        </div>
-        <div class="cap">
-          <p class="title">Pong</p>
-          <p class="sub">Neuroevolution for Atari games</p>
-        </div>
-      </article>
-
-      <article class="card">
-        <div class="media"><img src="assets/cv.gif" alt="Pendulum demo"></div>
-        <div class="cap">
-          <p class="title">Pendulum</p>
-          <p class="sub">OpenCV tracking + dynamics modeling</p>
         </div>
       </article>
     </section>
@@ -397,8 +401,30 @@
       localStorage.setItem('theme', next);
     }
 
+    function updateNav() {
+      const sections = ['research', 'projects', 'teaching', 'resources'];
+      const navItems = document.querySelectorAll('.nav-item');
+      let current = 'research';
+      
+      for (const section of sections) {
+        const el = document.getElementById(section);
+        if (el && window.scrollY >= el.offsetTop - 200) {
+          current = section;
+        }
+      }
+      
+      navItems.forEach(item => {
+        if (item.dataset.section === current) {
+          item.classList.add('nav-item--active');
+        } else {
+          item.classList.remove('nav-item--active');
+        }
+      });
+    }
+
     const themeBtn = document.getElementById('theme-toggle');
     themeBtn.addEventListener('click', toggleTheme);
+    window.addEventListener('scroll', updateNav);
 
     // Initialize on load
     initTheme();
