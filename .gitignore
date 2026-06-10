@@ -8,3 +8,11 @@
 /dataSources.local.xml
 
 .idea/
+
+# openblitz: never commit secrets/deps
+.env
+.env.*
+node_modules/
+*.pem
+*.key
+.DS_Store
